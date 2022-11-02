@@ -11,16 +11,33 @@ import java.io.Serializable;
  * @author sergio
  */
 public class Especialidad implements Serializable{
+    private int id;
     private String nombreEspecialidad;
-    private float salarioMedio;
-    private float extraPeligrosidad;
-    private Animal animal;
-    
-    public Especialidad(String nombreEspecialidad, float salarioMedio, float extraPeligrosidad, Animal animal) {
+    private String desc;
+
+    public Especialidad(int id, String nombreEspecialidad, String desc) {
+        this.id = id;
         this.nombreEspecialidad = nombreEspecialidad;
-        this.salarioMedio = salarioMedio;
-        this.extraPeligrosidad = extraPeligrosidad;
-        this.animal= animal;
+        this.desc = desc;
+    }
+    
+    public Especialidad(String nombreEspecialidad, String desc) {
+        this.id = id;
+        this.nombreEspecialidad = nombreEspecialidad;
+        this.desc = desc;
+    }
+    
+    public Especialidad(int id, String nombreEspecialidad) {
+        this.id = id;
+        this.nombreEspecialidad = nombreEspecialidad;
+    }
+    
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNombreEspecialidad() {
@@ -31,20 +48,19 @@ public class Especialidad implements Serializable{
         this.nombreEspecialidad = nombreEspecialidad;
     }
 
-    public float getSalarioMedio() {
-        return salarioMedio;
+    public String getDesc() {
+        return desc;
     }
 
-    public void setSalarioMedio(float salarioMedio) {
-        this.salarioMedio = salarioMedio;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
-    public float getExtraPeligrosidad() {
-        return extraPeligrosidad;
-    }
-
-    public void setExtraPeligrosidad(float extraPeligrosidad) {
-        this.extraPeligrosidad = extraPeligrosidad;
+    
+    
+    @Override
+    public String toString(){
+        return nombreEspecialidad;
     }
     
     

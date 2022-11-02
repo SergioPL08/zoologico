@@ -11,16 +11,14 @@ import java.io.Serializable;
  * @author sergio
  */
 public class Cuidador implements Serializable{
-    private String nombre;
-    private String apellidos;
-    private int idCuidador;
-    private Especialidad especialidad;
+    private String nombre, apellidos, tel;
+    private float salario;
 
-    public Cuidador(String nombre, String apellidos, int idCuidador, Especialidad especialidad) {
+    public Cuidador(String nombre, String apellidos, String tel, float salario) {
         this.nombre = nombre;
-        this.idCuidador = idCuidador;
         this.apellidos = apellidos;
-        this.especialidad = especialidad;
+        this.tel = tel;
+        this.salario = salario;
     }
 
     public String getNombre() {
@@ -31,14 +29,6 @@ public class Cuidador implements Serializable{
         this.nombre = nombre;
     }
 
-    public int getIdCuidador() {
-        return idCuidador;
-    }
-
-    public void setIdCuidador(int idCuidador) {
-        this.idCuidador = idCuidador;
-    }
-
     public String getApellidos() {
         return apellidos;
     }
@@ -47,13 +37,24 @@ public class Cuidador implements Serializable{
         this.apellidos = apellidos;
     }
 
-    public Especialidad getEspecialidad() {
-        return especialidad;
+    public String getTel() {
+        return tel;
     }
 
-    public void setEspecialidad(Especialidad especialidad) {
-        this.especialidad = especialidad;
+    public void setTel(String tel) {
+        this.tel = tel;
     }
+
+    public float getSalario() {
+        return salario;
+    }
+
+    public void setSalario(float salario) {
+        this.salario = salario;
+    }
+
+
+    
     
     
 }

@@ -11,60 +11,51 @@ import java.io.Serializable;
  * @author sergio
  */
 public class Cuidados implements Serializable{
-    private String tipoComida;
-    private String habitat;
-    private float costePromedio;
-    private float cantidadComidaKG;
-    private int periodicidadComidaDias;
-    private final Animal animal;
+    private int id;
+    private String nombre;
+    private String descripcion;
 
-    public Cuidados(String tipoComida, String habitat, float costePromedio, float cantidadComidaKG, int periodicidadComidaDias, Animal animal) {
-        this.tipoComida = tipoComida;
-        this.habitat = habitat;
-        this.costePromedio = costePromedio;
-        this.cantidadComidaKG = cantidadComidaKG;
-        this.periodicidadComidaDias = periodicidadComidaDias;
-        this.animal = animal;
+    public Cuidados(int id, String nombre, String descripcion) {
+        this.id = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+    }
+
+    public Cuidados(String nombre, String descripcion) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
     }
     
-    public String getTipoComida() {
-        return tipoComida;
+    public int getId() {
+        return id;
     }
 
-    public void setTipoComida(String tipoComida) {
-        this.tipoComida = tipoComida;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getHabitat() {
-        return habitat;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setHabitat(String habitat) {
-        this.habitat = habitat;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public float getCostePromedio() {
-        return costePromedio;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setCostePromedio(float costePromedio) {
-        this.costePromedio = costePromedio;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
-    public float getCantidadComidaKG() {
-        return cantidadComidaKG;
+    
+    
+    @Override
+    public String toString(){
+        return nombre;
     }
-
-    public void setCantidadComidaKG(float cantidadComidaKG) {
-        this.cantidadComidaKG = cantidadComidaKG;
-    }
-
-    public int getPeriodicidadComidaDias() {
-        return periodicidadComidaDias;
-    }
-
-    public void setPeriodicidadComidaDias(int periodicidadComidaDias) {
-        this.periodicidadComidaDias = periodicidadComidaDias;
-    }
+    
     
 }

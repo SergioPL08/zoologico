@@ -1,21 +1,14 @@
 package InterfazV2;
 
 
-import interfazFicheros.*;
-import java.io.EOFException;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.xml.transform.OutputKeys;
+import javax.swing.table.DefaultTableModel;
 import zoo.*;
 import util.*;
 
@@ -29,29 +22,28 @@ import util.*;
  * @author sergio
  */
 public class addCuidados extends javax.swing.JFrame {
-
-    ArrayList<Animal> animales;
     ArrayList<Cuidados> cuidados;
+    Conexion miConexion;
+    DefaultTableModel modelo;
     
     /**
      * Creates new form addCuid
      */
     public addCuidados() {
         initComponents();
-        animales = new ArrayList<Animal>();
-        cuidados = new ArrayList<Cuidados>();
-        try{
-            animales = utilities.cargar(animales, "Animales.dat");
-            String [] listaAnimales = new String[animales.size()];
-            listaAnimales = utilities.rellenator(animales,"Animales.dat");
-            jComboBoxjAnimal.setModel(new javax.swing.DefaultComboBoxModel(listaAnimales));
+        cuidados = new ArrayList<Cuidados>(); 
+        miConexion = new Conexion("localhost","3306","zoologico","zoo","pepe");
+        //Rellenamos la tabla de cuidados con los datos de la base de datos
+        modelo = (DefaultTableModel) jTable1.getModel();
+        try {
+            String consulta = "SELECT * FROM cuidado";
+            ResultSet rsTabla = miConexion.getSelect(consulta);
+            while(rsTabla.next()){
+                modelo.addRow(new Object[] {rsTabla.getString(2),rsTabla.getString(3)});
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(tableAnimal.class.getName()).log(Level.SEVERE, null, ex);
         }
-        catch(IOException f){
-                JOptionPane.showMessageDialog(null,f.getMessage());
-            }
-            catch (ClassNotFoundException ex) {
-                Logger.getLogger(addCuidados.class.getName()).log(Level.SEVERE, null, ex);
-            }
         
     }
 
@@ -67,20 +59,13 @@ public class addCuidados extends javax.swing.JFrame {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel1 = new javax.swing.JPanel();
-        LTipoComida = new javax.swing.JLabel();
-        LHabitat = new javax.swing.JLabel();
-        LsubespecieAnimal = new javax.swing.JLabel();
-        LAnimal = new javax.swing.JLabel();
-        TTipoComida = new javax.swing.JTextField();
-        THabitat = new javax.swing.JTextField();
-        SPrecioMedio = new javax.swing.JSpinner();
+        LDesc = new javax.swing.JLabel();
+        jTNombre = new javax.swing.JTextField();
         addCuidado = new javax.swing.JToggleButton();
         jLabel1 = new javax.swing.JLabel();
-        SPeriodicidad = new javax.swing.JSpinner();
-        LCantidadComida1 = new javax.swing.JLabel();
-        SCantidadComida1 = new javax.swing.JSpinner();
-        LPeridiocidad1 = new javax.swing.JLabel();
-        jComboBoxjAnimal = new javax.swing.JComboBox<>();
+        LNombre = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTADesc = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -90,72 +75,26 @@ public class addCuidados extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(800, 600));
         java.awt.GridBagLayout jPanel1Layout = new java.awt.GridBagLayout();
-        jPanel1Layout.columnWidths = new int[] {0, 6, 0, 6, 0, 6, 0, 6, 0};
-        jPanel1Layout.rowHeights = new int[] {0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0};
+        jPanel1Layout.columnWidths = new int[] {0, 6, 0};
+        jPanel1Layout.rowHeights = new int[] {0, 8, 0, 8, 0, 8, 0, 8, 0};
         jPanel1.setLayout(jPanel1Layout);
 
-        LTipoComida.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        LTipoComida.setForeground(new java.awt.Color(0, 153, 51));
-        LTipoComida.setText("Tipo Comida");
+        LDesc.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        LDesc.setForeground(new java.awt.Color(0, 153, 51));
+        LDesc.setText("Descripcion");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
-        jPanel1.add(LTipoComida, gridBagConstraints);
+        gridBagConstraints.gridy = 4;
+        jPanel1.add(LDesc, gridBagConstraints);
 
-        LHabitat.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        LHabitat.setForeground(new java.awt.Color(0, 153, 51));
-        LHabitat.setText("Habitat");
+        jTNombre.setBackground(new java.awt.Color(255, 255, 255));
+        jTNombre.setForeground(new java.awt.Color(0, 0, 0));
+        jTNombre.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        jTNombre.setPreferredSize(new java.awt.Dimension(100, 24));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 16;
-        jPanel1.add(LHabitat, gridBagConstraints);
-
-        LsubespecieAnimal.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        LsubespecieAnimal.setForeground(new java.awt.Color(0, 153, 51));
-        LsubespecieAnimal.setText("Precio Medio");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 24;
-        jPanel1.add(LsubespecieAnimal, gridBagConstraints);
-
-        LAnimal.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        LAnimal.setForeground(new java.awt.Color(0, 153, 51));
-        LAnimal.setText("Animal");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 48;
-        jPanel1.add(LAnimal, gridBagConstraints);
-
-        TTipoComida.setBackground(new java.awt.Color(255, 255, 255));
-        TTipoComida.setForeground(new java.awt.Color(0, 0, 0));
-        TTipoComida.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        TTipoComida.setPreferredSize(new java.awt.Dimension(100, 24));
-        TTipoComida.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TTipoComidaActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
-        gridBagConstraints.gridy = 8;
-        jPanel1.add(TTipoComida, gridBagConstraints);
-
-        THabitat.setBackground(new java.awt.Color(255, 255, 255));
-        THabitat.setForeground(new java.awt.Color(0, 0, 0));
-        THabitat.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        THabitat.setPreferredSize(new java.awt.Dimension(100, 24));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
-        gridBagConstraints.gridy = 16;
-        jPanel1.add(THabitat, gridBagConstraints);
-
-        SPrecioMedio.setModel(new javax.swing.SpinnerNumberModel(0.0f, 0.0f, null, 1.0f));
-        SPrecioMedio.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        SPrecioMedio.setPreferredSize(new java.awt.Dimension(100, 24));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
-        gridBagConstraints.gridy = 24;
-        jPanel1.add(SPrecioMedio, gridBagConstraints);
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        jPanel1.add(jTNombre, gridBagConstraints);
 
         addCuidado.setForeground(new java.awt.Color(255, 255, 255));
         addCuidado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.png"))); // NOI18N
@@ -168,8 +107,8 @@ public class addCuidados extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 52;
-        gridBagConstraints.gridwidth = 9;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridwidth = 3;
         jPanel1.add(addCuidado, gridBagConstraints);
 
         jLabel1.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
@@ -180,62 +119,48 @@ public class addCuidados extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 9;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel1.add(jLabel1, gridBagConstraints);
 
-        SPeriodicidad.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
-        SPeriodicidad.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        SPeriodicidad.setPreferredSize(new java.awt.Dimension(100, 24));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
-        gridBagConstraints.gridy = 40;
-        jPanel1.add(SPeriodicidad, gridBagConstraints);
-
-        LCantidadComida1.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        LCantidadComida1.setForeground(new java.awt.Color(0, 153, 51));
-        LCantidadComida1.setText("Cantidad Comida (kg)");
+        LNombre.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        LNombre.setForeground(new java.awt.Color(0, 153, 51));
+        LNombre.setText("Nombre");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 32;
-        jPanel1.add(LCantidadComida1, gridBagConstraints);
+        gridBagConstraints.gridy = 2;
+        jPanel1.add(LNombre, gridBagConstraints);
 
-        SCantidadComida1.setModel(new javax.swing.SpinnerNumberModel(0.0f, 0.0f, null, 1.0f));
-        SCantidadComida1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        SCantidadComida1.setPreferredSize(new java.awt.Dimension(100, 24));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
-        gridBagConstraints.gridy = 32;
-        jPanel1.add(SCantidadComida1, gridBagConstraints);
+        jTADesc.setBackground(new java.awt.Color(255, 255, 255));
+        jTADesc.setColumns(20);
+        jTADesc.setForeground(new java.awt.Color(51, 51, 51));
+        jTADesc.setRows(5);
+        jScrollPane2.setViewportView(jTADesc);
 
-        LPeridiocidad1.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        LPeridiocidad1.setForeground(new java.awt.Color(0, 153, 51));
-        LPeridiocidad1.setText("Periodicidad Comida (veces al día)");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 40;
-        jPanel1.add(LPeridiocidad1, gridBagConstraints);
-
-        jComboBoxjAnimal.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBoxjAnimal.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
-        gridBagConstraints.gridy = 48;
-        jPanel1.add(jComboBoxjAnimal, gridBagConstraints);
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridwidth = 3;
+        jPanel1.add(jScrollPane2, gridBagConstraints);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
-                "Tipo Comida", "Habitat", "Precio Mecio", "Cantidad Comida", "Periodicidad", "Animal"
+                "Nombre", "Descripcion"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -244,15 +169,15 @@ public class addCuidados extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 579, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -260,7 +185,7 @@ public class addCuidados extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 526, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -268,8 +193,8 @@ public class addCuidados extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -277,46 +202,40 @@ public class addCuidados extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void TTipoComidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TTipoComidaActionPerformed
-        
-    }//GEN-LAST:event_TTipoComidaActionPerformed
-
     private void addCuidadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCuidadoActionPerformed
-        String tipoComida = TTipoComida.getText();
-        String habitat = THabitat.getText();
-        float cantComida = (float) SCantidadComida1.getValue();
-        float precioMedio = (float) SPrecioMedio.getValue();
-        int periodicidad = (int) SPeriodicidad.getValue();
-        Animal animal = animales.get(jComboBoxjAnimal.getSelectedIndex());
-        if(tipoComida.equals("")){
-            JOptionPane.showMessageDialog(null, "Introduce el tipo de comida");
-        }
-        else if(habitat.equals("")){
-            JOptionPane.showMessageDialog(null,"Introduce el habitat");
-        }
-        else if(cantComida==0){
-            JOptionPane.showMessageDialog(null,"La cantidad de comida no puede ser 0");
-        }
-        else if(precioMedio==0){
-            JOptionPane.showMessageDialog(null,"El precio no puede ser 0");
+        String nombre = jTNombre.getText();
+        String desc = jTADesc.getText();
+        if(nombre.equals("")){
+            JOptionPane.showMessageDialog(null, "Introduce el nombre");
         }
         else{
-            //(String tipoComida, String habitat, float costePromedio, float cantidadComidaKG, int periodicidadComidaDias)
-            Cuidados cuidado = new Cuidados(tipoComida, habitat, precioMedio, cantComida, periodicidad, animal);
-            TTipoComida.setText("");
-            SCantidadComida1.setValue(0);
-            SPrecioMedio.setValue(0);
-            SPeriodicidad.setValue(0);
-            cuidados.add(cuidado);
-            JOptionPane.showMessageDialog(null,"Cuidado añadido correctamente");
-            try {
-                utilities.guardar(cuidados, "Cuidados.dat");
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "Error al guardar el fichero");            
+            Cuidados cuid = new Cuidados (nombre,desc);
+            cuidados.add(cuid);
+            try{
+                String consulta = "SELECT * FROM cuidado WHERE nombre_cuidado='"+nombre+"' AND descripcion='"+desc+"'";
+                ResultSet rs1 = miConexion.comprobarDatos(consulta);
+                if(rs1==null){
+                    ResultSet rs = miConexion.getSelect("Select * from cuidado");
+                    //Irse a la ultima linea de la tabla
+                    rs.moveToInsertRow();
+                    //
+                    rs.updateString("nombre_cuidado",nombre);
+                    rs.updateString("descripcion",desc);
+                    rs.insertRow();
+                    //users.add(user);
+                    JOptionPane.showMessageDialog(null, "Cuidado añadida correctamente");
+                    modelo.addRow(new Object[] {nombre,desc});
+                    jTNombre.setText("");
+                    jTADesc.setText("");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "El cuidado ya existe");
+                }   
+            } catch (SQLException ex) {
+                Logger.getLogger(addEspecialidad.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
             
-        
     }//GEN-LAST:event_addCuidadoActionPerformed
 
     /**
@@ -358,23 +277,16 @@ public class addCuidados extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel LAnimal;
-    private javax.swing.JLabel LCantidadComida1;
-    private javax.swing.JLabel LHabitat;
-    private javax.swing.JLabel LPeridiocidad1;
-    private javax.swing.JLabel LTipoComida;
-    private javax.swing.JLabel LsubespecieAnimal;
-    private javax.swing.JSpinner SCantidadComida1;
-    private javax.swing.JSpinner SPeriodicidad;
-    private javax.swing.JSpinner SPrecioMedio;
-    private javax.swing.JTextField THabitat;
-    private javax.swing.JTextField TTipoComida;
+    private javax.swing.JLabel LDesc;
+    private javax.swing.JLabel LNombre;
     private javax.swing.JToggleButton addCuidado;
-    private javax.swing.JComboBox<String> jComboBoxjAnimal;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextArea jTADesc;
+    private javax.swing.JTextField jTNombre;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

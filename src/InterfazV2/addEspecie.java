@@ -4,8 +4,6 @@
  */
 package InterfazV2;
 
-import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import util.Conexion;

@@ -259,12 +259,10 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
                     rs.updateInt("especie",especie);
                     rs.updateFloat("peso",peso);
                     rs.insertRow();
-                    //users.add(user);
                     JOptionPane.showMessageDialog(null, "Animal añadido correctamente");
                     TNombreAnimal.setText("");
                     SPesoAnimal.setValue(0);
                     modelo.addRow(new Object[] {nombre,nombreEsp,peso});
-
                 }
                 else{
                     JOptionPane.showMessageDialog(null, "El animal ya existe");

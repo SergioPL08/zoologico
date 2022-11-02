@@ -1,13 +1,14 @@
 package InterfazV2;
 
 
-import interfazFicheros.*;
-import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import util.utilities;
+import javax.swing.table.DefaultTableModel;
+import util.Conexion;
 import zoo.*;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -19,27 +20,27 @@ import zoo.*;
  * @author sergio
  */
 public class addEspecialidad extends javax.swing.JFrame {
-    ArrayList<Animal> lista;
     ArrayList<Especialidad> especialidades;
+    Conexion miConexion;
+    DefaultTableModel modelo;
     /**
      * Creates new form addEspecialidad
      */
     public addEspecialidad() {
         initComponents();
-        lista = new ArrayList<Animal>();
         especialidades = new ArrayList<Especialidad>(); 
-        try{
-            lista = utilities.cargar(lista, "Animales.dat");
-            String [] listaAnimales = new String[lista.size()];
-            listaAnimales = utilities.rellenator(lista,"Animales.dat");
-            jComboBoxAnimales.setModel(new javax.swing.DefaultComboBoxModel(listaAnimales));
+        miConexion = new Conexion("localhost","3306","zoologico","zoo","pepe");
+        //Rellenamos la tabla de especialidades con los datos de la base de datos
+        modelo = (DefaultTableModel) jTable1.getModel();
+        try {
+            String consulta = "SELECT * FROM especialidad";
+            ResultSet rsTabla = miConexion.getSelect(consulta);
+            while(rsTabla.next()){
+                modelo.addRow(new Object[] {rsTabla.getString(2),rsTabla.getString(3)});
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(tableAnimal.class.getName()).log(Level.SEVERE, null, ex);
         }
-        catch(IOException f){
-                JOptionPane.showMessageDialog(null,f.getMessage());
-            }
-            catch (ClassNotFoundException ex) {
-                Logger.getLogger(addCuidados.class.getName()).log(Level.SEVERE, null, ex);
-            }
         
     }
 
@@ -55,15 +56,12 @@ public class addEspecialidad extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         addEspecialidad = new javax.swing.JLabel();
-        JLSalarioMedio = new javax.swing.JLabel();
-        jTFNombreEsp = new javax.swing.JTextField();
+        JLDescrip = new javax.swing.JLabel();
         JLNombreEsp = new javax.swing.JLabel();
-        jSpinnerSalarioMedioEsp = new javax.swing.JSpinner();
-        JLNombre1 = new javax.swing.JLabel();
-        jSpinnerNPeligrosidad = new javax.swing.JSpinner();
         jButtonAdd = new javax.swing.JButton();
-        JLNombre2 = new javax.swing.JLabel();
-        jComboBoxAnimales = new javax.swing.JComboBox<>();
+        jTFNombreEsp = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTADesc = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -73,8 +71,8 @@ public class addEspecialidad extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(800, 600));
         java.awt.GridBagLayout jPanel1Layout = new java.awt.GridBagLayout();
-        jPanel1Layout.columnWidths = new int[] {0, 35, 0};
-        jPanel1Layout.rowHeights = new int[] {0, 32, 0, 32, 0, 32, 0, 32, 0, 32, 0};
+        jPanel1Layout.columnWidths = new int[] {0, 35, 0, 35, 0};
+        jPanel1Layout.rowHeights = new int[] {0, 32, 0, 32, 0, 32, 0, 32, 0};
         jPanel1.setLayout(jPanel1Layout);
 
         addEspecialidad.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
@@ -87,22 +85,14 @@ public class addEspecialidad extends javax.swing.JFrame {
         gridBagConstraints.gridwidth = 3;
         jPanel1.add(addEspecialidad, gridBagConstraints);
 
-        JLSalarioMedio.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
-        JLSalarioMedio.setForeground(new java.awt.Color(0, 153, 51));
-        JLSalarioMedio.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        JLSalarioMedio.setText("Salario Medio");
+        JLDescrip.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        JLDescrip.setForeground(new java.awt.Color(0, 153, 51));
+        JLDescrip.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        JLDescrip.setText("Descripcion");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
-        jPanel1.add(JLSalarioMedio, gridBagConstraints);
-
-        jTFNombreEsp.setBackground(new java.awt.Color(255, 255, 255));
-        jTFNombreEsp.setForeground(new java.awt.Color(0, 0, 0));
-        jTFNombreEsp.setPreferredSize(new java.awt.Dimension(100, 24));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        jPanel1.add(jTFNombreEsp, gridBagConstraints);
+        jPanel1.add(JLDescrip, gridBagConstraints);
 
         JLNombreEsp.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
         JLNombreEsp.setForeground(new java.awt.Color(0, 153, 51));
@@ -113,30 +103,7 @@ public class addEspecialidad extends javax.swing.JFrame {
         gridBagConstraints.gridy = 2;
         jPanel1.add(JLNombreEsp, gridBagConstraints);
 
-        jSpinnerSalarioMedioEsp.setModel(new javax.swing.SpinnerNumberModel(0.0f, 0.0f, null, 1.0f));
-        jSpinnerSalarioMedioEsp.setPreferredSize(new java.awt.Dimension(100, 26));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 4;
-        jPanel1.add(jSpinnerSalarioMedioEsp, gridBagConstraints);
-
-        JLNombre1.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
-        JLNombre1.setForeground(new java.awt.Color(0, 153, 51));
-        JLNombre1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        JLNombre1.setText("Animal");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
-        jPanel1.add(JLNombre1, gridBagConstraints);
-
-        jSpinnerNPeligrosidad.setModel(new javax.swing.SpinnerNumberModel(0.0f, 0.0f, null, 1.0f));
-        jSpinnerNPeligrosidad.setPreferredSize(new java.awt.Dimension(100, 26));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 6;
-        jPanel1.add(jSpinnerNPeligrosidad, gridBagConstraints);
-
-        jButtonAdd.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonAdd.setForeground(new java.awt.Color(51, 51, 51));
         jButtonAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.png"))); // NOI18N
         jButtonAdd.setText("Añadir");
         jButtonAdd.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -147,36 +114,46 @@ public class addEspecialidad extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.gridwidth = 3;
         jPanel1.add(jButtonAdd, gridBagConstraints);
 
-        JLNombre2.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
-        JLNombre2.setForeground(new java.awt.Color(0, 153, 51));
-        JLNombre2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        JLNombre2.setText("Nivel Peligrosidad");
+        jTFNombreEsp.setBackground(new java.awt.Color(255, 255, 255));
+        jTFNombreEsp.setForeground(new java.awt.Color(0, 0, 0));
+        jTFNombreEsp.setPreferredSize(new java.awt.Dimension(100, 24));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        jPanel1.add(jTFNombreEsp, gridBagConstraints);
+
+        jTADesc.setBackground(new java.awt.Color(255, 255, 255));
+        jTADesc.setColumns(20);
+        jTADesc.setForeground(new java.awt.Color(51, 51, 51));
+        jTADesc.setRows(5);
+        jScrollPane2.setViewportView(jTADesc);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
-        jPanel1.add(JLNombre2, gridBagConstraints);
-
-        jComboBoxAnimales.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 8;
-        jPanel1.add(jComboBoxAnimales, gridBagConstraints);
+        gridBagConstraints.gridwidth = 3;
+        jPanel1.add(jScrollPane2, gridBagConstraints);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Nombre", "Descripcion"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -219,25 +196,39 @@ public class addEspecialidad extends javax.swing.JFrame {
 
     private void jButtonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddActionPerformed
         String nombre = jTFNombreEsp.getText();
-        float nPeligr = (float) jSpinnerNPeligrosidad.getValue();
-        float salario = (float) jSpinnerSalarioMedioEsp.getValue();
-        Animal animal = lista.get(jComboBoxAnimales.getSelectedIndex());
+        String desc = jTADesc.getText();
         if(nombre.equals("")){
             JOptionPane.showMessageDialog(null, "Introduce el nombre");
         }
         else{
-            Especialidad esp = new Especialidad (nombre,salario,nPeligr,animal);
-            jTFNombreEsp.setText("");
-            jSpinnerNPeligrosidad.setValue(0);
-            jSpinnerSalarioMedioEsp.setValue(0);
+            Especialidad esp = new Especialidad (nombre,desc);
             especialidades.add(esp);
-            JOptionPane.showMessageDialog(null, "Especialidad añadida correctamente");
             try{
-                utilities.guardar(especialidades,"Especialidades.dat");
+                String consulta = "SELECT * FROM especialidad WHERE nombre='"+nombre+"' AND descripcion='"+desc+"'";
+                ResultSet rs1 = miConexion.comprobarDatos(consulta);
+                if(rs1==null){
+                    ResultSet rs = miConexion.getSelect("Select * from especialidad");
+                    //Irse a la ultima linea de la tabla
+                    rs.moveToInsertRow();
+                    //
+                    rs.updateString("nombre",nombre);
+                    rs.updateString("descripcion",desc);
+                    rs.insertRow();
+                    //users.add(user);
+                    JOptionPane.showMessageDialog(null, "Especialidad añadida correctamente");
+                    modelo.addRow(new Object[] {nombre,desc});
+                    jTFNombreEsp.setText("");
+                    jTADesc.setText("");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "La especialidad ya existe");
+                }   
+            } catch (SQLException ex) {
+                Logger.getLogger(addEspecialidad.class.getName()).log(Level.SEVERE, null, ex);
             }
-            catch(IOException ex){
-                JOptionPane.showMessageDialog(null, "Error al guardar el fichero");
-            }
+            
+            
+            
         }
     }//GEN-LAST:event_jButtonAddActionPerformed
 
@@ -278,18 +269,15 @@ public class addEspecialidad extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel JLNombre1;
-    private javax.swing.JLabel JLNombre2;
+    private javax.swing.JLabel JLDescrip;
     private javax.swing.JLabel JLNombreEsp;
-    private javax.swing.JLabel JLSalarioMedio;
     private javax.swing.JLabel addEspecialidad;
     private javax.swing.JButton jButtonAdd;
-    private javax.swing.JComboBox<String> jComboBoxAnimales;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSpinner jSpinnerNPeligrosidad;
-    private javax.swing.JSpinner jSpinnerSalarioMedioEsp;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextArea jTADesc;
     private javax.swing.JTextField jTFNombreEsp;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables

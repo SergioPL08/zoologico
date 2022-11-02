@@ -1,15 +1,14 @@
 package InterfazV2;
 
-import interfazFicheros.*;
-import java.io.IOException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import util.utilities;
+import javax.swing.table.DefaultTableModel;
+import util.Conexion;
 import zoo.Especialidad;
-import zoo.Cuidador;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -22,24 +21,43 @@ import zoo.Cuidador;
  */
 public class addCuidadores extends javax.swing.JFrame {
     ArrayList<Especialidad> especialidades;
+    Conexion miConexion;
+    DefaultTableModel modelo;
     /**
      * Creates new form addEspecialidad
      */
     public addCuidadores() {
         initComponents();
         especialidades = new ArrayList<Especialidad>();
-        try{
-            especialidades = utilities.cargar(especialidades, "Especialidades.dat");
-            String [] listaEspecialidades = new String[especialidades.size()];
-            listaEspecialidades = utilities.rellenator(especialidades,"Especialidades.dat");
-            jComboBoxEspecialidad.setModel(new javax.swing.DefaultComboBoxModel(listaEspecialidades));
+        miConexion = new Conexion("localhost","3306","zoologico","zoo","pepe");
+        //Rellenamos la tabla de animales con los animales de la base de datos
+        modelo = (DefaultTableModel) jTable1.getModel();
+        try {
+            String consulta = "SELECT persona.NOMBRE,persona.APELLIDO,persona.SALARIO,persona.TELEFONO,especialidad.nombre as ESPECIALIDAD FROM persona,especialidad WHERE persona.id_especialidad=especialidad.id ";
+            ResultSet rsTabla = miConexion.getSelect(consulta);
+            //System.out.println(miConexion.getSelect(consulta));
+            while(rsTabla.next()){
+                modelo.addRow(new Object[] {rsTabla.getString(1),rsTabla.getString(2),rsTabla.getFloat(3),rsTabla.getString(4),rsTabla.getString(5)});
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(tableAnimal.class.getName()).log(Level.SEVERE, null, ex);
         }
-        catch(IOException f){
-                JOptionPane.showMessageDialog(null,f.getMessage());
+        //Rellenamos la caja de especialidades
+        try{
+            String consultaEspecialidad = "SELECT * FROM especialidad";
+            DefaultComboBoxModel model = new DefaultComboBoxModel();
+            ResultSet rsEspecialidad = miConexion.getSelect(consultaEspecialidad);
+            while (rsEspecialidad.next()){
+                Especialidad esp = new Especialidad(rsEspecialidad.getInt(1),rsEspecialidad.getString(2));
+                especialidades.add(esp);
+                model.addElement(esp);
+                //System.out.println(rsEspecialidad.getString(1)+rsEspecialidad.getString(2));
             }
-            catch (ClassNotFoundException ex) {
-                Logger.getLogger(addCuidados.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            jComboBoxEspecialidad.setModel(model);
+        }
+        catch(SQLException ex){
+            JOptionPane.showMessageDialog(null,ex.getMessage());
+        }
         
     }
     /**
@@ -56,22 +74,26 @@ public class addCuidadores extends javax.swing.JFrame {
         addCuidador = new javax.swing.JLabel();
         JLNombre = new javax.swing.JLabel();
         jTFNombreCuidador = new javax.swing.JTextField();
-        JLApellidos = new javax.swing.JLabel();
-        jTFApe = new javax.swing.JTextField();
+        JLSalario = new javax.swing.JLabel();
+        jTFTel = new javax.swing.JTextField();
         JLEspecialidad = new javax.swing.JLabel();
         JLNum1 = new javax.swing.JLabel();
         jComboBoxEspecialidad = new javax.swing.JComboBox<>();
         jButtonAdd = new javax.swing.JButton();
-        jButtonCargarCuidadores = new javax.swing.JButton();
-        jSpinnerNumCuidador = new javax.swing.JSpinner();
+        JLApellidos = new javax.swing.JLabel();
+        jTFApe = new javax.swing.JTextField();
+        jSSalario = new javax.swing.JSpinner();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         capa0.setBackground(new java.awt.Color(255, 255, 255));
         capa0.setPreferredSize(new java.awt.Dimension(800, 600));
         java.awt.GridBagLayout capa0Layout = new java.awt.GridBagLayout();
-        capa0Layout.columnWidths = new int[] {0, 35, 0};
-        capa0Layout.rowHeights = new int[] {0, 32, 0, 32, 0, 32, 0, 32, 0, 32, 0};
+        capa0Layout.columnWidths = new int[] {0, 35, 0, 35, 0};
+        capa0Layout.rowHeights = new int[] {0, 32, 0, 32, 0, 32, 0, 32, 0, 32, 0, 32, 0};
         capa0.setLayout(capa0Layout);
 
         addCuidador.setBackground(new java.awt.Color(255, 255, 255));
@@ -103,6 +125,63 @@ public class addCuidadores extends javax.swing.JFrame {
         gridBagConstraints.gridy = 2;
         capa0.add(jTFNombreCuidador, gridBagConstraints);
 
+        JLSalario.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        JLSalario.setForeground(new java.awt.Color(0, 153, 51));
+        JLSalario.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        JLSalario.setText("Salario");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        capa0.add(JLSalario, gridBagConstraints);
+
+        jTFTel.setBackground(new java.awt.Color(255, 255, 255));
+        jTFTel.setForeground(new java.awt.Color(0, 0, 0));
+        jTFTel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(0, 0, 0))); // NOI18N
+        jTFTel.setPreferredSize(new java.awt.Dimension(100, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 8;
+        capa0.add(jTFTel, gridBagConstraints);
+
+        JLEspecialidad.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        JLEspecialidad.setForeground(new java.awt.Color(0, 153, 51));
+        JLEspecialidad.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        JLEspecialidad.setText("Especialidad");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 10;
+        capa0.add(JLEspecialidad, gridBagConstraints);
+
+        JLNum1.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        JLNum1.setForeground(new java.awt.Color(0, 153, 51));
+        JLNum1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        JLNum1.setText("Telefono");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 8;
+        capa0.add(JLNum1, gridBagConstraints);
+
+        jComboBoxEspecialidad.setPreferredSize(new java.awt.Dimension(100, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 10;
+        capa0.add(jComboBoxEspecialidad, gridBagConstraints);
+
+        jButtonAdd.setForeground(new java.awt.Color(51, 51, 51));
+        jButtonAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.png"))); // NOI18N
+        jButtonAdd.setText("Añadir");
+        jButtonAdd.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAddActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridwidth = 3;
+        capa0.add(jButtonAdd, gridBagConstraints);
+
         JLApellidos.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         JLApellidos.setForeground(new java.awt.Color(0, 153, 51));
         JLApellidos.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -121,74 +200,61 @@ public class addCuidadores extends javax.swing.JFrame {
         gridBagConstraints.gridy = 4;
         capa0.add(jTFApe, gridBagConstraints);
 
-        JLEspecialidad.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        JLEspecialidad.setForeground(new java.awt.Color(0, 153, 51));
-        JLEspecialidad.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        JLEspecialidad.setText("Especialidad");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
-        capa0.add(JLEspecialidad, gridBagConstraints);
-
-        JLNum1.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        JLNum1.setForeground(new java.awt.Color(0, 153, 51));
-        JLNum1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        JLNum1.setText("Nº Cuidador");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        capa0.add(JLNum1, gridBagConstraints);
-
-        jComboBoxEspecialidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBoxEspecialidad.setPreferredSize(new java.awt.Dimension(100, 20));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 8;
-        capa0.add(jComboBoxEspecialidad, gridBagConstraints);
-
-        jButtonAdd.setForeground(new java.awt.Color(255, 255, 255));
-        jButtonAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.png"))); // NOI18N
-        jButtonAdd.setText("Añadir");
-        jButtonAdd.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButtonAdd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonAddActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
-        capa0.add(jButtonAdd, gridBagConstraints);
-
-        jButtonCargarCuidadores.setForeground(new java.awt.Color(255, 255, 255));
-        jButtonCargarCuidadores.setText("Cargar");
-        jButtonCargarCuidadores.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCargarCuidadoresActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 10;
-        capa0.add(jButtonCargarCuidadores, gridBagConstraints);
-
-        jSpinnerNumCuidador.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
-        jSpinnerNumCuidador.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(0, 0, 0))); // NOI18N
-        jSpinnerNumCuidador.setPreferredSize(new java.awt.Dimension(100, 26));
+        jSSalario.setModel(new javax.swing.SpinnerNumberModel(0.0f, 0.0f, null, 1.0f));
+        jSSalario.setPreferredSize(new java.awt.Dimension(100, 26));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 6;
-        capa0.add(jSpinnerNumCuidador, gridBagConstraints);
+        capa0.add(jSSalario, gridBagConstraints);
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nombre", "Apellidos", "Salario", "Telefono", "Especialidad"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.String.class, java.lang.Object.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(capa0, javax.swing.GroupLayout.PREFERRED_SIZE, 384, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(capa0, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(capa0, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(capa0, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -196,34 +262,59 @@ public class addCuidadores extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddActionPerformed
-        String nombre = JLNombre.getText();
-        String ape = JLApellidos.getText();
-        int num = (int)jSpinnerNumCuidador.getValue();
+        String nombre = jTFNombreCuidador.getText();
+        String ape = jTFApe.getText();
+        float salario = (float)jSSalario.getValue();
+        String num = jTFTel.getText();
         Especialidad esp = especialidades.get(jComboBoxEspecialidad.getSelectedIndex());
+        int especialidad = esp.getId();
         if(nombre.equals("")){
             JOptionPane.showMessageDialog(null, "Introduce el nombre");
         }
         else if(ape.equals("")){
             JOptionPane.showMessageDialog(null, "Introduce el apellido");
         }
-        else if(num==0){
-            JOptionPane.showMessageDialog(null, "Introduce el nombre");
+        else if(salario==0){
+            JOptionPane.showMessageDialog(null, "El salario no puede ser 0");
+        }
+        else if(num.equals("")){
+            JOptionPane.showMessageDialog(null, "Introduce el número de teléfono");
+        }
+        else if(num.length()!=9){
+            JOptionPane.showMessageDialog(null, "Introduce correctamente número de teléfono");
         }
         else{
-            Cuidador cuidador = new Cuidador(nombre,ape,num,esp);
-            JOptionPane.showMessageDialog(null,"Cuidado añadido correctamente");
             try {
-                utilities.guardar(especialidades, "Cuidadores.dat");
-                JOptionPane.showMessageDialog(null, "Archivo guardado correctamente");            
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "Error al guardar el fichero");            
+                String consulta = "SELECT NOMBRE,APELLIDO,TELEFONO,id_especialidad FROM persona where NOMBRE='"+nombre+"' AND APELLIDO='"+ape+"' AND TELEFONO='"+num+"' AND id_especialidad="+especialidad;
+                ResultSet rs1 =miConexion.comprobarDatos(consulta);
+                //System.out.println(rs1);
+                if(rs1==null){
+                    ResultSet rs = miConexion.getSelect("Select * from persona");
+                    //Irse a la ultima linea de la tabla persona
+                    rs.moveToInsertRow();
+                    rs.updateString("nombre",nombre);
+                    rs.updateString("apellido",ape);
+                    rs.updateFloat("salario",salario);
+                    rs.updateString("telefono", num);
+                    rs.updateInt("id_especialidad",especialidad);
+                    rs.insertRow();
+                    rs.moveToInsertRow();
+                    JOptionPane.showMessageDialog(null, "Cuidador añadido correctamente");
+                    jTFNombreCuidador.setText("");
+                    jTFApe.setText("");
+                    jTFTel.setText("");
+                    jSSalario.setValue(0);
+                    modelo.addRow(new Object[] {nombre,ape,salario,num,esp});
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "El cuiador ya existe");
+                }
+            
+        }   catch (SQLException ex) {
+                Logger.getLogger(addCuidadores.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_jButtonAddActionPerformed
-
-    private void jButtonCargarCuidadoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCargarCuidadoresActionPerformed
-        
-    }//GEN-LAST:event_jButtonCargarCuidadoresActionPerformed
 
     /**
      * @param args the command line arguments
@@ -266,13 +357,17 @@ public class addCuidadores extends javax.swing.JFrame {
     private javax.swing.JLabel JLEspecialidad;
     private javax.swing.JLabel JLNombre;
     private javax.swing.JLabel JLNum1;
+    private javax.swing.JLabel JLSalario;
     private javax.swing.JLabel addCuidador;
     private javax.swing.JPanel capa0;
     private javax.swing.JButton jButtonAdd;
-    private javax.swing.JButton jButtonCargarCuidadores;
     private javax.swing.JComboBox<String> jComboBoxEspecialidad;
-    private javax.swing.JSpinner jSpinnerNumCuidador;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JSpinner jSSalario;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTFApe;
     private javax.swing.JTextField jTFNombreCuidador;
+    private javax.swing.JTextField jTFTel;
+    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }
