@@ -36,12 +36,14 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
         animales = new ArrayList<Animal>();
         miConexion = new Conexion("localhost","3306","zoologico","zoo","pepe");
         //Rellenamos la tabla de animales con los animales de la base de datos
-        modelo = (DefaultTableModel) jTable1.getModel();
+        modelo = (DefaultTableModel) jTablaAnimales.getModel();
         try {
-            String consulta = "SELECT animal.NOMBRE,animal.PESO,especie.NOMBRE_ESPECIE FROM animal, especie WHERE animal.ESPECIE=especie.ID_ESPECIE";
+            String consulta = "SELECT animal.NOMBRE,animal.PESO,especie.NOMBRE_ESPECIE,ESPECIE.id_especie FROM animal, especie WHERE animal.ESPECIE=especie.ID_ESPECIE";
+            System.out.println(consulta);
             ResultSet rsTabla = miConexion.getSelect(consulta);
             while(rsTabla.next()){
-                modelo.addRow(new Object[] {rsTabla.getString(1),rsTabla.getString(3),rsTabla.getFloat(2)});
+                Especie esp = new Especie(rsTabla.getInt(4),rsTabla.getString(3));
+                modelo.addRow(new Object[] {rsTabla.getString(1),esp,rsTabla.getFloat(2)});
             }
         } catch (SQLException ex) {
             Logger.getLogger(tableAnimal.class.getName()).log(Level.SEVERE, null, ex);
@@ -77,31 +79,47 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTablaAnimales = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         LnombreAnimal = new javax.swing.JLabel();
         LespecieAnimal = new javax.swing.JLabel();
         LpesoAnimal = new javax.swing.JLabel();
         TNombreAnimal = new javax.swing.JTextField();
         SPesoAnimal = new javax.swing.JSpinner();
-        JButtonAddAnimal = new javax.swing.JToggleButton();
         jLabel1 = new javax.swing.JLabel();
         jComboBoxEspecie = new javax.swing.JComboBox<>();
+        jToolBar1 = new javax.swing.JToolBar();
+        JButtonAddAnimal = new javax.swing.JToggleButton();
+        JButtonEditAnimal = new javax.swing.JToggleButton();
+        JButtonRemoveAnimal = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTablaAnimales.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
                 "Nombre", "Especie", "Peso"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Object.class, java.lang.Float.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jTablaAnimales.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                selectRow(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTablaAnimales);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -173,23 +191,6 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
         gridBagConstraints.gridy = 6;
         jPanel2.add(SPesoAnimal, gridBagConstraints);
 
-        JButtonAddAnimal.setBackground(new java.awt.Color(51, 51, 51));
-        JButtonAddAnimal.setForeground(new java.awt.Color(255, 255, 255));
-        JButtonAddAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.png"))); // NOI18N
-        JButtonAddAnimal.setText("Añadir");
-        JButtonAddAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        JButtonAddAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
-        JButtonAddAnimal.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JButtonAddAnimalActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.gridwidth = 3;
-        jPanel2.add(JButtonAddAnimal, gridBagConstraints);
-
         jLabel1.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(51, 51, 51));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -207,22 +208,66 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
         gridBagConstraints.gridy = 4;
         jPanel2.add(jComboBoxEspecie, gridBagConstraints);
 
+        jToolBar1.setBackground(new java.awt.Color(204, 204, 204));
+        jToolBar1.setRollover(true);
+
+        JButtonAddAnimal.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonAddAnimal.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonAddAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.png"))); // NOI18N
+        JButtonAddAnimal.setText("Añadir");
+        JButtonAddAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonAddAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonAddAnimal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JButtonAddAnimalActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(JButtonAddAnimal);
+
+        JButtonEditAnimal.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonEditAnimal.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonEditAnimal.setText("Editar");
+        JButtonEditAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonEditAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonEditAnimal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JButtonEditAnimalActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(JButtonEditAnimal);
+
+        JButtonRemoveAnimal.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonRemoveAnimal.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonRemoveAnimal.setText("Eliminar");
+        JButtonRemoveAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonRemoveAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonRemoveAnimal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JButtonRemoveAnimalActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(JButtonRemoveAnimal);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 461, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -274,6 +319,22 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
         }
     }//GEN-LAST:event_JButtonAddAnimalActionPerformed
 
+    private void JButtonEditAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEditAnimalActionPerformed
+        
+    }//GEN-LAST:event_JButtonEditAnimalActionPerformed
+
+    private void JButtonRemoveAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonRemoveAnimalActionPerformed
+        
+    }//GEN-LAST:event_JButtonRemoveAnimalActionPerformed
+
+    private void selectRow(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectRow
+        int fila = jTablaAnimales.getSelectedRow();
+        TNombreAnimal.setText((String)jTablaAnimales.getValueAt(fila,0));
+        Especie esp = new Especie ((Especie)jTablaAnimales.getValueAt(fila, 1));
+        System.out.println(esp);
+        jComboBoxEspecie.setSelectedItem(esp);
+    }//GEN-LAST:event_selectRow
+
     /**
      * @param args the command line arguments
      */
@@ -314,6 +375,8 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton JButtonAddAnimal;
+    private javax.swing.JToggleButton JButtonEditAnimal;
+    private javax.swing.JToggleButton JButtonRemoveAnimal;
     private javax.swing.JLabel LespecieAnimal;
     private javax.swing.JLabel LnombreAnimal;
     private javax.swing.JLabel LpesoAnimal;
@@ -324,6 +387,7 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTablaAnimales;
+    private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
 }

@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Login;
+import InterfazV2.menuPrincipal;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -156,6 +157,10 @@ public class PanelLogin extends javax.swing.JFrame {
             }
             else{
                 JOptionPane.showMessageDialog(null, "Usuario correcto");
+                menuPrincipal mp = new menuPrincipal();
+                mp.setVisible(true);
+                this.setVisible(false);
+                
             }
             
             
