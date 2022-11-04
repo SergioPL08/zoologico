@@ -27,36 +27,37 @@ public class addCuidadores extends javax.swing.JFrame {
      * Creates new form addEspecialidad
      */
     public addCuidadores() {
-        initComponents();
-        especialidades = new ArrayList<Especialidad>();
-        miConexion = new Conexion("localhost","3306","zoologico","zoo","pepe");
-        //Rellenamos la tabla de animales con los animales de la base de datos
-        modelo = (DefaultTableModel) jTable1.getModel();
-        try {
+        try{
+            initComponents();
+            especialidades = new ArrayList<Especialidad>();
+            miConexion = new Conexion("localhost","3306","zoologico","zoo","pepe");
+            //Rellenamos la tabla de animales con los animales de la base de datos
+            modelo = (DefaultTableModel) jTable1.getModel();
             String consulta = "SELECT persona.NOMBRE,persona.APELLIDO,persona.SALARIO,persona.TELEFONO,especialidad.nombre as ESPECIALIDAD FROM persona,especialidad WHERE persona.id_especialidad=especialidad.id ";
             ResultSet rsTabla = miConexion.getSelect(consulta);
             //System.out.println(miConexion.getSelect(consulta));
             while(rsTabla.next()){
                 modelo.addRow(new Object[] {rsTabla.getString(1),rsTabla.getString(2),rsTabla.getFloat(3),rsTabla.getString(4),rsTabla.getString(5)});
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(tableAnimal.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        //Rellenamos la caja de especialidades
-        try{
-            String consultaEspecialidad = "SELECT * FROM especialidad";
-            DefaultComboBoxModel model = new DefaultComboBoxModel();
-            ResultSet rsEspecialidad = miConexion.getSelect(consultaEspecialidad);
-            while (rsEspecialidad.next()){
-                Especialidad esp = new Especialidad(rsEspecialidad.getInt(1),rsEspecialidad.getString(2));
-                especialidades.add(esp);
-                model.addElement(esp);
-                //System.out.println(rsEspecialidad.getString(1)+rsEspecialidad.getString(2));
+            //Rellenamos la caja de especialidades
+            try{
+                String consultaEspecialidad = "SELECT * FROM especialidad";
+                DefaultComboBoxModel model = new DefaultComboBoxModel();
+                ResultSet rsEspecialidad = miConexion.getSelect(consultaEspecialidad);
+                while (rsEspecialidad.next()){
+                    Especialidad esp = new Especialidad(rsEspecialidad.getInt(1),rsEspecialidad.getString(2));
+                    especialidades.add(esp);
+                    model.addElement(esp);
+                    //System.out.println(rsEspecialidad.getString(1)+rsEspecialidad.getString(2));
+                }
+                jComboBoxEspecialidad.setModel(model);
             }
-            jComboBoxEspecialidad.setModel(model);
+            catch(SQLException ex){
+                JOptionPane.showMessageDialog(null,ex.getMessage());
+            }
         }
         catch(SQLException ex){
-            JOptionPane.showMessageDialog(null,ex.getMessage());
+            Logger.getLogger(addCuidadores.class.getName()).log(Level.SEVERE,null, ex);
         }
         
     }

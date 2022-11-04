@@ -30,19 +30,20 @@ public class addCuidados extends javax.swing.JFrame {
      * Creates new form addCuid
      */
     public addCuidados() {
-        initComponents();
-        cuidados = new ArrayList<Cuidados>(); 
-        miConexion = new Conexion("localhost","3306","zoologico","zoo","pepe");
-        //Rellenamos la tabla de cuidados con los datos de la base de datos
-        modelo = (DefaultTableModel) jTable1.getModel();
         try {
+            initComponents();
+            cuidados = new ArrayList<Cuidados>();
+            miConexion = new Conexion("localhost","3306","zoologico","zoo","pepe");
+            //Rellenamos la tabla de cuidados con los datos de la base de datos
+            modelo = (DefaultTableModel) jTable1.getModel();
+            
             String consulta = "SELECT * FROM cuidado";
             ResultSet rsTabla = miConexion.getSelect(consulta);
             while(rsTabla.next()){
                 modelo.addRow(new Object[] {rsTabla.getString(2),rsTabla.getString(3)});
             }
         } catch (SQLException ex) {
-            Logger.getLogger(tableAnimal.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(addCuidados.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }

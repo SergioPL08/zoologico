@@ -27,19 +27,20 @@ public class addEspecialidad extends javax.swing.JFrame {
      * Creates new form addEspecialidad
      */
     public addEspecialidad() {
-        initComponents();
-        especialidades = new ArrayList<Especialidad>(); 
-        miConexion = new Conexion("localhost","3306","zoologico","zoo","pepe");
-        //Rellenamos la tabla de especialidades con los datos de la base de datos
-        modelo = (DefaultTableModel) jTable1.getModel();
         try {
+            initComponents();
+            especialidades = new ArrayList<Especialidad>();
+            miConexion = new Conexion("localhost","3306","zoologico","zoo","pepe");
+            //Rellenamos la tabla de especialidades con los datos de la base de datos
+            modelo = (DefaultTableModel) jTable1.getModel();
+            
             String consulta = "SELECT * FROM especialidad";
             ResultSet rsTabla = miConexion.getSelect(consulta);
             while(rsTabla.next()){
                 modelo.addRow(new Object[] {rsTabla.getString(2),rsTabla.getString(3)});
             }
         } catch (SQLException ex) {
-            Logger.getLogger(tableAnimal.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(addEspecialidad.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }

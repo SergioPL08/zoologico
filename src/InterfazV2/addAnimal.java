@@ -31,38 +31,42 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
      * Creates new form addAnimañ
      */
     public addAnimal() {
-        initComponents();
-        especies = new ArrayList();
-        animales = new ArrayList<Animal>();
-        miConexion = new Conexion("localhost","3306","zoologico","zoo","pepe");
-        //Rellenamos la tabla de animales con los animales de la base de datos
-        modelo = (DefaultTableModel) jTablaAnimales.getModel();
-        try {
-            String consulta = "SELECT animal.NOMBRE,animal.PESO,especie.NOMBRE_ESPECIE,ESPECIE.id_especie FROM animal, especie WHERE animal.ESPECIE=especie.ID_ESPECIE";
-            System.out.println(consulta);
+        try{
+            initComponents();
+            especies = new ArrayList();
+            animales = new ArrayList<Animal>();
+            miConexion = new Conexion("localhost","3306","zoologico","zoo","pepe");
+            //Rellenamos la tabla de animales con los animales de la base de datos
+            modelo = (DefaultTableModel) jTablaAnimales.getModel();
+            String consulta = "SELECT animal.NOMBRE,animal.PESO,especie.NOMBRE_ESPECIE,ESPECIE.id_especie,ID_ANIMAL FROM animal, especie WHERE animal.ESPECIE=especie.ID_ESPECIE ORDER BY id_animal";
+            //System.out.println(consulta);
             ResultSet rsTabla = miConexion.getSelect(consulta);
             while(rsTabla.next()){
                 Especie esp = new Especie(rsTabla.getInt(4),rsTabla.getString(3));
-                modelo.addRow(new Object[] {rsTabla.getString(1),esp,rsTabla.getFloat(2)});
+                modelo.addRow(new Object[] {rsTabla.getInt(5),rsTabla.getString(1),esp,rsTabla.getFloat(2)});
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(tableAnimal.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        //Rellenamos la caja de especies
-        try{
-            String consultaEspecie = "SELECT * FROM especie";
-            DefaultComboBoxModel model = new DefaultComboBoxModel();
-            ResultSet rsEspecie = miConexion.getSelect(consultaEspecie);
-            while (rsEspecie.next()){
-                Especie esp = new Especie(rsEspecie.getInt(1),rsEspecie.getString(2));
-                especies.add(esp);
-                model.addElement(esp);
-                //System.out.println(rsEspecie.getInt(1)+rsEspecie.getString(2));
+            //Rellenamos la caja de especies
+            try{
+                String consultaEspecie = "SELECT * FROM especie";
+                DefaultComboBoxModel model = new DefaultComboBoxModel();
+                ResultSet rsEspecie = miConexion.getSelect(consultaEspecie);
+                while (rsEspecie.next()){
+                    Especie esp = new Especie(rsEspecie.getInt(1),rsEspecie.getString(2));
+                    especies.add(esp);
+                    model.addElement(esp);
+                    //System.out.println(rsEspecie.getInt(1)+rsEspecie.getString(2));
+                }
+                jComboBoxEspecie.setModel(model);
             }
-            jComboBoxEspecie.setModel(model);
+            catch(SQLException ex){
+                JOptionPane.showMessageDialog(null,ex.getMessage());
+            }
+            catch(java.lang.NullPointerException ex){
+                System.out.println("Abre el xamp xd");
+            }
         }
         catch(SQLException ex){
-                JOptionPane.showMessageDialog(null,ex.getMessage());
+                Logger.getLogger(addAnimal.class.getName()).log(Level.SEVERE,null, ex);
         }
         
     }
@@ -103,15 +107,22 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
 
             },
             new String [] {
-                "Nombre", "Especie", "Peso"
+                "Id", "Nombre", "Especie", "Peso"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Object.class, java.lang.Float.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Object.class, java.lang.Float.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         jTablaAnimales.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -120,6 +131,12 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
             }
         });
         jScrollPane1.setViewportView(jTablaAnimales);
+        if (jTablaAnimales.getColumnModel().getColumnCount() > 0) {
+            jTablaAnimales.getColumnModel().getColumn(0).setResizable(false);
+            jTablaAnimales.getColumnModel().getColumn(1).setResizable(false);
+            jTablaAnimales.getColumnModel().getColumn(2).setResizable(false);
+            jTablaAnimales.getColumnModel().getColumn(3).setResizable(false);
+        }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -214,9 +231,13 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
         JButtonAddAnimal.setBackground(new java.awt.Color(51, 51, 51));
         JButtonAddAnimal.setForeground(new java.awt.Color(0, 0, 0));
         JButtonAddAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.png"))); // NOI18N
-        JButtonAddAnimal.setText("Añadir");
         JButtonAddAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         JButtonAddAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonAddAnimal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                textButtonAdd(evt);
+            }
+        });
         JButtonAddAnimal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 JButtonAddAnimalActionPerformed(evt);
@@ -226,9 +247,14 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
 
         JButtonEditAnimal.setBackground(new java.awt.Color(51, 51, 51));
         JButtonEditAnimal.setForeground(new java.awt.Color(0, 0, 0));
-        JButtonEditAnimal.setText("Editar");
+        JButtonEditAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/InterfazV2/edit.png"))); // NOI18N
         JButtonEditAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         JButtonEditAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonEditAnimal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                textButtonEdit(evt);
+            }
+        });
         JButtonEditAnimal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 JButtonEditAnimalActionPerformed(evt);
@@ -238,9 +264,14 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
 
         JButtonRemoveAnimal.setBackground(new java.awt.Color(51, 51, 51));
         JButtonRemoveAnimal.setForeground(new java.awt.Color(0, 0, 0));
-        JButtonRemoveAnimal.setText("Eliminar");
+        JButtonRemoveAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/InterfazV2/delete.png"))); // NOI18N
         JButtonRemoveAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         JButtonRemoveAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonRemoveAnimal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                textButtonDelete(evt);
+            }
+        });
         JButtonRemoveAnimal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 JButtonRemoveAnimalActionPerformed(evt);
@@ -296,7 +327,7 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
                 ResultSet rs1 =miConexion.comprobarDatos(consulta);
                 //System.out.println(rs1);
                 if(rs1==null){
-                    ResultSet rs = miConexion.getSelect("Select * from animal");
+                    ResultSet rs = miConexion.getSelect("Select * from animal order");
                     //Irse a la ultima linea de la tabla
                     rs.moveToInsertRow();
                     //
@@ -304,10 +335,12 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
                     rs.updateInt("especie",especie);
                     rs.updateFloat("peso",peso);
                     rs.insertRow();
+                    ResultSet getId=miConexion.comprobarDatos("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='ZOO' AND TABLE_NAME='ANIMAL'");
+                    //System.out.println(getId);
                     JOptionPane.showMessageDialog(null, "Animal añadido correctamente");
                     TNombreAnimal.setText("");
                     SPesoAnimal.setValue(0);
-                    modelo.addRow(new Object[] {nombre,nombreEsp,peso});
+                    modelo.addRow(new Object[] {getId.getInt("AUTO_INCREMENT"),nombre,nombreEsp,peso});
                 }
                 else{
                     JOptionPane.showMessageDialog(null, "El animal ya existe");
@@ -320,20 +353,59 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
     }//GEN-LAST:event_JButtonAddAnimalActionPerformed
 
     private void JButtonEditAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEditAnimalActionPerformed
-        
+        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No podrás recuperar los datos anteriores","Editar animal",JOptionPane.YES_OPTION);
+        if(resp==0){
+            String nombre = TNombreAnimal.getText();
+            float peso = (float) SPesoAnimal.getValue();
+            int fila = jTablaAnimales.getSelectedRow();
+            int id=(int)jTablaAnimales.getValueAt(fila, 0);
+            String sentencia = "UPDATE ANIMAL SET NOMBRE='"+nombre+"', PESO="+peso+" WHERE ID_ANIMAL="+id;
+            if(miConexion.editTable(sentencia)==1){
+                modelo.setValueAt(TNombreAnimal.getText(), fila, 1);
+                modelo.setValueAt(SPesoAnimal.getValue(), fila, 3);
+                JOptionPane.showMessageDialog(null, "Animal editado correctamente");
+                TNombreAnimal.setText("");
+                SPesoAnimal.setValue(0);
+            }
+            
+        }
     }//GEN-LAST:event_JButtonEditAnimalActionPerformed
 
     private void JButtonRemoveAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonRemoveAnimalActionPerformed
-        
+        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro, manín? No vas a poder recuperar los datos eliminados","Eliminar animal",JOptionPane.YES_OPTION);
+        if(resp==0){
+            int id=(int)jTablaAnimales.getValueAt(jTablaAnimales.getSelectedRow(), 0);
+            int fila = jTablaAnimales.getSelectedRow();
+            String sentencia = "DELETE FROM ANIMAL WHERE ID_ANIMAL="+id;
+            if(miConexion.editTable(sentencia)==1){
+                modelo.removeRow(fila);
+                JOptionPane.showMessageDialog(null, "Animal elimado correctamente");
+                TNombreAnimal.setText("");
+                SPesoAnimal.setValue(0);
+            }
+        }
     }//GEN-LAST:event_JButtonRemoveAnimalActionPerformed
 
     private void selectRow(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectRow
         int fila = jTablaAnimales.getSelectedRow();
-        TNombreAnimal.setText((String)jTablaAnimales.getValueAt(fila,0));
-        Especie esp = new Especie ((Especie)jTablaAnimales.getValueAt(fila, 1));
-        System.out.println(esp);
-        jComboBoxEspecie.setSelectedItem(esp);
+        TNombreAnimal.setText((String)jTablaAnimales.getValueAt(fila,1));
+        Especie esp = new Especie ((Especie)jTablaAnimales.getValueAt(fila, 2));
+        //System.out.println(esp.getId());
+        jComboBoxEspecie.getModel().setSelectedItem(esp);
+        SPesoAnimal.setValue((Float)jTablaAnimales.getValueAt(fila,3));
     }//GEN-LAST:event_selectRow
+
+    private void textButtonDelete(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textButtonDelete
+        JButtonAddAnimal.setToolTipText("Eliminar");
+    }//GEN-LAST:event_textButtonDelete
+
+    private void textButtonEdit(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textButtonEdit
+        JButtonAddAnimal.setToolTipText("Editar");
+    }//GEN-LAST:event_textButtonEdit
+
+    private void textButtonAdd(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textButtonAdd
+        JButtonAddAnimal.setToolTipText("Añadir");
+    }//GEN-LAST:event_textButtonAdd
 
     /**
      * @param args the command line arguments
