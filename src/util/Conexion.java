@@ -100,6 +100,19 @@ public class Conexion {
         return null;
     }
     
+    public int editTable(String consulta){
+        try{
+            Conexion miConexion = new Conexion("localhost","3306","zoo","zoologico","pepe");
+            Connection conDB = miConexion.makeConnect();
+            Statement st = conDB.createStatement();
+            int rs = st.executeUpdate(consulta);
+            return rs;
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+            return -1;
+        }
+    }
+    
     public static ResultSet getTabla(int resultSetType, int resultSetConcurrence, String consulta){
         try {
             Conexion miConexion = new Conexion("localhost","3306","zoo","zoologico","pepe");
