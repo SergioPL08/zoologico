@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Sergio
@@ -58,6 +60,7 @@ public class Conexion {
         try {
             Conexion miConexion = new Conexion("localhost","3306","zoo","zoologico","pepe");
             Connection conDB = miConexion.makeConnect();
+            
             Statement st = conDB.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = st.executeQuery(consulta);
             if(!rs.first()){

@@ -21,6 +21,12 @@ public class Especialidad implements Serializable{
         this.desc = desc;
     }
     
+    public Especialidad(Especialidad esp){
+        this.id=esp.id;
+        this.nombreEspecialidad=esp.nombreEspecialidad;
+        this.desc=esp.desc;
+    }
+    
     public Especialidad(String nombreEspecialidad, String desc) {
         this.id = id;
         this.nombreEspecialidad = nombreEspecialidad;

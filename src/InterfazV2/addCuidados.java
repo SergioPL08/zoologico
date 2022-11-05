@@ -4,6 +4,8 @@ package InterfazV2;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,12 +37,12 @@ public class addCuidados extends javax.swing.JFrame {
             cuidados = new ArrayList<Cuidados>();
             miConexion = new Conexion("localhost","3306","zoologico","zoo","pepe");
             //Rellenamos la tabla de cuidados con los datos de la base de datos
-            modelo = (DefaultTableModel) jTable1.getModel();
+            modelo = (DefaultTableModel) jTablaCuidados.getModel();
             
             String consulta = "SELECT * FROM cuidado";
             ResultSet rsTabla = miConexion.getSelect(consulta);
             while(rsTabla.next()){
-                modelo.addRow(new Object[] {rsTabla.getString(2),rsTabla.getString(3)});
+                modelo.addRow(new Object[] {rsTabla.getInt(1),rsTabla.getString(2),rsTabla.getString(3),rsTabla.getTimestamp(4)});
             }
         } catch (SQLException ex) {
             Logger.getLogger(addCuidados.class.getName()).log(Level.SEVERE, null, ex);
@@ -61,15 +63,18 @@ public class addCuidados extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         LDesc = new javax.swing.JLabel();
-        jTNombre = new javax.swing.JTextField();
-        addCuidado = new javax.swing.JToggleButton();
         jLabel1 = new javax.swing.JLabel();
         LNombre = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTADesc = new javax.swing.JTextArea();
+        jTFNombreCuidado = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTablaCuidados = new javax.swing.JTable();
+        jToolBar1 = new javax.swing.JToolBar();
+        jButtonAdd = new javax.swing.JButton();
+        JButtonEditAnimal = new javax.swing.JToggleButton();
+        JButtonRemoveAnimal = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -87,30 +92,6 @@ public class addCuidados extends javax.swing.JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
         jPanel1.add(LDesc, gridBagConstraints);
-
-        jTNombre.setBackground(new java.awt.Color(255, 255, 255));
-        jTNombre.setForeground(new java.awt.Color(0, 0, 0));
-        jTNombre.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        jTNombre.setPreferredSize(new java.awt.Dimension(100, 24));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        jPanel1.add(jTNombre, gridBagConstraints);
-
-        addCuidado.setForeground(new java.awt.Color(255, 255, 255));
-        addCuidado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.png"))); // NOI18N
-        addCuidado.setText("Añadir");
-        addCuidado.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        addCuidado.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addCuidadoActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.gridwidth = 3;
-        jPanel1.add(addCuidado, gridBagConstraints);
 
         jLabel1.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(51, 51, 51));
@@ -144,25 +125,51 @@ public class addCuidados extends javax.swing.JFrame {
         gridBagConstraints.gridwidth = 3;
         jPanel1.add(jScrollPane2, gridBagConstraints);
 
+        jTFNombreCuidado.setBackground(new java.awt.Color(255, 255, 255));
+        jTFNombreCuidado.setForeground(new java.awt.Color(0, 0, 0));
+        jTFNombreCuidado.setPreferredSize(new java.awt.Dimension(100, 24));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        jPanel1.add(jTFNombreCuidado, gridBagConstraints);
+
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTablaCuidados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Nombre", "Descripcion"
+                "Id", "Nombre", "Descripcion", "Última Modificación"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jTablaCuidados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                click(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTablaCuidados);
+        if (jTablaCuidados.getColumnModel().getColumnCount() > 0) {
+            jTablaCuidados.getColumnModel().getColumn(0).setPreferredWidth(30);
+            jTablaCuidados.getColumnModel().getColumn(1).setPreferredWidth(100);
+            jTablaCuidados.getColumnModel().getColumn(2).setPreferredWidth(200);
+            jTablaCuidados.getColumnModel().getColumn(3).setPreferredWidth(200);
+        }
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -170,7 +177,7 @@ public class addCuidados extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -181,21 +188,64 @@ public class addCuidados extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jToolBar1.setBackground(new java.awt.Color(204, 204, 204));
+        jToolBar1.setFloatable(false);
+        jToolBar1.setRollover(true);
+
+        jButtonAdd.setForeground(new java.awt.Color(0, 0, 0));
+        jButtonAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.png"))); // NOI18N
+        jButtonAdd.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAddActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButtonAdd);
+
+        JButtonEditAnimal.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonEditAnimal.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonEditAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/edit.png"))); // NOI18N
+        JButtonEditAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonEditAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonEditAnimal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JButtonEditAnimalActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(JButtonEditAnimal);
+
+        JButtonRemoveAnimal.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonRemoveAnimal.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonRemoveAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/delete.png"))); // NOI18N
+        JButtonRemoveAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonRemoveAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonRemoveAnimal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JButtonRemoveAnimalActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(JButtonRemoveAnimal);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -203,8 +253,8 @@ public class addCuidados extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addCuidadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCuidadoActionPerformed
-        String nombre = jTNombre.getText();
+    private void jButtonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddActionPerformed
+        String nombre = jTFNombreCuidado.getText();
         String desc = jTADesc.getText();
         if(nombre.equals("")){
             JOptionPane.showMessageDialog(null, "Introduce el nombre");
@@ -215,6 +265,8 @@ public class addCuidados extends javax.swing.JFrame {
             try{
                 String consulta = "SELECT * FROM cuidado WHERE nombre_cuidado='"+nombre+"' AND descripcion='"+desc+"'";
                 ResultSet rs1 = miConexion.comprobarDatos(consulta);
+                LocalDateTime dateTime = LocalDateTime.now();
+                String currentTimeStamp = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0").format(dateTime);
                 if(rs1==null){
                     ResultSet rs = miConexion.getSelect("Select * from cuidado");
                     //Irse a la ultima linea de la tabla
@@ -225,8 +277,9 @@ public class addCuidados extends javax.swing.JFrame {
                     rs.insertRow();
                     //users.add(user);
                     JOptionPane.showMessageDialog(null, "Cuidado añadida correctamente");
-                    modelo.addRow(new Object[] {nombre,desc});
-                    jTNombre.setText("");
+                    ResultSet getId=miConexion.comprobarDatos("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='ZOO' AND TABLE_NAME='cuidado'");
+                    modelo.addRow(new Object[] {getId.getInt("AUTO_INCREMENT")-1,nombre,desc,currentTimeStamp});
+                    jTFNombreCuidado.setText("");
                     jTADesc.setText("");
                 }
                 else{
@@ -237,7 +290,49 @@ public class addCuidados extends javax.swing.JFrame {
             }
         }
             
-    }//GEN-LAST:event_addCuidadoActionPerformed
+    }//GEN-LAST:event_jButtonAddActionPerformed
+
+    private void JButtonEditAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEditAnimalActionPerformed
+        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No podrás recuperar los datos anteriores","Editar especie",JOptionPane.YES_OPTION);
+        if(resp==0){
+            String nombre = jTFNombreCuidado.getText();
+            String desc = jTADesc.getText();
+            int fila = jTablaCuidados.getSelectedRow();
+            int id=(int)jTablaCuidados.getValueAt(fila, 0);
+            String sentencia = "UPDATE CUIDADO SET NOMBRE_CUIDADO='"+nombre+"',DESCRIPCION='"+desc+"' WHERE ID_CUIDADO="+id;
+            System.out.println(sentencia);
+            if(miConexion.editTable(sentencia)==1){
+                modelo.setValueAt(jTFNombreCuidado.getText(), fila, 1);
+                modelo.setValueAt(jTADesc.getText(), fila, 2);
+                JOptionPane.showMessageDialog(null, "Especialidad editada correctamente");
+                jTFNombreCuidado.setText("");
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Error al editar la especialidad");
+            }
+        }
+    }//GEN-LAST:event_JButtonEditAnimalActionPerformed
+
+    private void JButtonRemoveAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonRemoveAnimalActionPerformed
+        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro, manín? No vas a poder recuperar los datos eliminados","Eliminar especie",JOptionPane.YES_OPTION);
+        if(resp==0){
+            int id=(int)jTablaCuidados.getValueAt(jTablaCuidados.getSelectedRow(), 0);
+            int fila = jTablaCuidados.getSelectedRow();
+            String sentencia = "DELETE FROM CUIDADO WHERE ID_CUIDADO="+id;
+            if(miConexion.editTable(sentencia)==1){
+                modelo.removeRow(fila);
+                JOptionPane.showMessageDialog(null, "Especialidad elimado correctamente");
+                jTFNombreCuidado.setText("");
+                jTADesc.setText("");
+            }
+        }
+    }//GEN-LAST:event_JButtonRemoveAnimalActionPerformed
+
+    private void click(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_click
+        int fila = jTablaCuidados.getSelectedRow();
+        jTFNombreCuidado.setText((String)jTablaCuidados.getValueAt(fila,1));
+        jTADesc.setText((String)jTablaCuidados.getValueAt(fila,2));
+    }//GEN-LAST:event_click
 
     /**
      * @param args the command line arguments
@@ -278,16 +373,19 @@ public class addCuidados extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JToggleButton JButtonEditAnimal;
+    private javax.swing.JToggleButton JButtonRemoveAnimal;
     private javax.swing.JLabel LDesc;
     private javax.swing.JLabel LNombre;
-    private javax.swing.JToggleButton addCuidado;
+    private javax.swing.JButton jButtonAdd;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTADesc;
-    private javax.swing.JTextField jTNombre;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTextField jTFNombreCuidado;
+    private javax.swing.JTable jTablaCuidados;
+    private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
 }

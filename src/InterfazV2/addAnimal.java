@@ -2,13 +2,17 @@ package InterfazV2;
 
 
 import java.io.Serializable;
+import java.security.Timestamp;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import zoo.Animal;
 import util.Conexion;
@@ -30,6 +34,8 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
     /**
      * Creates new form addAnimañ
      */
+    
+    
     public addAnimal() {
         try{
             initComponents();
@@ -38,12 +44,12 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
             miConexion = new Conexion("localhost","3306","zoologico","zoo","pepe");
             //Rellenamos la tabla de animales con los animales de la base de datos
             modelo = (DefaultTableModel) jTablaAnimales.getModel();
-            String consulta = "SELECT animal.NOMBRE,animal.PESO,especie.NOMBRE_ESPECIE,ESPECIE.id_especie,ID_ANIMAL FROM animal, especie WHERE animal.ESPECIE=especie.ID_ESPECIE ORDER BY id_animal";
+            String consulta = "SELECT animal.NOMBRE,animal.PESO,especie.NOMBRE_ESPECIE,ESPECIE.id_especie,ID_ANIMAL,animal.LAST_MOD FROM animal, especie WHERE animal.ESPECIE=especie.ID_ESPECIE ORDER BY id_animal";
             //System.out.println(consulta);
             ResultSet rsTabla = miConexion.getSelect(consulta);
             while(rsTabla.next()){
                 Especie esp = new Especie(rsTabla.getInt(4),rsTabla.getString(3));
-                modelo.addRow(new Object[] {rsTabla.getInt(5),rsTabla.getString(1),esp,rsTabla.getFloat(2)});
+                modelo.addRow(new Object[] {rsTabla.getInt(5),rsTabla.getString(1),esp,rsTabla.getFloat(2),rsTabla.getTimestamp(6)});
             }
             //Rellenamos la caja de especies
             try{
@@ -107,14 +113,14 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
 
             },
             new String [] {
-                "Id", "Nombre", "Especie", "Peso"
+                "Id", "Nombre", "Especie", "Peso", "Última Modificación"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Object.class, java.lang.Float.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Object.class, java.lang.Float.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -132,22 +138,22 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
         });
         jScrollPane1.setViewportView(jTablaAnimales);
         if (jTablaAnimales.getColumnModel().getColumnCount() > 0) {
-            jTablaAnimales.getColumnModel().getColumn(0).setResizable(false);
-            jTablaAnimales.getColumnModel().getColumn(1).setResizable(false);
-            jTablaAnimales.getColumnModel().getColumn(2).setResizable(false);
-            jTablaAnimales.getColumnModel().getColumn(3).setResizable(false);
+            jTablaAnimales.getColumnModel().getColumn(0).setPreferredWidth(10);
+            jTablaAnimales.getColumnModel().getColumn(1).setPreferredWidth(50);
+            jTablaAnimales.getColumnModel().getColumn(2).setPreferredWidth(50);
+            jTablaAnimales.getColumnModel().getColumn(3).setPreferredWidth(15);
         }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 504, Short.MAX_VALUE)
+            .addGap(0, 744, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 478, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(20, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 732, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,8 +161,8 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(48, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -226,6 +232,7 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
         jPanel2.add(jComboBoxEspecie, gridBagConstraints);
 
         jToolBar1.setBackground(new java.awt.Color(204, 204, 204));
+        jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
         JButtonAddAnimal.setBackground(new java.awt.Color(51, 51, 51));
@@ -247,7 +254,7 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
 
         JButtonEditAnimal.setBackground(new java.awt.Color(51, 51, 51));
         JButtonEditAnimal.setForeground(new java.awt.Color(0, 0, 0));
-        JButtonEditAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/InterfazV2/edit.png"))); // NOI18N
+        JButtonEditAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/edit.png"))); // NOI18N
         JButtonEditAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         JButtonEditAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
         JButtonEditAnimal.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -264,7 +271,7 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
 
         JButtonRemoveAnimal.setBackground(new java.awt.Color(51, 51, 51));
         JButtonRemoveAnimal.setForeground(new java.awt.Color(0, 0, 0));
-        JButtonRemoveAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/InterfazV2/delete.png"))); // NOI18N
+        JButtonRemoveAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/delete.png"))); // NOI18N
         JButtonRemoveAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         JButtonRemoveAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
         JButtonRemoveAnimal.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -289,7 +296,7 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
                     .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -325,9 +332,11 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
             try {
                 String consulta = "SELECT * FROM animal WHERE nombre='"+nombre+"' AND especie="+especie;
                 ResultSet rs1 =miConexion.comprobarDatos(consulta);
+                LocalDateTime dateTime = LocalDateTime.now();
+                String currentTimeStamp = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0").format(dateTime);
                 //System.out.println(rs1);
                 if(rs1==null){
-                    ResultSet rs = miConexion.getSelect("Select * from animal order");
+                    ResultSet rs = miConexion.getSelect("Select * from animal");
                     //Irse a la ultima linea de la tabla
                     rs.moveToInsertRow();
                     //
@@ -340,7 +349,7 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
                     JOptionPane.showMessageDialog(null, "Animal añadido correctamente");
                     TNombreAnimal.setText("");
                     SPesoAnimal.setValue(0);
-                    modelo.addRow(new Object[] {getId.getInt("AUTO_INCREMENT"),nombre,nombreEsp,peso});
+                    modelo.addRow(new Object[] {getId.getInt("AUTO_INCREMENT")-1,nombre,esp,peso,currentTimeStamp});
                 }
                 else{
                     JOptionPane.showMessageDialog(null, "El animal ya existe");
@@ -360,14 +369,20 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
             int fila = jTablaAnimales.getSelectedRow();
             int id=(int)jTablaAnimales.getValueAt(fila, 0);
             String sentencia = "UPDATE ANIMAL SET NOMBRE='"+nombre+"', PESO="+peso+" WHERE ID_ANIMAL="+id;
+            System.out.println(sentencia);
             if(miConexion.editTable(sentencia)==1){
+                LocalDateTime dateTime = LocalDateTime.now();
+                String currentTimeStamp = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0").format(dateTime);
                 modelo.setValueAt(TNombreAnimal.getText(), fila, 1);
                 modelo.setValueAt(SPesoAnimal.getValue(), fila, 3);
+                modelo.setValueAt(currentTimeStamp, fila, 4);
                 JOptionPane.showMessageDialog(null, "Animal editado correctamente");
                 TNombreAnimal.setText("");
                 SPesoAnimal.setValue(0);
             }
-            
+            else{
+                JOptionPane.showMessageDialog(null, "Error al editar el animal");
+            }
         }
     }//GEN-LAST:event_JButtonEditAnimalActionPerformed
 

@@ -3,6 +3,8 @@ package InterfazV2;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,12 +34,12 @@ public class addEspecialidad extends javax.swing.JFrame {
             especialidades = new ArrayList<Especialidad>();
             miConexion = new Conexion("localhost","3306","zoologico","zoo","pepe");
             //Rellenamos la tabla de especialidades con los datos de la base de datos
-            modelo = (DefaultTableModel) jTable1.getModel();
+            modelo = (DefaultTableModel) jTablaEspecialidades.getModel();
             
             String consulta = "SELECT * FROM especialidad";
             ResultSet rsTabla = miConexion.getSelect(consulta);
             while(rsTabla.next()){
-                modelo.addRow(new Object[] {rsTabla.getString(2),rsTabla.getString(3)});
+                modelo.addRow(new Object[] {rsTabla.getInt(1),rsTabla.getString(2),rsTabla.getString(3),rsTabla.getTimestamp(4)});
             }
         } catch (SQLException ex) {
             Logger.getLogger(addEspecialidad.class.getName()).log(Level.SEVERE, null, ex);
@@ -59,13 +61,16 @@ public class addEspecialidad extends javax.swing.JFrame {
         addEspecialidad = new javax.swing.JLabel();
         JLDescrip = new javax.swing.JLabel();
         JLNombreEsp = new javax.swing.JLabel();
-        jButtonAdd = new javax.swing.JButton();
         jTFNombreEsp = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTADesc = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTablaEspecialidades = new javax.swing.JTable();
+        jToolBar1 = new javax.swing.JToolBar();
+        jButtonAdd = new javax.swing.JButton();
+        JButtonEditAnimal = new javax.swing.JToggleButton();
+        JButtonRemoveAnimal = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -104,21 +109,6 @@ public class addEspecialidad extends javax.swing.JFrame {
         gridBagConstraints.gridy = 2;
         jPanel1.add(JLNombreEsp, gridBagConstraints);
 
-        jButtonAdd.setForeground(new java.awt.Color(51, 51, 51));
-        jButtonAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.png"))); // NOI18N
-        jButtonAdd.setText("Añadir");
-        jButtonAdd.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButtonAdd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonAddActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.gridwidth = 3;
-        jPanel1.add(jButtonAdd, gridBagConstraints);
-
         jTFNombreEsp.setBackground(new java.awt.Color(255, 255, 255));
         jTFNombreEsp.setForeground(new java.awt.Color(0, 0, 0));
         jTFNombreEsp.setPreferredSize(new java.awt.Dimension(100, 24));
@@ -139,56 +129,114 @@ public class addEspecialidad extends javax.swing.JFrame {
         gridBagConstraints.gridwidth = 3;
         jPanel1.add(jScrollPane2, gridBagConstraints);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTablaEspecialidades.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Nombre", "Descripcion"
+                "Id", "Nombre", "Descripcion", "Última Modificación"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                true, false, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jTablaEspecialidades.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                click(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTablaEspecialidades);
+        if (jTablaEspecialidades.getColumnModel().getColumnCount() > 0) {
+            jTablaEspecialidades.getColumnModel().getColumn(0).setPreferredWidth(10);
+            jTablaEspecialidades.getColumnModel().getColumn(1).setPreferredWidth(100);
+            jTablaEspecialidades.getColumnModel().getColumn(2).setPreferredWidth(200);
+            jTablaEspecialidades.getColumnModel().getColumn(3).setPreferredWidth(150);
+        }
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 453, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(0, 6, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
                 .addContainerGap())
         );
+
+        jToolBar1.setBackground(new java.awt.Color(204, 204, 204));
+        jToolBar1.setFloatable(false);
+        jToolBar1.setRollover(true);
+
+        jButtonAdd.setForeground(new java.awt.Color(0, 0, 0));
+        jButtonAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.png"))); // NOI18N
+        jButtonAdd.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAddActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButtonAdd);
+
+        JButtonEditAnimal.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonEditAnimal.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonEditAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/edit.png"))); // NOI18N
+        JButtonEditAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonEditAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonEditAnimal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JButtonEditAnimalActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(JButtonEditAnimal);
+
+        JButtonRemoveAnimal.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonRemoveAnimal.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonRemoveAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/delete.png"))); // NOI18N
+        JButtonRemoveAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonRemoveAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonRemoveAnimal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JButtonRemoveAnimalActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(JButtonRemoveAnimal);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -207,6 +255,8 @@ public class addEspecialidad extends javax.swing.JFrame {
             try{
                 String consulta = "SELECT * FROM especialidad WHERE nombre='"+nombre+"' AND descripcion='"+desc+"'";
                 ResultSet rs1 = miConexion.comprobarDatos(consulta);
+                LocalDateTime dateTime = LocalDateTime.now();
+                String currentTimeStamp = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0").format(dateTime);
                 if(rs1==null){
                     ResultSet rs = miConexion.getSelect("Select * from especialidad");
                     //Irse a la ultima linea de la tabla
@@ -217,7 +267,8 @@ public class addEspecialidad extends javax.swing.JFrame {
                     rs.insertRow();
                     //users.add(user);
                     JOptionPane.showMessageDialog(null, "Especialidad añadida correctamente");
-                    modelo.addRow(new Object[] {nombre,desc});
+                    ResultSet getId=miConexion.comprobarDatos("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='ZOO' AND TABLE_NAME='especialidad'");
+                    modelo.addRow(new Object[] {getId.getInt("AUTO_INCREMENT")-1,nombre,desc,currentTimeStamp});
                     jTFNombreEsp.setText("");
                     jTADesc.setText("");
                 }
@@ -232,6 +283,49 @@ public class addEspecialidad extends javax.swing.JFrame {
             
         }
     }//GEN-LAST:event_jButtonAddActionPerformed
+
+    private void JButtonEditAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEditAnimalActionPerformed
+        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No podrás recuperar los datos anteriores","Editar especie",JOptionPane.YES_OPTION);
+        if(resp==0){
+            String nombre = jTFNombreEsp.getText();
+            String desc = jTADesc.getText();
+            int fila = jTablaEspecialidades.getSelectedRow();
+            int id=(int)jTablaEspecialidades.getValueAt(fila, 0);
+            String sentencia = "UPDATE ESPECIALIDAD SET NOMBRE='"+nombre+"',DESCRIPCION='"+desc+"' WHERE ID="+id;
+            System.out.println(sentencia);
+            if(miConexion.editTable(sentencia)==1){
+                modelo.setValueAt(jTFNombreEsp.getText(), fila, 1);
+                modelo.setValueAt(jTADesc.getText(), fila, 2);
+                JOptionPane.showMessageDialog(null, "Especialidad editada correctamente");
+                jTFNombreEsp.setText("");
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Error al editar la especialidad");
+            }
+        }
+    }//GEN-LAST:event_JButtonEditAnimalActionPerformed
+
+    private void JButtonRemoveAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonRemoveAnimalActionPerformed
+        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro, manín? No vas a poder recuperar los datos eliminados","Eliminar especie",JOptionPane.YES_OPTION);
+        if(resp==0){
+            int id=(int)jTablaEspecialidades.getValueAt(jTablaEspecialidades.getSelectedRow(), 0);
+            int fila = jTablaEspecialidades.getSelectedRow();
+            String sentencia = "DELETE FROM ESPECIALIDAD WHERE ID="+id;
+            if(miConexion.editTable(sentencia)==1){
+                modelo.removeRow(fila);
+                JOptionPane.showMessageDialog(null, "Especialidad elimado correctamente");
+                jTFNombreEsp.setText("");
+                jTADesc.setText("");
+            }
+        }
+        
+    }//GEN-LAST:event_JButtonRemoveAnimalActionPerformed
+
+    private void click(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_click
+        int fila = jTablaEspecialidades.getSelectedRow();
+        jTFNombreEsp.setText((String)jTablaEspecialidades.getValueAt(fila,1));
+        jTADesc.setText((String)jTablaEspecialidades.getValueAt(fila,2));
+    }//GEN-LAST:event_click
 
     /**
      * @param args the command line arguments
@@ -270,6 +364,8 @@ public class addEspecialidad extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JToggleButton JButtonEditAnimal;
+    private javax.swing.JToggleButton JButtonRemoveAnimal;
     private javax.swing.JLabel JLDescrip;
     private javax.swing.JLabel JLNombreEsp;
     private javax.swing.JLabel addEspecialidad;
@@ -280,6 +376,7 @@ public class addEspecialidad extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTADesc;
     private javax.swing.JTextField jTFNombreEsp;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTablaEspecialidades;
+    private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
 }

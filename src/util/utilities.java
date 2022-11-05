@@ -13,6 +13,8 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import util.Lista;
 import zoo.Animal;
         
@@ -49,5 +51,7 @@ public class utilities {
         ois.close();
         return lista;
     }
+    
+   
     
 }

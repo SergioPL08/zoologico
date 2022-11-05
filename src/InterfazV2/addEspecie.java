@@ -9,6 +9,8 @@ import javax.swing.table.DefaultTableModel;
 import util.Conexion;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,7 +25,17 @@ public class addEspecie extends javax.swing.JFrame {
     public addEspecie() {
         initComponents();
         miConexion = new Conexion("localhost","3306","zoologico","zoo","pepe");
-
+        modelo = (DefaultTableModel) jTablaEspecies.getModel();
+            String consulta = "SELECT * FROM ESPECIE";
+            //System.out.println(consulta);
+            ResultSet rsTabla = miConexion.getSelect(consulta);
+        try {
+            while(rsTabla.next()){
+                modelo.addRow(new Object[] {rsTabla.getInt(1),rsTabla.getString(2)});
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(addEspecie.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -38,41 +50,64 @@ public class addEspecie extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTablaEspecies = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         LnombreEspecie = new javax.swing.JLabel();
         TNombreEspecie = new javax.swing.JTextField();
-        JButtonAddEspecie = new javax.swing.JToggleButton();
         jLabel1 = new javax.swing.JLabel();
+        jToolBar1 = new javax.swing.JToolBar();
+        JButtonAddEspecie = new javax.swing.JToggleButton();
+        JButtonEditAnimal = new javax.swing.JToggleButton();
+        JButtonRemoveAnimal = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTablaEspecies.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Nombre"
+                "Id", "Nombre"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTablaEspecies.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addEspecie.this.mouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTablaEspecies);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 334, Short.MAX_VALUE)
+            .addGap(0, 422, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 467, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addContainerGap()
@@ -97,29 +132,12 @@ public class addEspecie extends javax.swing.JFrame {
 
         TNombreEspecie.setBackground(new java.awt.Color(255, 255, 255));
         TNombreEspecie.setForeground(new java.awt.Color(0, 0, 0));
-        TNombreEspecie.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12), new java.awt.Color(0, 102, 51))); // NOI18N
+        TNombreEspecie.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(0, 102, 51))); // NOI18N
         TNombreEspecie.setPreferredSize(new java.awt.Dimension(100, 24));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
         jPanel2.add(TNombreEspecie, gridBagConstraints);
-
-        JButtonAddEspecie.setBackground(new java.awt.Color(51, 51, 51));
-        JButtonAddEspecie.setForeground(new java.awt.Color(255, 255, 255));
-        JButtonAddEspecie.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.png"))); // NOI18N
-        JButtonAddEspecie.setText("Añadir");
-        JButtonAddEspecie.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        JButtonAddEspecie.setPreferredSize(new java.awt.Dimension(70, 22));
-        JButtonAddEspecie.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JButtonAddEspecieActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 3;
-        jPanel2.add(JButtonAddEspecie, gridBagConstraints);
 
         jLabel1.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(51, 51, 51));
@@ -133,22 +151,65 @@ public class addEspecie extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel2.add(jLabel1, gridBagConstraints);
 
+        jToolBar1.setBackground(new java.awt.Color(204, 204, 204));
+        jToolBar1.setFloatable(false);
+        jToolBar1.setRollover(true);
+
+        JButtonAddEspecie.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonAddEspecie.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonAddEspecie.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.png"))); // NOI18N
+        JButtonAddEspecie.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonAddEspecie.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonAddEspecie.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JButtonAddEspecieActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(JButtonAddEspecie);
+
+        JButtonEditAnimal.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonEditAnimal.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonEditAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/edit.png"))); // NOI18N
+        JButtonEditAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonEditAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonEditAnimal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JButtonEditAnimalActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(JButtonEditAnimal);
+
+        JButtonRemoveAnimal.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonRemoveAnimal.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonRemoveAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/delete.png"))); // NOI18N
+        JButtonRemoveAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonRemoveAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonRemoveAnimal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JButtonRemoveAnimalActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(JButtonRemoveAnimal);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 461, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -161,24 +222,23 @@ public class addEspecie extends javax.swing.JFrame {
         }
         else{
             try {
-                String consulta = "SELECT * FROM especies";
+                String consulta = "SELECT * FROM especie WHERE NOMBRE_ESPECIE='"+especie+"'";
                 ResultSet rs1 =miConexion.comprobarDatos(consulta);
                 //System.out.println(rs1);
                 if(rs1==null){
                     ResultSet rs = miConexion.getSelect(consulta);
                     //Irse a la ultima linea de la tabla
                     rs.moveToInsertRow();
-                    //
                     rs.updateString("nombre_especie",especie);
                     rs.insertRow();
-                    //users.add(user);
-                    JOptionPane.showMessageDialog(null, "Especie añadido correctamente");
+                    ResultSet getId=miConexion.comprobarDatos("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='ZOO' AND TABLE_NAME='ESPECIE'");
+                    JOptionPane.showMessageDialog(null, "Especie añadida correctamente");
                     TNombreEspecie.setText("");
-                    modelo.addRow(new Object[] {especie});
+                    modelo.addRow(new Object[] {getId.getInt("AUTO_INCREMENT")-1,especie});
 
                 }
                 else{
-                    JOptionPane.showMessageDialog(null, "El animal ya existe");
+                    JOptionPane.showMessageDialog(null, "La especie ya existe");
                 }
 
             } catch (SQLException ex) {
@@ -186,6 +246,44 @@ public class addEspecie extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_JButtonAddEspecieActionPerformed
+
+    private void JButtonEditAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEditAnimalActionPerformed
+        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No podrás recuperar los datos anteriores","Editar especie",JOptionPane.YES_OPTION);
+        if(resp==0){
+            String nombre = TNombreEspecie.getText();
+            int fila = jTablaEspecies.getSelectedRow();
+            int id=(int)jTablaEspecies.getValueAt(fila, 0);
+            String sentencia = "UPDATE ESPECIE SET NOMBRE_ESPECIE='"+nombre+"' WHERE ID_ESPECIE="+id;
+            System.out.println(sentencia);
+            if(miConexion.editTable(sentencia)==1){
+                modelo.setValueAt(TNombreEspecie.getText(), fila, 1);
+                JOptionPane.showMessageDialog(null, "Especie editado correctamente");
+                TNombreEspecie.setText("");
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Error al editar la especie");
+            }
+        }
+    }//GEN-LAST:event_JButtonEditAnimalActionPerformed
+
+    private void JButtonRemoveAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonRemoveAnimalActionPerformed
+        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro, manín? No vas a poder recuperar los datos eliminados","Eliminar especie",JOptionPane.YES_OPTION);
+        if(resp==0){
+            int id=(int)jTablaEspecies.getValueAt(jTablaEspecies.getSelectedRow(), 0);
+            int fila = jTablaEspecies.getSelectedRow();
+            String sentencia = "DELETE FROM ESPECIE WHERE ID_ESPECIE="+id;
+            if(miConexion.editTable(sentencia)==1){
+                modelo.removeRow(fila);
+                JOptionPane.showMessageDialog(null, "Especie elimado correctamente");
+                TNombreEspecie.setText("");
+            }
+        }
+    }//GEN-LAST:event_JButtonRemoveAnimalActionPerformed
+
+    private void mouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseClicked
+        int fila = jTablaEspecies.getSelectedRow();
+        TNombreEspecie.setText((String)jTablaEspecies.getValueAt(fila,1));
+    }//GEN-LAST:event_mouseClicked
 
     /**
      * @param args the command line arguments
@@ -224,12 +322,15 @@ public class addEspecie extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton JButtonAddEspecie;
+    private javax.swing.JToggleButton JButtonEditAnimal;
+    private javax.swing.JToggleButton JButtonRemoveAnimal;
     private javax.swing.JLabel LnombreEspecie;
     private javax.swing.JTextField TNombreEspecie;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTablaEspecies;
+    private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
 }
