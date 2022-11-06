@@ -10,6 +10,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import util.Conexion;
+import util.TextPrompt;
 import zoo.Especialidad;
 
 /*
@@ -31,16 +32,22 @@ public class addCuidadores extends javax.swing.JFrame {
     public addCuidadores() {
         try{
             initComponents();
+            //TextPrompt sirve para poner un placeholder en un textfield
+            TextPrompt name = new TextPrompt("Jorge", jTFNombreCuidador);
+            TextPrompt apellido = new TextPrompt("Sanchez", jTFApe);
+            TextPrompt telefono = new TextPrompt("958645234", jTFTel);
+            
             especialidades = new ArrayList<Especialidad>();
             miConexion = new Conexion("localhost","3306","zoologico","zoo","pepe");
             //Rellenamos la tabla de animales con los animales de la base de datos
             modelo = (DefaultTableModel) jTablaCuidadores.getModel();
-            String consulta = "SELECT ID_PERSONA,persona.NOMBRE,persona.APELLIDO,persona.SALARIO,persona.TELEFONO,especialidad.nombre as ESPECIALIDAD,persona.LAST_MOD  FROM persona,especialidad,cuidador WHERE cuidador.id_esp=especialidad.id AND persona.ID_PERSONA=cuidador.id_per";
+            String consulta = "SELECT ID_PERSONA,persona.NOMBRE,persona.APELLIDO,persona.SALARIO,persona.TELEFONO,especialidad.nombre as ESPECIALIDAD,especialidad.id ,persona.LAST_MOD  FROM persona,especialidad,cuidador WHERE cuidador.id_esp=especialidad.id AND persona.ID_PERSONA=cuidador.id_per ORDER BY persona.ID_PERSONA";
             System.out.println(consulta);
             ResultSet rsTabla = miConexion.getSelect(consulta);
             //System.out.println(miConexion.getSelect(consulta));
             while(rsTabla.next()){
-                modelo.addRow(new Object[] {rsTabla.getInt(1),rsTabla.getString(2),rsTabla.getString(3),rsTabla.getFloat(4),rsTabla.getString(5),rsTabla.getObject(6),rsTabla.getTimestamp(7)});
+                Especialidad esp = new Especialidad(rsTabla.getInt(7),rsTabla.getString(6));
+                modelo.addRow(new Object[] {rsTabla.getInt(1),rsTabla.getString(2),rsTabla.getString(3),rsTabla.getFloat(4),rsTabla.getString(5),esp,rsTabla.getTimestamp(8)});
             }
             //Rellenamos la caja de especialidades
             try{
@@ -93,6 +100,7 @@ public class addCuidadores extends javax.swing.JFrame {
         JButtonAddAnimal = new javax.swing.JToggleButton();
         JButtonEditAnimal = new javax.swing.JToggleButton();
         JButtonRemoveAnimal = new javax.swing.JToggleButton();
+        JButtonErase = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -295,6 +303,21 @@ public class addCuidadores extends javax.swing.JFrame {
         });
         jToolBar1.add(JButtonRemoveAnimal);
 
+        JButtonErase.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonErase.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonErase.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/erase.png"))); // NOI18N
+        JButtonErase.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonErase.setFocusable(false);
+        JButtonErase.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        JButtonErase.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonErase.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        JButtonErase.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JButtonEraseActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(JButtonErase);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -346,7 +369,7 @@ public class addCuidadores extends javax.swing.JFrame {
             try {
                 String consulta = "SELECT * FROM persona,cuidador WHERE nombre='"+nombre+"' AND apellido='"+ape+"' AND TELEFONO ='"+num+"'AND CUIDADOR.ID_ESP='"+esp.getId()+"'";
                 ResultSet rs1 =miConexion.comprobarDatos(consulta);
-                System.out.println(consulta);
+                //System.out.println(consulta);
                 if(rs1==null){
                     LocalDateTime dateTime = LocalDateTime.now();
                     String currentTimeStamp = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0").format(dateTime);
@@ -383,11 +406,60 @@ public class addCuidadores extends javax.swing.JFrame {
     }//GEN-LAST:event_JButtonAddAnimalActionPerformed
 
     private void JButtonEditAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEditAnimalActionPerformed
-        // TODO add your handling code here:
+        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No podrás recuperar los datos anteriores","Editar cuidador",JOptionPane.YES_OPTION);
+        if(resp==0){
+            int fila = jTablaCuidadores.getSelectedRow();
+            int id=(int)jTablaCuidadores.getValueAt(fila, 0);
+            String nombre = jTFNombreCuidador.getText();
+            String ape = jTFApe.getText();
+            float salario = (float)jSSalario.getValue();
+            String num = jTFTel.getText();
+            String sentencia = "UPDATE PERSONA SET NOMBRE='"+nombre+"', APELLIDO='"+ape+"',SALARIO="+salario+",TELEFONO='"+num+"'  WHERE ID_PERSONA="+id;
+            System.out.println(sentencia);
+            if(miConexion.editTable(sentencia)==1){
+                LocalDateTime dateTime = LocalDateTime.now();
+                String currentTimeStamp = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0").format(dateTime);
+                modelo.setValueAt(jTFNombreCuidador.getText(), fila, 1);
+                modelo.setValueAt(jTFApe.getText(), fila, 2);
+                modelo.setValueAt(jSSalario.getValue(), fila, 3);
+                modelo.setValueAt(jTFTel.getText(), fila, 4);
+                modelo.setValueAt(currentTimeStamp, fila, 6);
+                JOptionPane.showMessageDialog(null, "Cuidador editado correctamente");
+                jTFNombreCuidador.setText("");
+                jTFNombreCuidador.setText("");
+                jTFTel.setText("");
+                jSSalario.setValue(0);
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Error al editar el cuidador");
+            }
+        }
     }//GEN-LAST:event_JButtonEditAnimalActionPerformed
 
     private void JButtonRemoveAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonRemoveAnimalActionPerformed
-        // TODO add your handling code here:
+        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No vas a poder recuperar los datos eliminados","Eliminar cuidador",JOptionPane.YES_OPTION);
+        if(resp==0){
+            int id=(int)jTablaCuidadores.getValueAt(jTablaCuidadores.getSelectedRow(), 0);
+            int fila = jTablaCuidadores.getSelectedRow();
+            String sentencia1 = "DELETE FROM CUIDADOR WHERE id_per="+id;
+            String sentencia2 = "DELETE FROM PERSONA WHERE ID_PERSONA="+id;
+            
+            //System.out.println(sentencia1);
+            if(miConexion.editTable(sentencia1)==1){
+                if(miConexion.editTable(sentencia2)==1){
+                modelo.removeRow(fila);
+                JOptionPane.showMessageDialog(null, "Cuidador elimado correctamente");
+                jTFNombreCuidador.setText("");
+                jTFApe.setText("");
+                jTFTel.setText("");
+                jSSalario.setValue(0);
+                }
+                
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Error al eliminar el cuidador");
+            }
+        }
     }//GEN-LAST:event_JButtonRemoveAnimalActionPerformed
 
     private void click(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_click
@@ -397,9 +469,16 @@ public class addCuidadores extends javax.swing.JFrame {
         jSSalario.setValue((Float)jTablaCuidadores.getValueAt(fila,3));
         jTFTel.setText((String)jTablaCuidadores.getValueAt(fila,4));
         Especialidad esp = new Especialidad ((Especialidad)jTablaCuidadores.getValueAt(fila, 5));
-        System.out.println(esp.getId());
+        //System.out.println(esp.getId());
         jComboBoxEspecialidad.getModel().setSelectedItem(esp);
     }//GEN-LAST:event_click
+
+    private void JButtonEraseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEraseActionPerformed
+        jTFNombreCuidador.setText("");
+        jTFApe.setText("");
+        jTFTel.setText("");
+        jSSalario.setValue(0);
+    }//GEN-LAST:event_JButtonEraseActionPerformed
 
     /**
      * @param args the command line arguments
@@ -440,6 +519,7 @@ public class addCuidadores extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton JButtonAddAnimal;
     private javax.swing.JToggleButton JButtonEditAnimal;
+    private javax.swing.JToggleButton JButtonErase;
     private javax.swing.JToggleButton JButtonRemoveAnimal;
     private javax.swing.JLabel JLApellidos;
     private javax.swing.JLabel JLEspecialidad;

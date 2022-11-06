@@ -13,7 +13,8 @@ import java.io.Serializable;
 public class Cuidador implements Serializable{
     private String nombre, apellidos, tel;
     private float salario;
-
+    private int id;
+    
     public Cuidador(String nombre, String apellidos, String tel, float salario) {
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -21,6 +22,23 @@ public class Cuidador implements Serializable{
         this.salario = salario;
     }
 
+    public Cuidador(int id,String nombre) {
+        this.id=id;
+        this.nombre = nombre;
+    }
+    
+    public Cuidador(Cuidador cui) {
+        this.id=cui.id;
+        this.nombre = cui.nombre;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
     public String getNombre() {
         return nombre;
     }
@@ -53,7 +71,10 @@ public class Cuidador implements Serializable{
         this.salario = salario;
     }
 
-
+    @Override
+    public String toString(){
+        return this.nombre;
+    }
     
     
     

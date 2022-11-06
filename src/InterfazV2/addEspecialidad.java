@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import util.Conexion;
+import util.TextPrompt;
 import zoo.*;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -31,6 +32,10 @@ public class addEspecialidad extends javax.swing.JFrame {
     public addEspecialidad() {
         try {
             initComponents();
+            //TextPrompt sirve para poner un placeholder en un textfield
+            TextPrompt name = new TextPrompt("Perros", jTFNombreEsp);
+            TextPrompt descripcion = new TextPrompt("Especialista en cuidado y tratado de perros", jTADesc);
+            
             especialidades = new ArrayList<Especialidad>();
             miConexion = new Conexion("localhost","3306","zoologico","zoo","pepe");
             //Rellenamos la tabla de especialidades con los datos de la base de datos
@@ -71,6 +76,7 @@ public class addEspecialidad extends javax.swing.JFrame {
         jButtonAdd = new javax.swing.JButton();
         JButtonEditAnimal = new javax.swing.JToggleButton();
         JButtonRemoveAnimal = new javax.swing.JToggleButton();
+        JButtonErase = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -218,6 +224,21 @@ public class addEspecialidad extends javax.swing.JFrame {
         });
         jToolBar1.add(JButtonRemoveAnimal);
 
+        JButtonErase.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonErase.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonErase.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/erase.png"))); // NOI18N
+        JButtonErase.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonErase.setFocusable(false);
+        JButtonErase.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        JButtonErase.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonErase.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        JButtonErase.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JButtonEraseActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(JButtonErase);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -327,6 +348,11 @@ public class addEspecialidad extends javax.swing.JFrame {
         jTADesc.setText((String)jTablaEspecialidades.getValueAt(fila,2));
     }//GEN-LAST:event_click
 
+    private void JButtonEraseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEraseActionPerformed
+        jTFNombreEsp.setText("");
+        jTADesc.setText("");
+    }//GEN-LAST:event_JButtonEraseActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -365,6 +391,7 @@ public class addEspecialidad extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton JButtonEditAnimal;
+    private javax.swing.JToggleButton JButtonErase;
     private javax.swing.JToggleButton JButtonRemoveAnimal;
     private javax.swing.JLabel JLDescrip;
     private javax.swing.JLabel JLNombreEsp;

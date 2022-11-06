@@ -2,7 +2,6 @@ package InterfazV2;
 
 
 import java.io.Serializable;
-import java.security.Timestamp;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -12,10 +11,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import zoo.Animal;
 import util.Conexion;
+import util.TextPrompt;
 import zoo.Especie;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -38,7 +37,10 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
     
     public addAnimal() {
         try{
-            initComponents();
+            initComponents(); 
+            //TextPrompt sirve para poner un placeholder en un textfield
+            TextPrompt placeholder = new TextPrompt("Toby", TNombreAnimal);
+            
             especies = new ArrayList();
             animales = new ArrayList<Animal>();
             miConexion = new Conexion("localhost","3306","zoologico","zoo","pepe");
@@ -102,6 +104,7 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
         JButtonAddAnimal = new javax.swing.JToggleButton();
         JButtonEditAnimal = new javax.swing.JToggleButton();
         JButtonRemoveAnimal = new javax.swing.JToggleButton();
+        JButtonErase = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -286,6 +289,21 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
         });
         jToolBar1.add(JButtonRemoveAnimal);
 
+        JButtonErase.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonErase.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonErase.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/erase.png"))); // NOI18N
+        JButtonErase.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonErase.setFocusable(false);
+        JButtonErase.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        JButtonErase.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonErase.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        JButtonErase.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JButtonEraseActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(JButtonErase);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -387,7 +405,7 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
     }//GEN-LAST:event_JButtonEditAnimalActionPerformed
 
     private void JButtonRemoveAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonRemoveAnimalActionPerformed
-        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro, manín? No vas a poder recuperar los datos eliminados","Eliminar animal",JOptionPane.YES_OPTION);
+        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No vas a poder recuperar los datos eliminados","Eliminar animal",JOptionPane.YES_OPTION);
         if(resp==0){
             int id=(int)jTablaAnimales.getValueAt(jTablaAnimales.getSelectedRow(), 0);
             int fila = jTablaAnimales.getSelectedRow();
@@ -421,6 +439,11 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
     private void textButtonAdd(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textButtonAdd
         JButtonAddAnimal.setToolTipText("Añadir");
     }//GEN-LAST:event_textButtonAdd
+
+    private void JButtonEraseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEraseActionPerformed
+        TNombreAnimal.setText("");
+        SPesoAnimal.setValue(0);
+    }//GEN-LAST:event_JButtonEraseActionPerformed
 
     /**
      * @param args the command line arguments
@@ -463,6 +486,7 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton JButtonAddAnimal;
     private javax.swing.JToggleButton JButtonEditAnimal;
+    private javax.swing.JToggleButton JButtonErase;
     private javax.swing.JToggleButton JButtonRemoveAnimal;
     private javax.swing.JLabel LespecieAnimal;
     private javax.swing.JLabel LnombreAnimal;

@@ -62,8 +62,14 @@ public class Especialidad implements Serializable{
         this.desc = desc;
     }
 
-    
-    
+    @Override
+    public boolean equals(Object o){
+        return this==o;
+    }
+    @Override
+    public int hashCode(){
+        return id;
+    }
     @Override
     public String toString(){
         return nombreEspecialidad;

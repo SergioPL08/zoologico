@@ -21,8 +21,19 @@ public class Animal implements Serializable{
         this.peso = peso;
     }
     
+    public Animal(int id,String name) {
+        this.id=id;
+        this.name = name;
+    }
+    
+    public Animal(Animal ani) {
+        this.id=ani.id;
+        this.name = ani.name;
+    }
+    
+    @Override
     public String toString(){
-        return "Nombre: "+this.name+"\nEspecie:"+this.especie+"\nPeso:"+this.peso;
+        return this.name;
     }
 
     public int getId() {

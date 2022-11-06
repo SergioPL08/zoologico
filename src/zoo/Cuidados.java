@@ -21,6 +21,17 @@ public class Cuidados implements Serializable{
         this.descripcion = descripcion;
     }
 
+    public Cuidados(Cuidados cuidado) {
+        this.id = cuidado.id;
+        this.nombre = cuidado.nombre;
+        this.descripcion = cuidado.descripcion;
+    }
+    
+    public Cuidados(int id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+    
     public Cuidados(String nombre, String descripcion) {
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -49,8 +60,6 @@ public class Cuidados implements Serializable{
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-
-    
     
     @Override
     public String toString(){

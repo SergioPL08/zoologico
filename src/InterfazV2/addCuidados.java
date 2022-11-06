@@ -34,6 +34,10 @@ public class addCuidados extends javax.swing.JFrame {
     public addCuidados() {
         try {
             initComponents();
+            //TextPrompt sirve para poner un placeholder en un textfield
+            TextPrompt name = new TextPrompt("Cortar uñas pandas", jTFNombreCuidado);
+            TextPrompt descripcion = new TextPrompt("Cortarle y limarle las uñas a los pandas", jTADesc);
+            
             cuidados = new ArrayList<Cuidados>();
             miConexion = new Conexion("localhost","3306","zoologico","zoo","pepe");
             //Rellenamos la tabla de cuidados con los datos de la base de datos
@@ -75,6 +79,7 @@ public class addCuidados extends javax.swing.JFrame {
         jButtonAdd = new javax.swing.JButton();
         JButtonEditAnimal = new javax.swing.JToggleButton();
         JButtonRemoveAnimal = new javax.swing.JToggleButton();
+        JButtonErase = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -226,6 +231,21 @@ public class addCuidados extends javax.swing.JFrame {
         });
         jToolBar1.add(JButtonRemoveAnimal);
 
+        JButtonErase.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonErase.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonErase.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/erase.png"))); // NOI18N
+        JButtonErase.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonErase.setFocusable(false);
+        JButtonErase.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        JButtonErase.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonErase.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        JButtonErase.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JButtonEraseActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(JButtonErase);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -334,6 +354,11 @@ public class addCuidados extends javax.swing.JFrame {
         jTADesc.setText((String)jTablaCuidados.getValueAt(fila,2));
     }//GEN-LAST:event_click
 
+    private void JButtonEraseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEraseActionPerformed
+        jTFNombreCuidado.setText("");
+        jTADesc.setText("");
+    }//GEN-LAST:event_JButtonEraseActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -374,6 +399,7 @@ public class addCuidados extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton JButtonEditAnimal;
+    private javax.swing.JToggleButton JButtonErase;
     private javax.swing.JToggleButton JButtonRemoveAnimal;
     private javax.swing.JLabel LDesc;
     private javax.swing.JLabel LNombre;

@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import util.TextPrompt;
 
 /**
  *
@@ -24,6 +25,9 @@ public class addEspecie extends javax.swing.JFrame {
      */
     public addEspecie() {
         initComponents();
+            //TextPrompt sirve para poner un placeholder en un textfield
+            TextPrompt name = new TextPrompt("Monos", TNombreEspecie);
+            
         miConexion = new Conexion("localhost","3306","zoologico","zoo","pepe");
         modelo = (DefaultTableModel) jTablaEspecies.getModel();
             String consulta = "SELECT * FROM ESPECIE";
@@ -59,6 +63,7 @@ public class addEspecie extends javax.swing.JFrame {
         JButtonAddEspecie = new javax.swing.JToggleButton();
         JButtonEditAnimal = new javax.swing.JToggleButton();
         JButtonRemoveAnimal = new javax.swing.JToggleButton();
+        JButtonErase = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -191,6 +196,21 @@ public class addEspecie extends javax.swing.JFrame {
         });
         jToolBar1.add(JButtonRemoveAnimal);
 
+        JButtonErase.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonErase.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonErase.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/erase.png"))); // NOI18N
+        JButtonErase.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonErase.setFocusable(false);
+        JButtonErase.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        JButtonErase.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonErase.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        JButtonErase.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JButtonEraseActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(JButtonErase);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -285,6 +305,10 @@ public class addEspecie extends javax.swing.JFrame {
         TNombreEspecie.setText((String)jTablaEspecies.getValueAt(fila,1));
     }//GEN-LAST:event_mouseClicked
 
+    private void JButtonEraseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEraseActionPerformed
+        TNombreEspecie.setText("");
+    }//GEN-LAST:event_JButtonEraseActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -323,6 +347,7 @@ public class addEspecie extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton JButtonAddEspecie;
     private javax.swing.JToggleButton JButtonEditAnimal;
+    private javax.swing.JToggleButton JButtonErase;
     private javax.swing.JToggleButton JButtonRemoveAnimal;
     private javax.swing.JLabel LnombreEspecie;
     private javax.swing.JTextField TNombreEspecie;
