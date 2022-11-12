@@ -9,11 +9,11 @@ import InterfazV2.menuCuidador;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import util.Conexion;
+import util.utilities;
 /**
  *
  * @author sergio
@@ -26,6 +26,9 @@ public class PanelLogin extends javax.swing.JFrame {
      */
     public PanelLogin() {
         initComponents();
+        jButtonLogin.setCursor(new Cursor(HAND_CURSOR));
+        jLabelCrearCuenta.setCursor(new Cursor(HAND_CURSOR));
+        
         miConexion = new Conexion("localhost","3306","zoo","zoologico","pepe").makeConnect();
         users = new ArrayList();
     }
@@ -61,33 +64,34 @@ public class PanelLogin extends javax.swing.JFrame {
         jLabelLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logo2.png"))); // NOI18N
         jPanel1.add(jLabelLogo, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 60, -1, -1));
 
-        jLabelIniciarSesion.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        jLabelIniciarSesion.setFont(new java.awt.Font("Freshman", 1, 36)); // NOI18N
         jLabelIniciarSesion.setForeground(new java.awt.Color(51, 51, 51));
-        jLabelIniciarSesion.setText("Iniciar sesión");
+        jLabelIniciarSesion.setText("Iniciar sesion");
         jPanel1.add(jLabelIniciarSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 70, -1, -1));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setPreferredSize(new java.awt.Dimension(500, 400));
         jPanel2.setLayout(new java.awt.GridLayout(4, 1));
 
-        jLabelNombre.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        jLabelNombre.setForeground(new java.awt.Color(0, 153, 51));
+        jLabelNombre.setFont(new java.awt.Font("Freshman", 1, 24)); // NOI18N
+        jLabelNombre.setForeground(new java.awt.Color(0, 86, 44));
         jLabelNombre.setText("Nombre:");
         jPanel2.add(jLabelNombre);
 
         jTextFieldNombre.setBackground(new java.awt.Color(255, 255, 255));
-        jTextFieldNombre.setFont(new java.awt.Font("Calibri", 0, 24)); // NOI18N
+        jTextFieldNombre.setFont(new java.awt.Font("Freshman", 1, 24)); // NOI18N
         jTextFieldNombre.setForeground(new java.awt.Color(0, 0, 0));
         jTextFieldNombre.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 36), new java.awt.Color(0, 153, 51))); // NOI18N
         jTextFieldNombre.setMargin(new java.awt.Insets(0, 0, 1, 0));
         jPanel2.add(jTextFieldNombre);
 
-        jLabelPass.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        jLabelPass.setForeground(new java.awt.Color(0, 153, 51));
-        jLabelPass.setText("Contraseña");
+        jLabelPass.setFont(new java.awt.Font("Freshman", 1, 24)); // NOI18N
+        jLabelPass.setForeground(new java.awt.Color(0, 86, 44));
+        jLabelPass.setText("Contrasena");
         jPanel2.add(jLabelPass);
 
         jPasswordField1.setBackground(new java.awt.Color(255, 255, 255));
+        jPasswordField1.setFont(new java.awt.Font("Freshman", 1, 24)); // NOI18N
         jPasswordField1.setForeground(new java.awt.Color(51, 51, 51));
         jPanel2.add(jPasswordField1);
 
@@ -97,7 +101,7 @@ public class PanelLogin extends javax.swing.JFrame {
         jPanel1.add(jLabelCarpincho, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 0, -1, -1));
 
         jButtonLogin.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        jButtonLogin.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonLogin.setForeground(new java.awt.Color(0, 0, 0));
         jButtonLogin.setText("Iniciar sesión");
         jButtonLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -106,11 +110,18 @@ public class PanelLogin extends javax.swing.JFrame {
         });
         jPanel1.add(jButtonLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 570, -1, -1));
 
-        jLabelCrearCuenta.setForeground(new java.awt.Color(0, 153, 51));
+        jLabelCrearCuenta.setFont(new java.awt.Font("Freshman", 0, 12)); // NOI18N
+        jLabelCrearCuenta.setForeground(new java.awt.Color(0, 86, 44));
         jLabelCrearCuenta.setText("Crear cuenta");
         jLabelCrearCuenta.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 crearCuenta(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                PanelLogin.this.mouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                PanelLogin.this.mouseExited(evt);
             }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 jLabelCrearCuentaMousePressed(evt);
@@ -140,7 +151,7 @@ public class PanelLogin extends javax.swing.JFrame {
     private void jButtonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoginActionPerformed
         String nombre = jTextFieldNombre.getText().trim();
         char[] pass = jPasswordField1.getPassword();
-        String passwd = new String (pass);
+        String passwd = utilities.getEncryptedPass(new String (pass));
         if(nombre.equals("")){
             JOptionPane.showMessageDialog(null, "Introduce el nombre");
         } 
@@ -152,24 +163,24 @@ public class PanelLogin extends javax.swing.JFrame {
             ResultSet rsAdmin =util.Conexion.comprobarDatos("SELECT * FROM admin WHERE USER = '"+nombre+"' AND pass ='"+passwd+"'",miConexion);
             //System.out.println(rsAdmin);
             if(rsAdmin==null){
-                //Si no, comprobamos que el usuario y contraseña coincide con alguno de los cuidadores
-                ResultSet rsCuidador =util.Conexion.comprobarDatos("SELECT * FROM cuidador WHERE USER = '"+nombre+"' AND pass ='"+passwd+"'",miConexion);
-                int id=-1;
                 try {
-                    id = rsCuidador.getInt("id_per");
+                    //Si no, comprobamos que el usuario y contraseña coincide con alguno de los cuidadores
+                    String consulta = "SELECT * FROM cuidador WHERE USER = '"+nombre+"' AND pass ='"+passwd+"'";
+                    ResultSet rsCuidador =util.Conexion.comprobarDatos(consulta,miConexion);
+                    if(rsCuidador==null){
+                        JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
+                    }
+                    else{
+                        int id = rsCuidador.getInt("id_per");
+                        JOptionPane.showMessageDialog(null, "Cuidador correcto");
+                        util.Conexion.closeConnect(miConexion);
+                        menuCuidador mp = new menuCuidador(id,nombre);
+                        mp.setVisible(true);
+                        this.setVisible(false);
+                        
+                    }
                 } catch (SQLException ex) {
-                    Logger.getLogger(PanelLogin.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                if(rsCuidador==null){
                     JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
-                }
-                else{
-                    JOptionPane.showMessageDialog(null, "Cuidador correcto");
-                    util.Conexion.closeConnect(miConexion);
-                    menuCuidador mp = new menuCuidador(id,nombre);
-                    mp.setVisible(true);
-                    this.setVisible(false);
-                    
                 }
             }
             else{
@@ -192,8 +203,16 @@ public class PanelLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_crearCuenta
 
     private void jLabelCrearCuentaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelCrearCuentaMousePressed
-        jLabelCrearCuenta.setForeground(Color.decode("#FF6666"));
+        jLabelCrearCuenta.setForeground(Color.decode("#4DBAFF"));
     }//GEN-LAST:event_jLabelCrearCuentaMousePressed
+
+    private void mouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseEntered
+        jLabelCrearCuenta.setForeground(Color.decode("#FF6666"));
+    }//GEN-LAST:event_mouseEntered
+
+    private void mouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseExited
+        jLabelCrearCuenta.setForeground(Color.decode("#009933"));
+    }//GEN-LAST:event_mouseExited
 
     /**
      * @param args the command line arguments

@@ -1,16 +1,17 @@
 package InterfazV2;
 
+import java.awt.Cursor;
+import static java.awt.Frame.HAND_CURSOR;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import util.Conexion;
 import util.TextPrompt;
+import util.utilities;
 import zoo.Especialidad;
 
 /*
@@ -32,6 +33,10 @@ public class addCuidadores extends javax.swing.JFrame {
     public addCuidadores() {
         try{
             initComponents();
+            JButtonAddCuidador.setCursor(new Cursor(HAND_CURSOR));
+            JButtonEditCuidador.setCursor(new Cursor(HAND_CURSOR));
+            JButtonErase.setCursor(new Cursor(HAND_CURSOR));
+            JButtonRemoveCuidador.setCursor(new Cursor(HAND_CURSOR));
             //TextPrompt sirve para poner un placeholder en un textfield
             TextPrompt name = new TextPrompt("Jorge", jTFNombreCuidador);
             TextPrompt apellido = new TextPrompt("Sanchez", jTFApe);
@@ -67,7 +72,7 @@ public class addCuidadores extends javax.swing.JFrame {
             }
         }
         catch(SQLException ex){
-            Logger.getLogger(addCuidadores.class.getName()).log(Level.SEVERE,null, ex);
+            JOptionPane.showMessageDialog(null, "Error al cargar la especialidad");
         }
         
     }
@@ -88,7 +93,7 @@ public class addCuidadores extends javax.swing.JFrame {
         JLSalario = new javax.swing.JLabel();
         jTFTel = new javax.swing.JTextField();
         JLEspecialidad = new javax.swing.JLabel();
-        JLNum1 = new javax.swing.JLabel();
+        jLTelefono = new javax.swing.JLabel();
         jComboBoxEspecialidad = new javax.swing.JComboBox<>();
         JLApellidos = new javax.swing.JLabel();
         jTFApe = new javax.swing.JTextField();
@@ -101,8 +106,8 @@ public class addCuidadores extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTablaCuidadores = new javax.swing.JTable();
         jToolBar1 = new javax.swing.JToolBar();
-        JButtonAddAnimal = new javax.swing.JToggleButton();
-        JButtonEditAnimal = new javax.swing.JToggleButton();
+        JButtonAddCuidador = new javax.swing.JToggleButton();
+        JButtonEditCuidador = new javax.swing.JToggleButton();
         JButtonRemoveCuidador = new javax.swing.JToggleButton();
         JButtonErase = new javax.swing.JToggleButton();
 
@@ -116,18 +121,18 @@ public class addCuidadores extends javax.swing.JFrame {
         capa0.setLayout(capa0Layout);
 
         addCuidador.setBackground(new java.awt.Color(255, 255, 255));
-        addCuidador.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
+        addCuidador.setFont(new java.awt.Font("Freshman", 0, 36)); // NOI18N
         addCuidador.setForeground(new java.awt.Color(51, 51, 51));
         addCuidador.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        addCuidador.setText("Añadir cuidador");
+        addCuidador.setText("cuidadores");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 3;
         capa0.add(addCuidador, gridBagConstraints);
 
-        JLNombre.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        JLNombre.setForeground(new java.awt.Color(0, 153, 51));
+        JLNombre.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        JLNombre.setForeground(new java.awt.Color(0, 86, 44));
         JLNombre.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         JLNombre.setText("Nombre");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -136,6 +141,7 @@ public class addCuidadores extends javax.swing.JFrame {
         capa0.add(JLNombre, gridBagConstraints);
 
         jTFNombreCuidador.setBackground(new java.awt.Color(255, 255, 255));
+        jTFNombreCuidador.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
         jTFNombreCuidador.setForeground(new java.awt.Color(0, 0, 0));
         jTFNombreCuidador.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(0, 0, 0))); // NOI18N
         jTFNombreCuidador.setPreferredSize(new java.awt.Dimension(100, 20));
@@ -144,8 +150,8 @@ public class addCuidadores extends javax.swing.JFrame {
         gridBagConstraints.gridy = 2;
         capa0.add(jTFNombreCuidador, gridBagConstraints);
 
-        JLSalario.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        JLSalario.setForeground(new java.awt.Color(0, 153, 51));
+        JLSalario.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        JLSalario.setForeground(new java.awt.Color(0, 86, 44));
         JLSalario.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         JLSalario.setText("Salario");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -154,6 +160,7 @@ public class addCuidadores extends javax.swing.JFrame {
         capa0.add(JLSalario, gridBagConstraints);
 
         jTFTel.setBackground(new java.awt.Color(255, 255, 255));
+        jTFTel.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
         jTFTel.setForeground(new java.awt.Color(0, 0, 0));
         jTFTel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(0, 0, 0))); // NOI18N
         jTFTel.setPreferredSize(new java.awt.Dimension(100, 20));
@@ -162,8 +169,8 @@ public class addCuidadores extends javax.swing.JFrame {
         gridBagConstraints.gridy = 8;
         capa0.add(jTFTel, gridBagConstraints);
 
-        JLEspecialidad.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        JLEspecialidad.setForeground(new java.awt.Color(0, 153, 51));
+        JLEspecialidad.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        JLEspecialidad.setForeground(new java.awt.Color(0, 86, 44));
         JLEspecialidad.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         JLEspecialidad.setText("Especialidad");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -171,23 +178,24 @@ public class addCuidadores extends javax.swing.JFrame {
         gridBagConstraints.gridy = 10;
         capa0.add(JLEspecialidad, gridBagConstraints);
 
-        JLNum1.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        JLNum1.setForeground(new java.awt.Color(0, 153, 51));
-        JLNum1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        JLNum1.setText("Telefono");
+        jLTelefono.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        jLTelefono.setForeground(new java.awt.Color(0, 86, 44));
+        jLTelefono.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLTelefono.setText("Telefono");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
-        capa0.add(JLNum1, gridBagConstraints);
+        capa0.add(jLTelefono, gridBagConstraints);
 
+        jComboBoxEspecialidad.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
         jComboBoxEspecialidad.setPreferredSize(new java.awt.Dimension(100, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 10;
         capa0.add(jComboBoxEspecialidad, gridBagConstraints);
 
-        JLApellidos.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        JLApellidos.setForeground(new java.awt.Color(0, 153, 51));
+        JLApellidos.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        JLApellidos.setForeground(new java.awt.Color(0, 86, 44));
         JLApellidos.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         JLApellidos.setText("Apellidos");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -196,6 +204,7 @@ public class addCuidadores extends javax.swing.JFrame {
         capa0.add(JLApellidos, gridBagConstraints);
 
         jTFApe.setBackground(new java.awt.Color(255, 255, 255));
+        jTFApe.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
         jTFApe.setForeground(new java.awt.Color(0, 0, 0));
         jTFApe.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(0, 0, 0))); // NOI18N
         jTFApe.setPreferredSize(new java.awt.Dimension(100, 20));
@@ -212,6 +221,7 @@ public class addCuidadores extends javax.swing.JFrame {
         capa0.add(jSSalario, gridBagConstraints);
 
         jTFUser.setBackground(new java.awt.Color(255, 255, 255));
+        jTFUser.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
         jTFUser.setForeground(new java.awt.Color(0, 0, 0));
         jTFUser.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(0, 0, 0))); // NOI18N
         jTFUser.setPreferredSize(new java.awt.Dimension(100, 20));
@@ -220,14 +230,15 @@ public class addCuidadores extends javax.swing.JFrame {
         gridBagConstraints.gridy = 12;
         capa0.add(jTFUser, gridBagConstraints);
 
+        jPasswordField1.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
         jPasswordField1.setPreferredSize(new java.awt.Dimension(100, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 14;
         capa0.add(jPasswordField1, gridBagConstraints);
 
-        JLUser.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        JLUser.setForeground(new java.awt.Color(0, 153, 51));
+        JLUser.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        JLUser.setForeground(new java.awt.Color(0, 86, 44));
         JLUser.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         JLUser.setText("Usuario");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -235,10 +246,10 @@ public class addCuidadores extends javax.swing.JFrame {
         gridBagConstraints.gridy = 12;
         capa0.add(JLUser, gridBagConstraints);
 
-        JLPass.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        JLPass.setForeground(new java.awt.Color(0, 153, 51));
+        JLPass.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        JLPass.setForeground(new java.awt.Color(0, 86, 44));
         JLPass.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        JLPass.setText("Contraseña");
+        JLPass.setText("Contrasena");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 14;
@@ -302,29 +313,29 @@ public class addCuidadores extends javax.swing.JFrame {
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
-        JButtonAddAnimal.setBackground(new java.awt.Color(51, 51, 51));
-        JButtonAddAnimal.setForeground(new java.awt.Color(0, 0, 0));
-        JButtonAddAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.png"))); // NOI18N
-        JButtonAddAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        JButtonAddAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
-        JButtonAddAnimal.addActionListener(new java.awt.event.ActionListener() {
+        JButtonAddCuidador.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonAddCuidador.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonAddCuidador.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.png"))); // NOI18N
+        JButtonAddCuidador.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonAddCuidador.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonAddCuidador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JButtonAddAnimalActionPerformed(evt);
+                JButtonAddCuidadorActionPerformed(evt);
             }
         });
-        jToolBar1.add(JButtonAddAnimal);
+        jToolBar1.add(JButtonAddCuidador);
 
-        JButtonEditAnimal.setBackground(new java.awt.Color(51, 51, 51));
-        JButtonEditAnimal.setForeground(new java.awt.Color(0, 0, 0));
-        JButtonEditAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/edit.png"))); // NOI18N
-        JButtonEditAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        JButtonEditAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
-        JButtonEditAnimal.addActionListener(new java.awt.event.ActionListener() {
+        JButtonEditCuidador.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonEditCuidador.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonEditCuidador.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/edit.png"))); // NOI18N
+        JButtonEditCuidador.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonEditCuidador.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonEditCuidador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JButtonEditAnimalActionPerformed(evt);
+                JButtonEditCuidadorActionPerformed(evt);
             }
         });
-        jToolBar1.add(JButtonEditAnimal);
+        jToolBar1.add(JButtonEditCuidador);
 
         JButtonRemoveCuidador.setBackground(new java.awt.Color(51, 51, 51));
         JButtonRemoveCuidador.setForeground(new java.awt.Color(0, 0, 0));
@@ -377,13 +388,13 @@ public class addCuidadores extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void JButtonAddAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonAddAnimalActionPerformed
+    private void JButtonAddCuidadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonAddCuidadorActionPerformed
         //Recogemos los datos de los campos de texto
         String nombre = jTFNombreCuidador.getText();
         String ape = jTFApe.getText();
         String user = jTFUser.getText();
         char[] pass = jPasswordField1.getPassword();
-        String passwd = new String (pass);
+        String passwd = utilities.getEncryptedPass(new String (pass));
         float salario = (float)jSSalario.getValue();
         String num = jTFTel.getText();
         Especialidad esp = new Especialidad((Especialidad)jComboBoxEspecialidad.getSelectedItem());
@@ -409,15 +420,19 @@ public class addCuidadores extends javax.swing.JFrame {
         else if(num.length()!=9){
             JOptionPane.showMessageDialog(null, "Introduce correctamente número de teléfono");
         }
+        //Comprobamos que el nombre de usuario no esté vacío
         else if(user.equals("")){
             JOptionPane.showMessageDialog(null, "Introduce el nombre de usuario");
         }
+        //Comprobamos que la contraseña no esté vacía
         else if(passwd.equals("")){
             JOptionPane.showMessageDialog(null, "Introduce la contraseña");
         }
+        //admin es el nombre del usuario admin, por lo tanto no es válido
         else if(user.equals("admin")){
             JOptionPane.showMessageDialog(null, "Nombre de usuario no válido");
         }
+        //admin es la contraseña del usuario admin, por lo tanto no es válida
         else if(passwd.equals("admin")){
             JOptionPane.showMessageDialog(null, "Contraseña válida");
         }
@@ -479,93 +494,104 @@ public class addCuidadores extends javax.swing.JFrame {
                 }
             
         }   catch (SQLException ex) {
-                Logger.getLogger(addCuidadores.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Error al crear el cuidador");
             }
         }
-    }//GEN-LAST:event_JButtonAddAnimalActionPerformed
+    }//GEN-LAST:event_JButtonAddCuidadorActionPerformed
 
-    private void JButtonEditAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEditAnimalActionPerformed
-        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No podrás recuperar los datos anteriores","Editar cuidador",JOptionPane.YES_OPTION);
-        if(resp==0){
-            int fila = jTablaCuidadores.getSelectedRow();
-            int id=(int)jTablaCuidadores.getValueAt(fila, 0);
-            String nombre = jTFNombreCuidador.getText();
-            String ape = jTFApe.getText();
-            float salario = (float)jSSalario.getValue();
-            String num = jTFTel.getText();
-            String sentencia = "UPDATE PERSONA SET NOMBRE='"+nombre+"', APELLIDO='"+ape+"',SALARIO="+salario+",TELEFONO='"+num+"'  WHERE ID_PERSONA="+id;
-            System.out.println(sentencia);
-            if(util.Conexion.editTable(sentencia,miConexion)==1){
-                LocalDateTime dateTime = LocalDateTime.now();
-                String currentTimeStamp = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0").format(dateTime);
-                modelo.setValueAt(jTFNombreCuidador.getText(), fila, 1);
-                modelo.setValueAt(jTFApe.getText(), fila, 2);
-                modelo.setValueAt(jSSalario.getValue(), fila, 3);
-                modelo.setValueAt(jTFTel.getText(), fila, 4);
-                modelo.setValueAt(currentTimeStamp, fila, 6);
-                JOptionPane.showMessageDialog(null, "Cuidador editado correctamente");
-                jTFNombreCuidador.setText("");
-                jTFNombreCuidador.setText("");
-                jTFTel.setText("");
-                jSSalario.setValue(0);
-            }
-            else{
-                JOptionPane.showMessageDialog(null, "Error al editar el cuidador");
+    private void JButtonEditCuidadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEditCuidadorActionPerformed
+        try{
+            int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No podrás recuperar los datos anteriores","Editar cuidador",JOptionPane.YES_OPTION);
+            if(resp==0){
+                int fila = jTablaCuidadores.getSelectedRow();
+                int id=(int)jTablaCuidadores.getValueAt(fila, 0);
+                String nombre = jTFNombreCuidador.getText();
+                String ape = jTFApe.getText();
+                float salario = (float)jSSalario.getValue();
+                String num = jTFTel.getText();
+                String sentencia = "UPDATE PERSONA SET NOMBRE='"+nombre+"', APELLIDO='"+ape+"',SALARIO="+salario+",TELEFONO='"+num+"'  WHERE ID_PERSONA="+id;
+                System.out.println(sentencia);
+                if(util.Conexion.editTable(sentencia,miConexion)==1){
+                    LocalDateTime dateTime = LocalDateTime.now();
+                    String currentTimeStamp = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0").format(dateTime);
+                    modelo.setValueAt(jTFNombreCuidador.getText(), fila, 1);
+                    modelo.setValueAt(jTFApe.getText(), fila, 2);
+                    modelo.setValueAt(jSSalario.getValue(), fila, 3);
+                    modelo.setValueAt(jTFTel.getText(), fila, 4);
+                    modelo.setValueAt(currentTimeStamp, fila, 6);
+                    JOptionPane.showMessageDialog(null, "Cuidador editado correctamente");
+                    jTFNombreCuidador.setText("");
+                    jTFNombreCuidador.setText("");
+                    jTFTel.setText("");
+                    jSSalario.setValue(0);
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "Error al editar el cuidador");
+                }
             }
         }
-    }//GEN-LAST:event_JButtonEditAnimalActionPerformed
+        catch(java.lang.NullPointerException ex){
+            JOptionPane.showMessageDialog(null, "Selecciona una fila de la tabla");
+        }
+            
+    }//GEN-LAST:event_JButtonEditCuidadorActionPerformed
 
     private void JButtonRemoveCuidadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonRemoveCuidadorActionPerformed
-        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No vas a poder recuperar los datos eliminados","Eliminar cuidador",JOptionPane.YES_OPTION);
-        if(resp==0){
-            int id=(int)jTablaCuidadores.getValueAt(jTablaCuidadores.getSelectedRow(), 0);
-            int fila = jTablaCuidadores.getSelectedRow();
-            try {
-                miConexion.setAutoCommit(false);
-                String comprobarTarea = "Select * from realizada where id_cuidador="+id;
-                ResultSet rs1 = util.Conexion.comprobarDatos(comprobarTarea, miConexion);
-                if(rs1!=null){
-                    String sentencia = "DELETE FROM REALIZADA WHERE ID_CUIDADOR="+id;
-                    if(util.Conexion.editTable(sentencia,miConexion)!=1){
-                        miConexion.rollback();
+        try{
+            int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No vas a poder recuperar los datos eliminados","Eliminar cuidador",JOptionPane.YES_OPTION);
+            if(resp==0){
+                int id=(int)jTablaCuidadores.getValueAt(jTablaCuidadores.getSelectedRow(), 0);
+                int fila = jTablaCuidadores.getSelectedRow();
+                try {
+                    miConexion.setAutoCommit(false);
+                    String comprobarTarea = "Select * from realizada where id_cuidador="+id;
+                    ResultSet rs1 = util.Conexion.comprobarDatos(comprobarTarea, miConexion);
+                    if(rs1!=null){
+                        String sentencia = "DELETE FROM REALIZADA WHERE ID_CUIDADOR="+id;
+                        if(util.Conexion.editTable(sentencia,miConexion)!=1){
+                            miConexion.rollback();
+                        }
+                        else{
+                            JOptionPane.showMessageDialog(null, "Tareas relacionadas con el cuidador elimadas correctamente");
+                        }
+                    }
+                 } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(null, "Error al eliminar el cuidador");
+                }
+                //System.out.println(sentencia1);
+                String sentencia1 = "DELETE FROM CUIDADOR WHERE id_per="+id;
+                String sentencia2 = "DELETE FROM PERSONA WHERE ID_PERSONA="+id;
+                if(util.Conexion.editTable(sentencia1,miConexion)==1){
+                    if(util.Conexion.editTable(sentencia2,miConexion)==1){
+                    modelo.removeRow(fila);
+                    JOptionPane.showMessageDialog(null, "Cuidador elimado correctamente");
+                    jTFNombreCuidador.setText("");
+                    jTFApe.setText("");
+                    jTFTel.setText("");
+                    jSSalario.setValue(0);
+                        try {
+                            miConexion.commit();
+                        } catch (SQLException ex) {
+                            JOptionPane.showMessageDialog(null, "Error al eliminar el cuidador");
+                        }
                     }
                     else{
-                        JOptionPane.showMessageDialog(null, "Tareas relacionadas con el cuidador elimadas correctamente");
-                    }
-                }
-             } catch (SQLException ex) {
-                Logger.getLogger(addCuidadores.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            //System.out.println(sentencia1);
-            String sentencia1 = "DELETE FROM CUIDADOR WHERE id_per="+id;
-            String sentencia2 = "DELETE FROM PERSONA WHERE ID_PERSONA="+id;
-            if(util.Conexion.editTable(sentencia1,miConexion)==1){
-                if(util.Conexion.editTable(sentencia2,miConexion)==1){
-                modelo.removeRow(fila);
-                JOptionPane.showMessageDialog(null, "Cuidador elimado correctamente");
-                jTFNombreCuidador.setText("");
-                jTFApe.setText("");
-                jTFTel.setText("");
-                jSSalario.setValue(0);
-                    try {
-                        miConexion.commit();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(addCuidadores.class.getName()).log(Level.SEVERE, null, ex);
+                        try {
+                            miConexion.rollback();
+                        } catch (SQLException ex) {
+                            JOptionPane.showMessageDialog(null, "Error al eliminar el cuidador");
+                        }
                     }
                 }
                 else{
-                    try {
-                        miConexion.rollback();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(addCuidadores.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    JOptionPane.showMessageDialog(null, "Error al eliminar el cuidador");
                 }
-            }
-            else{
-                JOptionPane.showMessageDialog(null, "Error al eliminar el cuidador");
-            }
-        
-            }
+
+                }
+        }
+        catch(java.lang.NullPointerException ex){
+            JOptionPane.showMessageDialog(null, "Selecciona una fila de la tabla");
+        }
     }//GEN-LAST:event_JButtonRemoveCuidadorActionPerformed
 
     private void click(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_click
@@ -589,54 +615,23 @@ public class addCuidadores extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(addCuidadores.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(addCuidadores.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(addCuidadores.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(addCuidadores.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new addCuidadores().setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JToggleButton JButtonAddAnimal;
-    private javax.swing.JToggleButton JButtonEditAnimal;
+    private javax.swing.JToggleButton JButtonAddCuidador;
+    private javax.swing.JToggleButton JButtonEditCuidador;
     private javax.swing.JToggleButton JButtonErase;
     private javax.swing.JToggleButton JButtonRemoveCuidador;
     private javax.swing.JLabel JLApellidos;
     private javax.swing.JLabel JLEspecialidad;
     private javax.swing.JLabel JLNombre;
-    private javax.swing.JLabel JLNum1;
     private javax.swing.JLabel JLPass;
     private javax.swing.JLabel JLSalario;
     private javax.swing.JLabel JLUser;
     private javax.swing.JLabel addCuidador;
     private javax.swing.JPanel capa0;
     private javax.swing.JComboBox<String> jComboBoxEspecialidad;
+    private javax.swing.JLabel jLTelefono;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JSpinner jSSalario;

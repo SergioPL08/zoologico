@@ -7,11 +7,14 @@ package Login;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import util.Conexion;
+import util.utilities;
+import zoo.Especialidad;
 
 /**
  *
@@ -19,6 +22,7 @@ import util.Conexion;
  */
 public class Register extends javax.swing.JFrame {
     ArrayList users;
+    ArrayList<Especialidad> especialidades;
     Connection miConexion;
 
     /**
@@ -28,6 +32,23 @@ public class Register extends javax.swing.JFrame {
         initComponents();
         miConexion = new Conexion("localhost","3306","zoo","zoologico","pepe").makeConnect();
         users = new ArrayList();
+        especialidades = new ArrayList<Especialidad>();
+        //Rellenamos la caja de especialidades
+            try{
+                String consultaEspecialidad = "SELECT * FROM especialidad";
+                DefaultComboBoxModel model = new DefaultComboBoxModel();
+                ResultSet rsEspecialidad = util.Conexion.getSelect(consultaEspecialidad,miConexion);
+                while (rsEspecialidad.next()){
+                    Especialidad esp = new Especialidad(rsEspecialidad.getInt(1),rsEspecialidad.getString(2));
+                    especialidades.add(esp);
+                    model.addElement(esp);
+                    //System.out.println(rsEspecialidad.getString(1)+rsEspecialidad.getString(2));
+                }
+                jComboBoxEspecialidad.setModel(model);
+            }
+            catch(SQLException ex){
+                JOptionPane.showMessageDialog(null,ex.getMessage());
+            }
             }
 
     /**
@@ -38,91 +59,215 @@ public class Register extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
-        jPanel1 = new javax.swing.JPanel();
+        capa0 = new javax.swing.JPanel();
+        LRegister = new javax.swing.JLabel();
+        JLNombre = new javax.swing.JLabel();
+        jTFNombre = new javax.swing.JTextField();
+        JLSalario = new javax.swing.JLabel();
+        jTFTel = new javax.swing.JTextField();
+        JLEspecialidad = new javax.swing.JLabel();
+        JLNum1 = new javax.swing.JLabel();
+        jComboBoxEspecialidad = new javax.swing.JComboBox<>();
+        JLApellidos = new javax.swing.JLabel();
+        jTFApe = new javax.swing.JTextField();
+        jSSalario = new javax.swing.JSpinner();
+        jTFUser = new javax.swing.JTextField();
+        jPasswordField1 = new javax.swing.JPasswordField();
+        JLUser = new javax.swing.JLabel();
+        JLPass = new javax.swing.JLabel();
         jButtonRegister = new javax.swing.JButton();
-        jLabelLogo = new javax.swing.JLabel();
-        jLabelIniciarSesion = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        jLabelNombre = new javax.swing.JLabel();
-        jTextFieldNombre = new javax.swing.JTextField();
-        jLabelPass = new javax.swing.JLabel();
-        jPasswordField = new javax.swing.JPasswordField();
-        jLabelNombre1 = new javax.swing.JLabel();
-        jPasswordFieldConfirmar = new javax.swing.JPasswordField();
+        JLNombre1 = new javax.swing.JLabel();
+        JLPass1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setPreferredSize(new java.awt.Dimension(700, 600));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        capa0.setBackground(new java.awt.Color(255, 255, 255));
+        capa0.setPreferredSize(new java.awt.Dimension(800, 600));
+        java.awt.GridBagLayout capa0Layout = new java.awt.GridBagLayout();
+        capa0Layout.columnWidths = new int[] {0, 35, 0};
+        capa0Layout.rowHeights = new int[] {0, 32, 0, 32, 0, 32, 0, 32, 0, 32, 0, 32, 0, 32, 0, 32, 0};
+        capa0.setLayout(capa0Layout);
 
-        jButtonRegister.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        jButtonRegister.setForeground(new java.awt.Color(255, 255, 255));
+        LRegister.setBackground(new java.awt.Color(255, 255, 255));
+        LRegister.setFont(new java.awt.Font("Freshman", 0, 36)); // NOI18N
+        LRegister.setForeground(new java.awt.Color(51, 51, 51));
+        LRegister.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        LRegister.setText("Registrarse");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 3;
+        capa0.add(LRegister, gridBagConstraints);
+
+        JLNombre.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        JLNombre.setForeground(new java.awt.Color(0, 86, 44));
+        JLNombre.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        JLNombre.setText("Nombre");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        capa0.add(JLNombre, gridBagConstraints);
+
+        jTFNombre.setBackground(new java.awt.Color(255, 255, 255));
+        jTFNombre.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        jTFNombre.setForeground(new java.awt.Color(0, 0, 0));
+        jTFNombre.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(0, 0, 0))); // NOI18N
+        jTFNombre.setPreferredSize(new java.awt.Dimension(100, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        capa0.add(jTFNombre, gridBagConstraints);
+
+        JLSalario.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        JLSalario.setForeground(new java.awt.Color(0, 86, 44));
+        JLSalario.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        JLSalario.setText("Salario");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        capa0.add(JLSalario, gridBagConstraints);
+
+        jTFTel.setBackground(new java.awt.Color(255, 255, 255));
+        jTFTel.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        jTFTel.setForeground(new java.awt.Color(0, 0, 0));
+        jTFTel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(0, 0, 0))); // NOI18N
+        jTFTel.setPreferredSize(new java.awt.Dimension(100, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 8;
+        capa0.add(jTFTel, gridBagConstraints);
+
+        JLEspecialidad.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        JLEspecialidad.setForeground(new java.awt.Color(0, 86, 44));
+        JLEspecialidad.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        JLEspecialidad.setText("Especialidad");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 10;
+        capa0.add(JLEspecialidad, gridBagConstraints);
+
+        JLNum1.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        JLNum1.setForeground(new java.awt.Color(0, 86, 44));
+        JLNum1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        JLNum1.setText("Telefono");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 8;
+        capa0.add(JLNum1, gridBagConstraints);
+
+        jComboBoxEspecialidad.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        jComboBoxEspecialidad.setPreferredSize(new java.awt.Dimension(100, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 10;
+        capa0.add(jComboBoxEspecialidad, gridBagConstraints);
+
+        JLApellidos.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        JLApellidos.setForeground(new java.awt.Color(0, 86, 44));
+        JLApellidos.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        JLApellidos.setText("Apellidos");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        capa0.add(JLApellidos, gridBagConstraints);
+
+        jTFApe.setBackground(new java.awt.Color(255, 255, 255));
+        jTFApe.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        jTFApe.setForeground(new java.awt.Color(0, 0, 0));
+        jTFApe.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(0, 0, 0))); // NOI18N
+        jTFApe.setPreferredSize(new java.awt.Dimension(100, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 4;
+        capa0.add(jTFApe, gridBagConstraints);
+
+        jSSalario.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        jSSalario.setModel(new javax.swing.SpinnerNumberModel(0.0f, 0.0f, null, 1.0f));
+        jSSalario.setPreferredSize(new java.awt.Dimension(100, 26));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 6;
+        capa0.add(jSSalario, gridBagConstraints);
+
+        jTFUser.setBackground(new java.awt.Color(255, 255, 255));
+        jTFUser.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        jTFUser.setForeground(new java.awt.Color(0, 0, 0));
+        jTFUser.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(0, 0, 0))); // NOI18N
+        jTFUser.setPreferredSize(new java.awt.Dimension(100, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 12;
+        capa0.add(jTFUser, gridBagConstraints);
+
+        jPasswordField1.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        jPasswordField1.setPreferredSize(new java.awt.Dimension(100, 22));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 14;
+        capa0.add(jPasswordField1, gridBagConstraints);
+
+        JLUser.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        JLUser.setForeground(new java.awt.Color(0, 86, 44));
+        JLUser.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        JLUser.setText("Usuario");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 12;
+        capa0.add(JLUser, gridBagConstraints);
+
+        JLPass.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        JLPass.setForeground(new java.awt.Color(0, 86, 44));
+        JLPass.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        JLPass.setText("Contrasena");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 14;
+        capa0.add(JLPass, gridBagConstraints);
+
+        jButtonRegister.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        jButtonRegister.setForeground(new java.awt.Color(0, 0, 0));
         jButtonRegister.setText("Registrar");
         jButtonRegister.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonRegisterActionPerformed(evt);
             }
         });
-        jPanel1.add(jButtonRegister, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 480, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 16;
+        gridBagConstraints.gridwidth = 3;
+        capa0.add(jButtonRegister, gridBagConstraints);
 
-        jLabelLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logo2.png"))); // NOI18N
-        jPanel1.add(jLabelLogo, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 60, -1, -1));
+        JLNombre1.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        JLNombre1.setForeground(new java.awt.Color(0, 153, 51));
+        JLNombre1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        JLNombre1.setText("Nombre");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        capa0.add(JLNombre1, gridBagConstraints);
 
-        jLabelIniciarSesion.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        jLabelIniciarSesion.setForeground(new java.awt.Color(51, 51, 51));
-        jLabelIniciarSesion.setText("Registrar");
-        jPanel1.add(jLabelIniciarSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 70, -1, -1));
-
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setPreferredSize(new java.awt.Dimension(500, 400));
-        jPanel2.setLayout(new java.awt.GridLayout(4, 1));
-
-        jLabelNombre.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        jLabelNombre.setForeground(new java.awt.Color(0, 153, 51));
-        jLabelNombre.setText("Nombre:");
-        jPanel2.add(jLabelNombre);
-
-        jTextFieldNombre.setBackground(new java.awt.Color(255, 255, 255));
-        jTextFieldNombre.setFont(new java.awt.Font("Calibri", 0, 24)); // NOI18N
-        jTextFieldNombre.setForeground(new java.awt.Color(0, 0, 0));
-        jTextFieldNombre.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 36), new java.awt.Color(0, 153, 51))); // NOI18N
-        jTextFieldNombre.setMargin(new java.awt.Insets(0, 0, 1, 0));
-        jPanel2.add(jTextFieldNombre);
-
-        jLabelPass.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        jLabelPass.setForeground(new java.awt.Color(0, 153, 51));
-        jLabelPass.setText("Contraseña");
-        jPanel2.add(jLabelPass);
-
-        jPasswordField.setBackground(new java.awt.Color(255, 255, 255));
-        jPasswordField.setForeground(new java.awt.Color(51, 51, 51));
-        jPanel2.add(jPasswordField);
-
-        jLabelNombre1.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        jLabelNombre1.setForeground(new java.awt.Color(0, 153, 51));
-        jLabelNombre1.setText("Confirmar");
-        jPanel2.add(jLabelNombre1);
-
-        jPasswordFieldConfirmar.setBackground(new java.awt.Color(255, 255, 255));
-        jPasswordFieldConfirmar.setForeground(new java.awt.Color(51, 51, 51));
-        jPanel2.add(jPasswordFieldConfirmar);
-
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 370, 340));
+        JLPass1.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        JLPass1.setForeground(new java.awt.Color(0, 153, 51));
+        JLPass1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        JLPass1.setText("Contraseña");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 14;
+        capa0.add(JLPass1, gridBagConstraints);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(capa0, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(capa0, javax.swing.GroupLayout.PREFERRED_SIZE, 566, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -130,97 +275,140 @@ public class Register extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRegisterActionPerformed
-        String nombre = jTextFieldNombre.getText().trim();
-        char[] pass = jPasswordField.getPassword();
-        String passwd = new String (pass);
-        char[] confirm = jPasswordFieldConfirmar.getPassword();
-        String confirmar = new String (confirm);
+        //Recogemos los datos de los campos de texto
+        String nombre = jTFNombre.getText();
+        String ape = jTFApe.getText();
+        String user = jTFUser.getText();
+        char[] pass = jPasswordField1.getPassword();
+        String passwd = utilities.getEncryptedPass(new String (pass));
+        float salario = (float)jSSalario.getValue();
+        String num = jTFTel.getText();
+        Especialidad esp = new Especialidad((Especialidad)jComboBoxEspecialidad.getSelectedItem());
+        int especialidad = esp.getId();
+        //Hacemos las comprobaciones necesarias
+        //Comprobamos que el nombre no esté vacío
         if(nombre.equals("")){
             JOptionPane.showMessageDialog(null, "Introduce el nombre");
-        } 
-        else if(pass.equals("")){
-            JOptionPane.showMessageDialog(null, "La contraseña está vacía");
         }
-        else if(!passwd.equals(confirmar)){
-            JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden");
+        //Comprobamos que el apellido no esté vacío
+        else if(ape.equals("")){
+            JOptionPane.showMessageDialog(null, "Introduce el apellido");
+        }
+        //Comprobamos que el salario no sea 0
+        else if(salario==0){
+            JOptionPane.showMessageDialog(null, "El salario no puede ser 0");
+        }
+        //Comprobamos que el número de teléfono no esté vacío
+        else if(num.equals("")){
+            JOptionPane.showMessageDialog(null, "Introduce el número de teléfono");
+        }
+        //Comprobamos que el número de teléfono tenga 9 caracteres
+        else if(num.length()!=9){
+            JOptionPane.showMessageDialog(null, "Introduce correctamente número de teléfono");
+        }
+        //Comprobamos que el nombre de usuario no esté vacío
+        else if(user.equals("")){
+            JOptionPane.showMessageDialog(null, "Introduce el nombre de usuario");
+        }
+        //Comprobamos que la contraseña no esté vacía
+        else if(passwd.equals("")){
+            JOptionPane.showMessageDialog(null, "Introduce la contraseña");
+        }
+        //admin es el nombre del usuario admin, por lo tanto no es válido
+        else if(user.equals("admin")){
+            JOptionPane.showMessageDialog(null, "Nombre de usuario no válido");
+        }
+        //admin es la contraseña del usuario admin, por lo tanto no es válida
+        else if(passwd.equals("admin")){
+            JOptionPane.showMessageDialog(null, "Contraseña válida");
         }
         else{
             try {
-                ResultSet rs1 =util.Conexion.comprobarDatos("SELECT * FROM admin WHERE USER = '"+nombre+"'",miConexion);
-                System.out.println(rs1);
+                //Comprobamos que el cuidador no existe (al menos con el mismo nombre, apellido y telefono)
+                String consulta = "SELECT * FROM persona,cuidador WHERE nombre='"+nombre+"' AND apellido='"+ape+"' AND TELEFONO ='"+num+"'AND CUIDADOR.ID_ESP='"+esp.getId()+"'";
+                ResultSet rs1 = util.Conexion.comprobarDatos(consulta,miConexion);
+                //System.out.println(consulta);
                 if(rs1==null){
-                    String consulta = "Select * from users";
-                    ResultSet rs = util.Conexion.getTabla(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE, consulta,miConexion);
-                    //Irse a la ultima linea de la tabla
-                    rs.moveToInsertRow();
-                    //
-                    rs.updateString("user",nombre);
-                    rs.updateString("pass",passwd);
-                    rs.insertRow();
-                    //users.add(user);
-                    JOptionPane.showMessageDialog(null, "Usuario añadido correctamente");
-                    jTextFieldNombre.setText("");
-                    jPasswordField.setText("");
-                    jPasswordFieldConfirmar.setText("");
+                    String valitateUser = "SELECT * FROM CUIDADOR WHERE user='"+user+"'";
+                    ResultSet rsUser = util.Conexion.comprobarDatos(consulta,miConexion);
+                    if(rsUser==null){
+                        miConexion.setAutoCommit(false);
+                        LocalDateTime dateTime = LocalDateTime.now();
+                        String currentTimeStamp = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0").format(dateTime);
+                        ResultSet rs = util.Conexion.getSelect("Select * from persona",miConexion);
+                        //Irse a la ultima linea de la tabla persona
+                        rs.moveToInsertRow();
+                        rs.updateString("nombre",nombre);
+                        rs.updateString("apellido",ape);
+                        rs.updateFloat("salario",salario);
+                        rs.updateString("telefono", num);
+                        rs.insertRow();
+                        ResultSet rs2 = util.Conexion.getSelect("Select * from cuidador",miConexion);
+                        ResultSet getId= util.Conexion.getSelect("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='ZOO' AND TABLE_NAME='PERSONA'",miConexion);
+                        System.out.println(getId);
+                        if(!getId.next()){
+                            miConexion.rollback();
+                        }
+                        else{
+                            int idPersona = getId.getInt(1);
+                        }
+                        //System.out.println(getId.getInt("AUTO_INCREMENT")-1);
+                        rs2.moveToInsertRow();
+                        rs2.updateInt(1, getId.getInt("AUTO_INCREMENT")-1);
+                        rs2.updateInt(2,especialidad);
+                        rs2.updateString(3, user);
+                        rs2.updateString(4, passwd);
+                        rs2.insertRow();
+                        ResultSet getId2= util.Conexion.getSelect("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='ZOO' AND TABLE_NAME='CUIDADOR'",miConexion);
+                        if(getId2==null){
+                            miConexion.rollback();
+                        }
+                        else{
+                            miConexion.commit();
+                        }
+                        JOptionPane.showMessageDialog(null, "Cuidador registrado correctamente");
+                        jTFNombre.setText("");
+                        jTFApe.setText("");
+                        jTFTel.setText("");
+                        jSSalario.setValue(0);
+                        this.setVisible(false);
+                    }
+                    
                 }
                 else{
-                    JOptionPane.showMessageDialog(null, "El usuario ya existe");
+                    JOptionPane.showMessageDialog(null, "El nombre de usuario ya existe");
                 }
-            } catch (SQLException ex) {
-                Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
-            }
             
-            
+        }   catch (SQLException ex) {  
+                JOptionPane.showMessageDialog(null, "El nombre de usuario ya existe");
+            }  
         }
-        
     }//GEN-LAST:event_jButtonRegisterActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Register.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Register.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Register.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Register.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Register().setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel JLApellidos;
+    private javax.swing.JLabel JLEspecialidad;
+    private javax.swing.JLabel JLNombre;
+    private javax.swing.JLabel JLNombre1;
+    private javax.swing.JLabel JLNum1;
+    private javax.swing.JLabel JLPass;
+    private javax.swing.JLabel JLPass1;
+    private javax.swing.JLabel JLSalario;
+    private javax.swing.JLabel JLUser;
+    private javax.swing.JLabel LRegister;
+    private javax.swing.JPanel capa0;
     private javax.swing.JButton jButtonRegister;
-    private javax.swing.JLabel jLabelIniciarSesion;
-    private javax.swing.JLabel jLabelLogo;
-    private javax.swing.JLabel jLabelNombre;
-    private javax.swing.JLabel jLabelNombre1;
-    private javax.swing.JLabel jLabelPass;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPasswordField jPasswordField;
-    private javax.swing.JPasswordField jPasswordFieldConfirmar;
-    private javax.swing.JTextField jTextFieldNombre;
+    private javax.swing.JComboBox<String> jComboBoxEspecialidad;
+    private javax.swing.JPasswordField jPasswordField1;
+    private javax.swing.JSpinner jSSalario;
+    private javax.swing.JTextField jTFApe;
+    private javax.swing.JTextField jTFNombre;
+    private javax.swing.JTextField jTFTel;
+    private javax.swing.JTextField jTFUser;
     // End of variables declaration//GEN-END:variables
 }

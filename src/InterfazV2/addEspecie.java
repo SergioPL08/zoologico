@@ -3,14 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package InterfazV2;
+import java.awt.Cursor;
+import static java.awt.Frame.HAND_CURSOR;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import util.Conexion;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import util.TextPrompt;
 
 /**
@@ -25,20 +25,22 @@ public class addEspecie extends javax.swing.JFrame {
      */
     public addEspecie() {
         initComponents();
-            //TextPrompt sirve para poner un placeholder en un textfield
-            TextPrompt name = new TextPrompt("Monos", TNombreEspecie);
+        JButtonAddEspecie.setCursor(new Cursor(HAND_CURSOR));
+        JButtonEditEspecie.setCursor(new Cursor(HAND_CURSOR));
+        JButtonErase.setCursor(new Cursor(HAND_CURSOR));
+        //TextPrompt sirve para poner un placeholder en un textfield
+        TextPrompt name = new TextPrompt("Monos", jTNombreEspecie);
             
         miConexion = new Conexion("localhost","3306","zoo","zoologico","pepe").makeConnect();
         modelo = (DefaultTableModel) jTablaEspecies.getModel();
             String consulta = "SELECT * FROM ESPECIE";
-            //System.out.println(consulta);
             ResultSet rsTabla = util.Conexion.getSelect(consulta,miConexion);
         try {
             while(rsTabla.next()){
                 modelo.addRow(new Object[] {rsTabla.getInt(1),rsTabla.getString(2)});
             }
         } catch (SQLException ex) {
-            Logger.getLogger(addEspecie.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error al cargar los datos");
         }
     }
 
@@ -57,14 +59,14 @@ public class addEspecie extends javax.swing.JFrame {
         jTablaEspecies = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         LnombreEspecie = new javax.swing.JLabel();
-        TNombreEspecie = new javax.swing.JTextField();
+        jTNombreEspecie = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jToolBar1 = new javax.swing.JToolBar();
         JButtonAddEspecie = new javax.swing.JToggleButton();
-        JButtonEditAnimal = new javax.swing.JToggleButton();
+        JButtonEditEspecie = new javax.swing.JToggleButton();
         JButtonErase = new javax.swing.JToggleButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -126,27 +128,28 @@ public class addEspecie extends javax.swing.JFrame {
         jPanel2Layout.rowHeights = new int[] {0, 25, 0, 25, 0};
         jPanel2.setLayout(jPanel2Layout);
 
-        LnombreEspecie.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        LnombreEspecie.setForeground(new java.awt.Color(0, 153, 51));
+        LnombreEspecie.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        LnombreEspecie.setForeground(new java.awt.Color(0, 86, 44));
         LnombreEspecie.setText("Nombre");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         jPanel2.add(LnombreEspecie, gridBagConstraints);
 
-        TNombreEspecie.setBackground(new java.awt.Color(255, 255, 255));
-        TNombreEspecie.setForeground(new java.awt.Color(0, 0, 0));
-        TNombreEspecie.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(0, 102, 51))); // NOI18N
-        TNombreEspecie.setPreferredSize(new java.awt.Dimension(100, 24));
+        jTNombreEspecie.setBackground(new java.awt.Color(255, 255, 255));
+        jTNombreEspecie.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        jTNombreEspecie.setForeground(new java.awt.Color(0, 0, 0));
+        jTNombreEspecie.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(0, 102, 51))); // NOI18N
+        jTNombreEspecie.setPreferredSize(new java.awt.Dimension(100, 24));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
-        jPanel2.add(TNombreEspecie, gridBagConstraints);
+        jPanel2.add(jTNombreEspecie, gridBagConstraints);
 
-        jLabel1.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Freshman", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(51, 51, 51));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Añadir especie");
+        jLabel1.setText("Especies");
         jLabel1.setPreferredSize(new java.awt.Dimension(50, 30));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -171,17 +174,17 @@ public class addEspecie extends javax.swing.JFrame {
         });
         jToolBar1.add(JButtonAddEspecie);
 
-        JButtonEditAnimal.setBackground(new java.awt.Color(51, 51, 51));
-        JButtonEditAnimal.setForeground(new java.awt.Color(0, 0, 0));
-        JButtonEditAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/edit.png"))); // NOI18N
-        JButtonEditAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        JButtonEditAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
-        JButtonEditAnimal.addActionListener(new java.awt.event.ActionListener() {
+        JButtonEditEspecie.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonEditEspecie.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonEditEspecie.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/edit.png"))); // NOI18N
+        JButtonEditEspecie.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonEditEspecie.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonEditEspecie.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JButtonEditAnimalActionPerformed(evt);
+                JButtonEditEspecieActionPerformed(evt);
             }
         });
-        jToolBar1.add(JButtonEditAnimal);
+        jToolBar1.add(JButtonEditEspecie);
 
         JButtonErase.setBackground(new java.awt.Color(51, 51, 51));
         JButtonErase.setForeground(new java.awt.Color(0, 0, 0));
@@ -223,7 +226,7 @@ public class addEspecie extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void JButtonAddEspecieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonAddEspecieActionPerformed
-        String especie = TNombreEspecie.getText();
+        String especie = jTNombreEspecie.getText();
         if(especie.equals("")){
             JOptionPane.showMessageDialog(null, "Introduce la especie");
         }
@@ -231,7 +234,6 @@ public class addEspecie extends javax.swing.JFrame {
             try {
                 String consulta = "SELECT * FROM especie WHERE NOMBRE_ESPECIE='"+especie+"'";
                 ResultSet rs1 = util.Conexion.comprobarDatos(consulta,miConexion);
-                //System.out.println(rs1);
                 if(rs1==null){
                     ResultSet rs = util.Conexion.getSelect(consulta,miConexion);
                     //Irse a la ultima linea de la tabla
@@ -240,7 +242,7 @@ public class addEspecie extends javax.swing.JFrame {
                     rs.insertRow();
                     ResultSet getId= util.Conexion.comprobarDatos("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='ZOO' AND TABLE_NAME='ESPECIE'",miConexion);
                     JOptionPane.showMessageDialog(null, "Especie añadida correctamente");
-                    TNombreEspecie.setText("");
+                    jTNombreEspecie.setText("");
                     modelo.addRow(new Object[] {getId.getInt("AUTO_INCREMENT")-1,especie});
 
                 }
@@ -254,79 +256,50 @@ public class addEspecie extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_JButtonAddEspecieActionPerformed
 
-    private void JButtonEditAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEditAnimalActionPerformed
-        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No podrás recuperar los datos anteriores","Editar especie",JOptionPane.YES_OPTION);
-        if(resp==0){
-            String nombre = TNombreEspecie.getText();
-            int fila = jTablaEspecies.getSelectedRow();
-            int id=(int)jTablaEspecies.getValueAt(fila, 0);
-            String sentencia = "UPDATE ESPECIE SET NOMBRE_ESPECIE='"+nombre+"' WHERE ID_ESPECIE="+id;
-            System.out.println(sentencia);
-            if(util.Conexion.editTable(sentencia,miConexion)==1){
-                modelo.setValueAt(TNombreEspecie.getText(), fila, 1);
-                JOptionPane.showMessageDialog(null, "Especie editada correctamente");
-                TNombreEspecie.setText("");
-            }
-            else{
-                JOptionPane.showMessageDialog(null, "Error al editar la especie");
+    private void JButtonEditEspecieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEditEspecieActionPerformed
+        try{
+            int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No podrás recuperar los datos anteriores","Editar especie",JOptionPane.YES_OPTION);
+            if(resp==0){
+                String nombre = jTNombreEspecie.getText();
+                int fila = jTablaEspecies.getSelectedRow();
+                int id=(int)jTablaEspecies.getValueAt(fila, 0);
+                String sentencia = "UPDATE ESPECIE SET NOMBRE_ESPECIE='"+nombre+"' WHERE ID_ESPECIE="+id;
+                if(util.Conexion.editTable(sentencia,miConexion)==1){
+                    modelo.setValueAt(jTNombreEspecie.getText(), fila, 1);
+                    JOptionPane.showMessageDialog(null, "Especie editada correctamente");
+                    jTNombreEspecie.setText("");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "Error al editar la especie");
+                }
             }
         }
-    }//GEN-LAST:event_JButtonEditAnimalActionPerformed
+        catch(java.lang.NullPointerException ex){
+            JOptionPane.showMessageDialog(null, "Selecciona una fila de la tabla");
+        }
+    }//GEN-LAST:event_JButtonEditEspecieActionPerformed
 
     private void mouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseClicked
         int fila = jTablaEspecies.getSelectedRow();
-        TNombreEspecie.setText((String)jTablaEspecies.getValueAt(fila,1));
+        jTNombreEspecie.setText((String)jTablaEspecies.getValueAt(fila,1));
     }//GEN-LAST:event_mouseClicked
 
     private void JButtonEraseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEraseActionPerformed
-        TNombreEspecie.setText("");
+        jTNombreEspecie.setText("");
     }//GEN-LAST:event_JButtonEraseActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(addEspecie.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(addEspecie.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(addEspecie.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(addEspecie.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new addEspecie().setVisible(true);
-            }
-        });
-    }
+   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton JButtonAddEspecie;
-    private javax.swing.JToggleButton JButtonEditAnimal;
+    private javax.swing.JToggleButton JButtonEditEspecie;
     private javax.swing.JToggleButton JButtonErase;
     private javax.swing.JLabel LnombreEspecie;
-    private javax.swing.JTextField TNombreEspecie;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField jTNombreEspecie;
     private javax.swing.JTable jTablaEspecies;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables

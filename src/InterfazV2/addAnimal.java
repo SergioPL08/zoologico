@@ -1,5 +1,7 @@
 package InterfazV2;
 
+import java.awt.Cursor;
+import static java.awt.Frame.HAND_CURSOR;
 import java.sql.Connection;
 import java.io.Serializable;
 import java.sql.ResultSet;
@@ -7,8 +9,6 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -36,16 +36,20 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
     
     
     public addAnimal(boolean admin) {
+        //Comprobamos si el usuario es admin o no, si es admin tiene acceso a toda la funcionalidad, pero si no lo es, no va a poder eliminar o editar animales
         try{
             initComponents(); 
+            JButtonAddAnimal.setCursor(new Cursor(HAND_CURSOR));
+            JButtonEditAnimal.setCursor(new Cursor(HAND_CURSOR));
+            JButtonErase.setCursor(new Cursor(HAND_CURSOR));
+            JButtonRemoveAnimal.setCursor(new Cursor(HAND_CURSOR));
             if(admin==false){
                 JButtonRemoveAnimal.setEnabled(false);
                 JButtonEditAnimal.setEnabled(false);
                 jLabelAviso.setText("Aviso: los cuidadores no pueden eliminar ni editar animales");
             }
             //TextPrompt sirve para poner un placeholder en un textfield
-            TextPrompt placeholder = new TextPrompt("Toby", TNombreAnimal);
-            
+            TextPrompt placeholder = new TextPrompt("Toby", jTNombreAnimal);
             especies = new ArrayList();
             animales = new ArrayList<Animal>();
             miConexion = new Conexion("localhost","3306","zoo","zoologico","pepe").makeConnect();            
@@ -79,7 +83,7 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
             }
         }
         catch(SQLException ex){
-                Logger.getLogger(addAnimal.class.getName()).log(Level.SEVERE,null, ex);
+                JOptionPane.showMessageDialog(null, "Error al cargar los datos");
         }
         
     }
@@ -101,8 +105,8 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
         LnombreAnimal = new javax.swing.JLabel();
         LespecieAnimal = new javax.swing.JLabel();
         LpesoAnimal = new javax.swing.JLabel();
-        TNombreAnimal = new javax.swing.JTextField();
-        SPesoAnimal = new javax.swing.JSpinner();
+        jTNombreAnimal = new javax.swing.JTextField();
+        jSPesoAnimal = new javax.swing.JSpinner();
         jLabel1 = new javax.swing.JLabel();
         jComboBoxEspecie = new javax.swing.JComboBox<>();
         jToolBar1 = new javax.swing.JToolBar();
@@ -181,52 +185,53 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
         jPanel2Layout.rowHeights = new int[] {0, 25, 0, 25, 0, 25, 0, 25, 0};
         jPanel2.setLayout(jPanel2Layout);
 
-        LnombreAnimal.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        LnombreAnimal.setForeground(new java.awt.Color(0, 153, 51));
+        LnombreAnimal.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        LnombreAnimal.setForeground(new java.awt.Color(0, 86, 44));
         LnombreAnimal.setText("Nombre");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         jPanel2.add(LnombreAnimal, gridBagConstraints);
 
-        LespecieAnimal.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        LespecieAnimal.setForeground(new java.awt.Color(0, 153, 51));
+        LespecieAnimal.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        LespecieAnimal.setForeground(new java.awt.Color(0, 86, 44));
         LespecieAnimal.setText("Especie");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
         jPanel2.add(LespecieAnimal, gridBagConstraints);
 
-        LpesoAnimal.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        LpesoAnimal.setForeground(new java.awt.Color(0, 153, 51));
+        LpesoAnimal.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        LpesoAnimal.setForeground(new java.awt.Color(0, 86, 44));
         LpesoAnimal.setText("Peso");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
         jPanel2.add(LpesoAnimal, gridBagConstraints);
 
-        TNombreAnimal.setBackground(new java.awt.Color(255, 255, 255));
-        TNombreAnimal.setForeground(new java.awt.Color(0, 0, 0));
-        TNombreAnimal.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(0, 102, 51))); // NOI18N
-        TNombreAnimal.setPreferredSize(new java.awt.Dimension(100, 24));
+        jTNombreAnimal.setBackground(new java.awt.Color(255, 255, 255));
+        jTNombreAnimal.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        jTNombreAnimal.setForeground(new java.awt.Color(0, 0, 0));
+        jTNombreAnimal.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(0, 102, 51))); // NOI18N
+        jTNombreAnimal.setPreferredSize(new java.awt.Dimension(100, 24));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
-        jPanel2.add(TNombreAnimal, gridBagConstraints);
+        jPanel2.add(jTNombreAnimal, gridBagConstraints);
 
-        SPesoAnimal.setModel(new javax.swing.SpinnerNumberModel(0.0f, 0.0f, null, 1.0f));
-        SPesoAnimal.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(0, 102, 51))); // NOI18N
-        SPesoAnimal.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        SPesoAnimal.setPreferredSize(new java.awt.Dimension(100, 24));
+        jSPesoAnimal.setModel(new javax.swing.SpinnerNumberModel(0.0f, 0.0f, null, 1.0f));
+        jSPesoAnimal.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(0, 102, 51))); // NOI18N
+        jSPesoAnimal.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jSPesoAnimal.setPreferredSize(new java.awt.Dimension(100, 24));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 6;
-        jPanel2.add(SPesoAnimal, gridBagConstraints);
+        jPanel2.add(jSPesoAnimal, gridBagConstraints);
 
-        jLabel1.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Freshman", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(51, 51, 51));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Añadir animal");
+        jLabel1.setText("Animales");
         jLabel1.setPreferredSize(new java.awt.Dimension(50, 30));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -347,11 +352,11 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
     }// </editor-fold>//GEN-END:initComponents
 
     private void JButtonAddAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonAddAnimalActionPerformed
-        String nombre = TNombreAnimal.getText();
+        String nombre = jTNombreAnimal.getText();
         Especie esp = new Especie((Especie)jComboBoxEspecie.getSelectedItem());
         int especie = esp.getId();
         String nombreEsp = esp.getName();
-        float peso = (float) SPesoAnimal.getValue();
+        float peso = (float) jSPesoAnimal.getValue();
         //(String name, String especie, String subespecie, float peso)
         if(nombre.equals("")){
             JOptionPane.showMessageDialog(null, "Introduce el nombre del animal");
@@ -381,8 +386,8 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
                     ResultSet getId=util.Conexion.comprobarDatos("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='ZOO' AND TABLE_NAME='ANIMAL'",miConexion);
                     //System.out.println(getId);
                     JOptionPane.showMessageDialog(null, "Animal añadido correctamente");
-                    TNombreAnimal.setText("");
-                    SPesoAnimal.setValue(0);
+                    jTNombreAnimal.setText("");
+                    jSPesoAnimal.setValue(0);
                     modelo.addRow(new Object[] {getId.getInt("AUTO_INCREMENT")-1,nombre,esp,peso,currentTimeStamp});
                 }
                 else{
@@ -390,87 +395,98 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
                 }
             
         }   catch (SQLException ex) {
-                Logger.getLogger(addAnimal.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Error al añadir el animal");
             }
         }
     }//GEN-LAST:event_JButtonAddAnimalActionPerformed
 
     private void JButtonEditAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEditAnimalActionPerformed
-        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No podrás recuperar los datos anteriores","Editar animal",JOptionPane.YES_OPTION);
-        if(resp==0){
-            String nombre = TNombreAnimal.getText();
-            float peso = (float) SPesoAnimal.getValue();
-            int fila = jTablaAnimales.getSelectedRow();
-            int id=(int)jTablaAnimales.getValueAt(fila, 0);
-            
-            String sentencia = "UPDATE ANIMAL SET NOMBRE='"+nombre+"', PESO="+peso+" WHERE ID_ANIMAL="+id;
-            System.out.println(sentencia);
-            if(util.Conexion.editTable(sentencia,miConexion)==1){
-                LocalDateTime dateTime = LocalDateTime.now();
-                String currentTimeStamp = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0").format(dateTime);
-                modelo.setValueAt(TNombreAnimal.getText(), fila, 1);
-                modelo.setValueAt(SPesoAnimal.getValue(), fila, 3);
-                modelo.setValueAt(currentTimeStamp, fila, 4);
-                JOptionPane.showMessageDialog(null, "Animal editado correctamente");
-                TNombreAnimal.setText("");
-                SPesoAnimal.setValue(0);
+        try{
+            int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No podrás recuperar los datos anteriores","Editar animal",JOptionPane.YES_OPTION);
+            if(resp==0){
+                String nombre = jTNombreAnimal.getText();
+                float peso = (float) jSPesoAnimal.getValue();
+                int fila = jTablaAnimales.getSelectedRow();
+                int id=(int)jTablaAnimales.getValueAt(fila, 0);
+
+                String sentencia = "UPDATE ANIMAL SET NOMBRE='"+nombre+"', PESO="+peso+" WHERE ID_ANIMAL="+id;
+                System.out.println(sentencia);
+                if(util.Conexion.editTable(sentencia,miConexion)==1){
+                    LocalDateTime dateTime = LocalDateTime.now();
+                    String currentTimeStamp = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0").format(dateTime);
+                    modelo.setValueAt(jTNombreAnimal.getText(), fila, 1);
+                    modelo.setValueAt(jSPesoAnimal.getValue(), fila, 3);
+                    modelo.setValueAt(currentTimeStamp, fila, 4);
+                    JOptionPane.showMessageDialog(null, "Animal editado correctamente");
+                    jTNombreAnimal.setText("");
+                    jSPesoAnimal.setValue(0);
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "Error al editar el animal");
+                }
             }
-            else{
-                JOptionPane.showMessageDialog(null, "Error al editar el animal");
-            }
+        }
+        catch(java.lang.NullPointerException ex){
+            JOptionPane.showMessageDialog(null, "Selecciona una fila de la tabla");
         }
     }//GEN-LAST:event_JButtonEditAnimalActionPerformed
 
     private void JButtonRemoveAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonRemoveAnimalActionPerformed
-        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No vas a poder recuperar los datos eliminados","Eliminar animal",JOptionPane.YES_OPTION);
-        if(resp==0){
-            int id=(int)jTablaAnimales.getValueAt(jTablaAnimales.getSelectedRow(), 0);
-            int fila = jTablaAnimales.getSelectedRow();
-            try {
-                miConexion.setAutoCommit(false);
-                String comprobarTarea = "Select * from realizada where id_animal="+id;
-                ResultSet rs1 = util.Conexion.comprobarDatos(comprobarTarea, miConexion);
-                if(rs1!=null){
-                    String sentencia = "DELETE FROM REALIZADA WHERE ID_ANIMAL="+id;
-                    if(util.Conexion.editTable(sentencia,miConexion)!=1){
+        try{
+            int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No vas a poder recuperar los datos eliminados","Eliminar animal",JOptionPane.YES_OPTION);
+            if(resp==0){
+                int id=(int)jTablaAnimales.getValueAt(jTablaAnimales.getSelectedRow(), 0);
+                int fila = jTablaAnimales.getSelectedRow();
+                try {
+                    miConexion.setAutoCommit(false);
+                    String comprobarTarea = "Select * from realizada where id_animal="+id;
+                    ResultSet rs1 = util.Conexion.comprobarDatos(comprobarTarea, miConexion);
+                    if(rs1!=null){
+                        String sentencia = "DELETE FROM REALIZADA WHERE ID_ANIMAL="+id;
+                        if(util.Conexion.editTable(sentencia,miConexion)!=1){
+                            miConexion.rollback();
+                        }
+                        else{
+                            JOptionPane.showMessageDialog(null, "Tareas relacionadas con el animal elimada correctamente");
+                        }
+                    }
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(null, "Error al eliminar el animal");
+                }
+                String sentencia = "DELETE FROM ANIMAL WHERE ID_ANIMAL="+id;
+                if(util.Conexion.editTable(sentencia,miConexion)==1){
+                    try {
+                        modelo.removeRow(fila);
+                        JOptionPane.showMessageDialog(null, "Animal elimado correctamente");
+                        jTNombreAnimal.setText("");
+                        jSPesoAnimal.setValue(0);
+                        miConexion.commit();
+                    } catch (SQLException ex) {
+                       JOptionPane.showMessageDialog(null, "Error al eliminar el animal");
+                    }
+                }
+                else{
+                    try {
                         miConexion.rollback();
+                    } catch (SQLException ex) {
+                        JOptionPane.showMessageDialog(null, "Error al eliminar el animal");
                     }
-                    else{
-                        JOptionPane.showMessageDialog(null, "Tareas relacionadas con el animal elimada correctamente");
-                    }
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(addAnimal.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            String sentencia = "DELETE FROM ANIMAL WHERE ID_ANIMAL="+id;
-            if(util.Conexion.editTable(sentencia,miConexion)==1){
-                try {
-                    modelo.removeRow(fila);
-                    JOptionPane.showMessageDialog(null, "Animal elimado correctamente");
-                    TNombreAnimal.setText("");
-                    SPesoAnimal.setValue(0);
-                    miConexion.commit();
-                } catch (SQLException ex) {
-                    Logger.getLogger(addAnimal.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            else{
-                try {
-                    miConexion.rollback();
-                } catch (SQLException ex) {
-                    Logger.getLogger(addAnimal.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+            
+        }
+        catch(java.lang.NullPointerException ex){
+            JOptionPane.showMessageDialog(null, "Selecciona una fila de la tabla");
         }
     }//GEN-LAST:event_JButtonRemoveAnimalActionPerformed
 
     private void selectRow(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectRow
         int fila = jTablaAnimales.getSelectedRow();
-        TNombreAnimal.setText((String)jTablaAnimales.getValueAt(fila,1));
+        jTNombreAnimal.setText((String)jTablaAnimales.getValueAt(fila,1));
         Especie esp = new Especie ((Especie)jTablaAnimales.getValueAt(fila, 2));
         //System.out.println(esp.getId());
         jComboBoxEspecie.getModel().setSelectedItem(esp);
-        SPesoAnimal.setValue((Float)jTablaAnimales.getValueAt(fila,3));
+        jSPesoAnimal.setValue((Float)jTablaAnimales.getValueAt(fila,3));
     }//GEN-LAST:event_selectRow
 
     private void textButtonDelete(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textButtonDelete
@@ -486,8 +502,8 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
     }//GEN-LAST:event_textButtonAdd
 
     private void JButtonEraseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEraseActionPerformed
-        TNombreAnimal.setText("");
-        SPesoAnimal.setValue(0);
+        jTNombreAnimal.setText("");
+        jSPesoAnimal.setValue(0);
     }//GEN-LAST:event_JButtonEraseActionPerformed
 
     /**
@@ -503,14 +519,14 @@ public class addAnimal extends javax.swing.JFrame implements Serializable{
     private javax.swing.JLabel LespecieAnimal;
     private javax.swing.JLabel LnombreAnimal;
     private javax.swing.JLabel LpesoAnimal;
-    private javax.swing.JSpinner SPesoAnimal;
-    private javax.swing.JTextField TNombreAnimal;
     private javax.swing.JComboBox<String> jComboBoxEspecie;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelAviso;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JSpinner jSPesoAnimal;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField jTNombreAnimal;
     private javax.swing.JTable jTablaAnimales;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables

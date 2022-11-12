@@ -1,13 +1,13 @@
 package InterfazV2;
 
+import java.awt.Cursor;
+import static java.awt.Frame.HAND_CURSOR;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import util.Conexion;
@@ -32,6 +32,9 @@ public class addEspecialidad extends javax.swing.JFrame {
     public addEspecialidad() {
         try {
             initComponents();
+            jButtonAddEspecialidad.setCursor(new Cursor(HAND_CURSOR));
+            JButtonEditEspecialidad.setCursor(new Cursor(HAND_CURSOR));
+            JButtonErase.setCursor(new Cursor(HAND_CURSOR));
             //TextPrompt sirve para poner un placeholder en un textfield
             TextPrompt name = new TextPrompt("Perros", jTFNombreEsp);
             TextPrompt descripcion = new TextPrompt("Especialista en cuidado y tratado de perros", jTADesc);
@@ -47,7 +50,7 @@ public class addEspecialidad extends javax.swing.JFrame {
                 modelo.addRow(new Object[] {rsTabla.getInt(1),rsTabla.getString(2),rsTabla.getString(3),rsTabla.getTimestamp(4)});
             }
         } catch (SQLException ex) {
-            Logger.getLogger(addEspecialidad.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error al cargar los datos");
         }
         
     }
@@ -73,8 +76,8 @@ public class addEspecialidad extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTablaEspecialidades = new javax.swing.JTable();
         jToolBar1 = new javax.swing.JToolBar();
-        jButtonAdd = new javax.swing.JButton();
-        JButtonEditAnimal = new javax.swing.JToggleButton();
+        jButtonAddEspecialidad = new javax.swing.JButton();
+        JButtonEditEspecialidad = new javax.swing.JToggleButton();
         JButtonErase = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -86,18 +89,18 @@ public class addEspecialidad extends javax.swing.JFrame {
         jPanel1Layout.rowHeights = new int[] {0, 32, 0, 32, 0, 32, 0, 32, 0};
         jPanel1.setLayout(jPanel1Layout);
 
-        addEspecialidad.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
+        addEspecialidad.setFont(new java.awt.Font("Freshman", 0, 36)); // NOI18N
         addEspecialidad.setForeground(new java.awt.Color(51, 51, 51));
         addEspecialidad.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        addEspecialidad.setText("Añadir Especialidad");
+        addEspecialidad.setText("Especialidades");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 3;
         jPanel1.add(addEspecialidad, gridBagConstraints);
 
-        JLDescrip.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
-        JLDescrip.setForeground(new java.awt.Color(0, 153, 51));
+        JLDescrip.setFont(new java.awt.Font("Freshman", 0, 14)); // NOI18N
+        JLDescrip.setForeground(new java.awt.Color(0, 86, 44));
         JLDescrip.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         JLDescrip.setText("Descripcion");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -105,8 +108,8 @@ public class addEspecialidad extends javax.swing.JFrame {
         gridBagConstraints.gridy = 4;
         jPanel1.add(JLDescrip, gridBagConstraints);
 
-        JLNombreEsp.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
-        JLNombreEsp.setForeground(new java.awt.Color(0, 153, 51));
+        JLNombreEsp.setFont(new java.awt.Font("Freshman", 0, 14)); // NOI18N
+        JLNombreEsp.setForeground(new java.awt.Color(0, 86, 44));
         JLNombreEsp.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         JLNombreEsp.setText("Nombre");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -115,6 +118,7 @@ public class addEspecialidad extends javax.swing.JFrame {
         jPanel1.add(JLNombreEsp, gridBagConstraints);
 
         jTFNombreEsp.setBackground(new java.awt.Color(255, 255, 255));
+        jTFNombreEsp.setFont(new java.awt.Font("Freshman", 0, 14)); // NOI18N
         jTFNombreEsp.setForeground(new java.awt.Color(0, 0, 0));
         jTFNombreEsp.setPreferredSize(new java.awt.Dimension(100, 24));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -189,27 +193,27 @@ public class addEspecialidad extends javax.swing.JFrame {
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
-        jButtonAdd.setForeground(new java.awt.Color(0, 0, 0));
-        jButtonAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.png"))); // NOI18N
-        jButtonAdd.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButtonAdd.addActionListener(new java.awt.event.ActionListener() {
+        jButtonAddEspecialidad.setForeground(new java.awt.Color(0, 0, 0));
+        jButtonAddEspecialidad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.png"))); // NOI18N
+        jButtonAddEspecialidad.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonAddEspecialidad.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonAddActionPerformed(evt);
+                jButtonAddEspecialidadActionPerformed(evt);
             }
         });
-        jToolBar1.add(jButtonAdd);
+        jToolBar1.add(jButtonAddEspecialidad);
 
-        JButtonEditAnimal.setBackground(new java.awt.Color(51, 51, 51));
-        JButtonEditAnimal.setForeground(new java.awt.Color(0, 0, 0));
-        JButtonEditAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/edit.png"))); // NOI18N
-        JButtonEditAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        JButtonEditAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
-        JButtonEditAnimal.addActionListener(new java.awt.event.ActionListener() {
+        JButtonEditEspecialidad.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonEditEspecialidad.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonEditEspecialidad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/edit.png"))); // NOI18N
+        JButtonEditEspecialidad.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonEditEspecialidad.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonEditEspecialidad.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JButtonEditAnimalActionPerformed(evt);
+                JButtonEditEspecialidadActionPerformed(evt);
             }
         });
-        jToolBar1.add(JButtonEditAnimal);
+        jToolBar1.add(JButtonEditEspecialidad);
 
         JButtonErase.setBackground(new java.awt.Color(51, 51, 51));
         JButtonErase.setForeground(new java.awt.Color(0, 0, 0));
@@ -251,7 +255,7 @@ public class addEspecialidad extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddActionPerformed
+    private void jButtonAddEspecialidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddEspecialidadActionPerformed
         String nombre = jTFNombreEsp.getText();
         String desc = jTADesc.getText();
         if(nombre.equals("")){
@@ -284,34 +288,39 @@ public class addEspecialidad extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "La especialidad ya existe");
                 }   
             } catch (SQLException ex) {
-                Logger.getLogger(addEspecialidad.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Error al añadir la especialidad");
             }
             
             
             
         }
-    }//GEN-LAST:event_jButtonAddActionPerformed
+    }//GEN-LAST:event_jButtonAddEspecialidadActionPerformed
 
-    private void JButtonEditAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEditAnimalActionPerformed
-        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No podrás recuperar los datos anteriores","Editar especie",JOptionPane.YES_OPTION);
-        if(resp==0){
-            String nombre = jTFNombreEsp.getText();
-            String desc = jTADesc.getText();
-            int fila = jTablaEspecialidades.getSelectedRow();
-            int id=(int)jTablaEspecialidades.getValueAt(fila, 0);
-            String sentencia = "UPDATE ESPECIALIDAD SET NOMBRE='"+nombre+"',DESCRIPCION='"+desc+"' WHERE ID="+id;
-            System.out.println(sentencia);
-            if(util.Conexion.editTable(sentencia,miConexion)==1){
-                modelo.setValueAt(jTFNombreEsp.getText(), fila, 1);
-                modelo.setValueAt(jTADesc.getText(), fila, 2);
-                JOptionPane.showMessageDialog(null, "Especialidad editada correctamente");
-                jTFNombreEsp.setText("");
-            }
-            else{
-                JOptionPane.showMessageDialog(null, "Error al editar la especialidad");
+    private void JButtonEditEspecialidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEditEspecialidadActionPerformed
+        try{
+            int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No podrás recuperar los datos anteriores","Editar especie",JOptionPane.YES_OPTION);
+            if(resp==0){
+                String nombre = jTFNombreEsp.getText();
+                String desc = jTADesc.getText();
+                int fila = jTablaEspecialidades.getSelectedRow();
+                int id=(int)jTablaEspecialidades.getValueAt(fila, 0);
+                String sentencia = "UPDATE ESPECIALIDAD SET NOMBRE='"+nombre+"',DESCRIPCION='"+desc+"' WHERE ID="+id;
+                System.out.println(sentencia);
+                if(util.Conexion.editTable(sentencia,miConexion)==1){
+                    modelo.setValueAt(jTFNombreEsp.getText(), fila, 1);
+                    modelo.setValueAt(jTADesc.getText(), fila, 2);
+                    JOptionPane.showMessageDialog(null, "Especialidad editada correctamente");
+                    jTFNombreEsp.setText("");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "Error al editar la especialidad");
+                }
             }
         }
-    }//GEN-LAST:event_JButtonEditAnimalActionPerformed
+        catch(java.lang.NullPointerException ex){
+            JOptionPane.showMessageDialog(null, "Selecciona una fila de la tabla");
+        }
+    }//GEN-LAST:event_JButtonEditEspecialidadActionPerformed
 
     private void click(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_click
         int fila = jTablaEspecialidades.getSelectedRow();
@@ -324,49 +333,15 @@ public class addEspecialidad extends javax.swing.JFrame {
         jTADesc.setText("");
     }//GEN-LAST:event_JButtonEraseActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(addEspecialidad.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(addEspecialidad.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(addEspecialidad.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(addEspecialidad.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new addEspecialidad().setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JToggleButton JButtonEditAnimal;
+    private javax.swing.JToggleButton JButtonEditEspecialidad;
     private javax.swing.JToggleButton JButtonErase;
     private javax.swing.JLabel JLDescrip;
     private javax.swing.JLabel JLNombreEsp;
     private javax.swing.JLabel addEspecialidad;
-    private javax.swing.JButton jButtonAdd;
+    private javax.swing.JButton jButtonAddEspecialidad;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;

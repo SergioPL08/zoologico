@@ -10,8 +10,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -50,6 +53,21 @@ public class utilities {
         lista = (ArrayList) ois.readObject();
         ois.close();
         return lista;
+    }
+    
+    public static String getEncryptedPass(String pass) {
+        try{
+            java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
+            byte[] array = md.digest(pass.getBytes());
+            StringBuffer sb = new StringBuffer();
+            for (int i=0;i<array.length;i++){
+                sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(utilities.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
     
    

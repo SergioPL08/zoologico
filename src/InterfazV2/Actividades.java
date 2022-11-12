@@ -4,6 +4,8 @@
  */
 package InterfazV2;
 
+import java.awt.Cursor;
+import static java.awt.Frame.HAND_CURSOR;
 import java.sql.Connection;
 import javax.swing.table.DefaultTableModel;
 import util.Conexion;
@@ -13,8 +15,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import zoo.Animal;
@@ -26,6 +26,11 @@ import zoo.Cuidados;
  */
 
 public class Actividades extends javax.swing.JFrame {
+    /**
+     * Este método comprueba que el formato de la hora es correcto
+     * @param hora 
+     * @return 
+     */
     public boolean ValitateHour(String hora){
        char[] a = hora.toString().toCharArray();
        String[] c = hora.split(":");
@@ -35,27 +40,44 @@ public class Actividades extends javax.swing.JFrame {
        else
            return true;
    }
-   
+   /**
+    * Método complementario para el formato de las horas, devuelve el valor de un entero a partir de un String
+    * @param valor
+    * @return 
+    */
    public int getInteger(String valor){
        return Integer.parseInt(valor);
    }
     Connection miConexion;
     DefaultTableModel modelo;
     ArrayList animales,cuidadores,cuidados;
+    int id;
     /**
      * Creates new form Actividades
      */
     
-    public Actividades(int id, String nombre, boolean admin) {
+    public Actividades(int idCuidador, String nombre, boolean admin) {
         initComponents();
-        
+        JButtonAddTarea.setCursor(new Cursor(HAND_CURSOR));
+        JButtonEditTarea.setCursor(new Cursor(HAND_CURSOR));
+        JButtonErase.setCursor(new Cursor(HAND_CURSOR));
+        JButtonRemoveTarea.setCursor(new Cursor(HAND_CURSOR));
+        //Creacion de variables y establecer conexion
+        this.id=idCuidador;
+        System.out.println(idCuidador);
         animales = new ArrayList();
         cuidadores = new ArrayList();
         cuidados = new ArrayList();
         miConexion = (Connection) new Conexion("localhost","3306","zoo","zoologico","pepe").makeConnect();
         //Rellenamos la tabla de animales con los animales de la base de datos
         modelo = (DefaultTableModel) jTablaTareas.getModel();
-        String consulta = "SELECT realizada.id_tarea,realizada.ID_ANIMAL, animal.NOMBRE as NOMBRE_ANIMAL,realizada.ID_CUIDADOR,persona.NOMBRE as NOMBRE_CUIDADOR,realizada.ID_CUIDADO,cuidado.NOMBRE_CUIDADO,realizada.FECHA FROM realizada,persona,cuidado,animal WHERE realizada.ID_ANIMAL=animal.ID_ANIMAL AND realizada.ID_CUIDADOR=persona.ID_PERSONA AND realizada.ID_CUIDADO=cuidado.ID_CUIDADO";
+        String consulta;
+        if(admin==true){
+            consulta = "SELECT realizada.id_tarea,realizada.ID_ANIMAL, animal.NOMBRE as NOMBRE_ANIMAL,realizada.ID_CUIDADOR,persona.NOMBRE as NOMBRE_CUIDADOR,realizada.ID_CUIDADO,cuidado.NOMBRE_CUIDADO,realizada.FECHA FROM realizada,persona,cuidado,animal WHERE realizada.ID_ANIMAL=animal.ID_ANIMAL AND realizada.ID_CUIDADOR=persona.ID_PERSONA AND realizada.ID_CUIDADO=cuidado.ID_CUIDADO";
+        }
+        else{
+            consulta = "SELECT realizada.id_tarea,realizada.ID_ANIMAL, animal.NOMBRE as NOMBRE_ANIMAL,realizada.ID_CUIDADOR,persona.NOMBRE as NOMBRE_CUIDADOR,realizada.ID_CUIDADO,cuidado.NOMBRE_CUIDADO,realizada.FECHA FROM realizada,persona,cuidado,animal WHERE realizada.ID_ANIMAL=animal.ID_ANIMAL AND realizada.ID_CUIDADOR=persona.ID_PERSONA AND realizada.ID_CUIDADO=cuidado.ID_CUIDADO AND id_persona="+id+"";
+        }
         System.out.println(consulta);
         ResultSet rsTabla = util.Conexion.getSelect(consulta,miConexion);
         try {
@@ -66,7 +88,7 @@ public class Actividades extends javax.swing.JFrame {
                 modelo.addRow(new Object[] {rsTabla.getInt(1),ani,cuidador,cuidado,rsTabla.getTimestamp(8)});
             }
         } catch (SQLException ex) {
-            Logger.getLogger(Actividades.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error al cargar los datos");
         }
         //Rellenamos la caja de animales
         String selectAnimal = "SELECT * FROM ANIMAL";
@@ -79,7 +101,7 @@ public class Actividades extends javax.swing.JFrame {
             }
         }
         catch (SQLException ex) {
-            Logger.getLogger(Actividades.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error al cargar los animales");
         }
         jComboBoxAnimal.setModel(modelAnimales);
          
@@ -94,7 +116,7 @@ public class Actividades extends javax.swing.JFrame {
             }
         }
         catch (SQLException ex) {
-            Logger.getLogger(Actividades.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error al cargar los cuidadores");
         }
         jComboBoxCuidador.setModel(modelCuidador);
         //Rellenamos la caja de cuidados
@@ -108,18 +130,21 @@ public class Actividades extends javax.swing.JFrame {
             }
         }
         catch (SQLException ex) {
-            Logger.getLogger(Actividades.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error al cargar los cuidados");
         }
         jComboBoxCuidado.setModel(modelCuidado);
         if(admin==false){
             try {
-                jComboBoxCuidador.setEnabled(false);
-                String consultaCuidador = "Select * from persona where id_persona = "+id+"";
+                String consultaCuidador = "Select id_persona,nombre from persona where id_persona = "+id+"";
+                System.out.println(consultaCuidador);
                 ResultSet rsCuidador = util.Conexion.getSelect(consultaCuidador,miConexion);
-                Cuidador c= new Cuidador(rsCuidador.getInt("ID_PERSONA"),rsCuidador.getString("NOMBRE"));
-                jComboBoxCuidador.getModel().setSelectedItem(c);
+                if(rsCuidador.next()){
+                    Cuidador c= new Cuidador(rsCuidador.getInt("ID_PERSONA"),rsCuidador.getString("NOMBRE"));
+                    jComboBoxCuidador.getModel().setSelectedItem(c);
+                }
+                jComboBoxCuidador.setEnabled(false);
             } catch (SQLException ex) {
-                Logger.getLogger(Actividades.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Error al cargar los cuidados");
             }
         }
     }
@@ -148,14 +173,14 @@ public class Actividades extends javax.swing.JFrame {
         jComboBoxCuidado = new javax.swing.JComboBox<>();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jLFecha = new javax.swing.JLabel();
-        jFormattedTextField1 = new javax.swing.JFormattedTextField();
+        jFormattedTextFieldHora = new javax.swing.JFormattedTextField();
         jToolBar1 = new javax.swing.JToolBar();
         JButtonAddTarea = new javax.swing.JToggleButton();
-        JButtonEditAnimal = new javax.swing.JToggleButton();
-        JButtonRemoveAnimal = new javax.swing.JToggleButton();
+        JButtonEditTarea = new javax.swing.JToggleButton();
+        JButtonRemoveTarea = new javax.swing.JToggleButton();
         JButtonErase = new javax.swing.JToggleButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -217,26 +242,26 @@ public class Actividades extends javax.swing.JFrame {
         jPanel2Layout.rowHeights = new int[] {0, 25, 0, 25, 0, 25, 0, 25, 0, 25, 0};
         jPanel2.setLayout(jPanel2Layout);
 
-        jLHora.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        jLHora.setForeground(new java.awt.Color(0, 153, 51));
+        jLHora.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        jLHora.setForeground(new java.awt.Color(0, 86, 44));
         jLHora.setText("Hora");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
         jPanel2.add(jLHora, gridBagConstraints);
 
-        LCuidador.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        LCuidador.setForeground(new java.awt.Color(0, 153, 51));
+        LCuidador.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        LCuidador.setForeground(new java.awt.Color(0, 86, 44));
         LCuidador.setText("Cuidador");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
         jPanel2.add(LCuidador, gridBagConstraints);
 
-        jLabel1.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Freshman", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(51, 51, 51));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Añadir tarea");
+        jLabel1.setText("tareas");
         jLabel1.setPreferredSize(new java.awt.Dimension(50, 30));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -245,32 +270,35 @@ public class Actividades extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel2.add(jLabel1, gridBagConstraints);
 
+        jComboBoxCuidador.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 8;
         jPanel2.add(jComboBoxCuidador, gridBagConstraints);
 
-        LAnimal.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        LAnimal.setForeground(new java.awt.Color(0, 153, 51));
+        LAnimal.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        LAnimal.setForeground(new java.awt.Color(0, 86, 44));
         LAnimal.setText("Animal");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
         jPanel2.add(LAnimal, gridBagConstraints);
 
+        jComboBoxAnimal.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 6;
         jPanel2.add(jComboBoxAnimal, gridBagConstraints);
 
-        LCuidado.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        LCuidado.setForeground(new java.awt.Color(0, 153, 51));
+        LCuidado.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        LCuidado.setForeground(new java.awt.Color(0, 86, 44));
         LCuidado.setText("Cuidado");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 10;
         jPanel2.add(LCuidado, gridBagConstraints);
 
+        jComboBoxCuidado.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 10;
@@ -285,25 +313,25 @@ public class Actividades extends javax.swing.JFrame {
         gridBagConstraints.gridy = 2;
         jPanel2.add(jDateChooser1, gridBagConstraints);
 
-        jLFecha.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        jLFecha.setForeground(new java.awt.Color(0, 153, 51));
+        jLFecha.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        jLFecha.setForeground(new java.awt.Color(0, 86, 44));
         jLFecha.setText("Fecha");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         jPanel2.add(jLFecha, gridBagConstraints);
 
-        jFormattedTextField1.setBackground(new java.awt.Color(255, 255, 255));
-        jFormattedTextField1.setForeground(new java.awt.Color(0, 0, 0));
+        jFormattedTextFieldHora.setBackground(new java.awt.Color(255, 255, 255));
+        jFormattedTextFieldHora.setForeground(new java.awt.Color(0, 0, 0));
         try {
-            jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##:##")));
+            jFormattedTextFieldHora.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##:##")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        jFormattedTextField1.setText("12:27");
-        jFormattedTextField1.setToolTipText("07:27");
-        jFormattedTextField1.setPreferredSize(new java.awt.Dimension(50, 25));
-        jFormattedTextField1.addMouseListener(new java.awt.event.MouseAdapter() {
+        jFormattedTextFieldHora.setText("12:27");
+        jFormattedTextFieldHora.setToolTipText("07:27");
+        jFormattedTextFieldHora.setPreferredSize(new java.awt.Dimension(50, 25));
+        jFormattedTextFieldHora.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 click(evt);
             }
@@ -311,7 +339,7 @@ public class Actividades extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 4;
-        jPanel2.add(jFormattedTextField1, gridBagConstraints);
+        jPanel2.add(jFormattedTextFieldHora, gridBagConstraints);
 
         jToolBar1.setBackground(new java.awt.Color(204, 204, 204));
         jToolBar1.setFloatable(false);
@@ -334,39 +362,39 @@ public class Actividades extends javax.swing.JFrame {
         });
         jToolBar1.add(JButtonAddTarea);
 
-        JButtonEditAnimal.setBackground(new java.awt.Color(51, 51, 51));
-        JButtonEditAnimal.setForeground(new java.awt.Color(0, 0, 0));
-        JButtonEditAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/edit.png"))); // NOI18N
-        JButtonEditAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        JButtonEditAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
-        JButtonEditAnimal.addMouseListener(new java.awt.event.MouseAdapter() {
+        JButtonEditTarea.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonEditTarea.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonEditTarea.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/edit.png"))); // NOI18N
+        JButtonEditTarea.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonEditTarea.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonEditTarea.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                JButtonEditAnimaltextButtonEdit(evt);
+                JButtonEditTareatextButtonEdit(evt);
             }
         });
-        JButtonEditAnimal.addActionListener(new java.awt.event.ActionListener() {
+        JButtonEditTarea.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JButtonEditAnimalActionPerformed(evt);
+                JButtonEditTareaActionPerformed(evt);
             }
         });
-        jToolBar1.add(JButtonEditAnimal);
+        jToolBar1.add(JButtonEditTarea);
 
-        JButtonRemoveAnimal.setBackground(new java.awt.Color(51, 51, 51));
-        JButtonRemoveAnimal.setForeground(new java.awt.Color(0, 0, 0));
-        JButtonRemoveAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/delete.png"))); // NOI18N
-        JButtonRemoveAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        JButtonRemoveAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
-        JButtonRemoveAnimal.addMouseListener(new java.awt.event.MouseAdapter() {
+        JButtonRemoveTarea.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonRemoveTarea.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonRemoveTarea.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/delete.png"))); // NOI18N
+        JButtonRemoveTarea.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonRemoveTarea.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonRemoveTarea.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                JButtonRemoveAnimaltextButtonDelete(evt);
+                JButtonRemoveTareatextButtonDelete(evt);
             }
         });
-        JButtonRemoveAnimal.addActionListener(new java.awt.event.ActionListener() {
+        JButtonRemoveTarea.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JButtonRemoveAnimalActionPerformed(evt);
+                JButtonRemoveTareaActionPerformed(evt);
             }
         });
-        jToolBar1.add(JButtonRemoveAnimal);
+        jToolBar1.add(JButtonRemoveTarea);
 
         JButtonErase.setBackground(new java.awt.Color(51, 51, 51));
         JButtonErase.setForeground(new java.awt.Color(0, 0, 0));
@@ -408,6 +436,10 @@ public class Actividades extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Este evento que se activa haciendo click en la tabla, selecciona la fila seleccionada y añade los datos de la tabla en los campos de texto
+     * @param evt 
+     */
     private void jTablaTareasselectRow(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTablaTareasselectRow
         int fila = jTablaTareas.getSelectedRow();
         
@@ -424,9 +456,13 @@ public class Actividades extends javax.swing.JFrame {
         jDateChooser1.setDate(date);
         
         
-        jFormattedTextField1.setText(date.toString());
+        jFormattedTextFieldHora.setText(date.toString());
     }//GEN-LAST:event_jTablaTareasselectRow
 
+    /**
+     * Aquí quería hacer que al pasar por encima de los botoñes añadir, editar y eliminar saliera un texto que indicara qué significa el icono del botón, pero no pude hacer que funcionara
+     * @param evt 
+     */
     private void JButtonAddTareatextButtonAdd(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JButtonAddTareatextButtonAdd
         JButtonAddTarea.setToolTipText("Añadir");
     }//GEN-LAST:event_JButtonAddTareatextButtonAdd
@@ -435,12 +471,12 @@ public class Actividades extends javax.swing.JFrame {
         //Recogemos los datos de los campos de texto y tal
         Date date = jDateChooser1.getDate();
         java.sql.Date fecha = new java.sql.Date(date.getTime());
-        String hora = jFormattedTextField1.getText();
+        String hora = jFormattedTextFieldHora.getText();
         Animal ani = new Animal((Animal)jComboBoxAnimal.getSelectedItem());
         Cuidador cuidador = new Cuidador((Cuidador)jComboBoxCuidador.getSelectedItem());
         Cuidados cuidado = new Cuidados((Cuidados)jComboBoxCuidado.getSelectedItem());
         //Comprobamos el formato de la hora con el método ValitateHour
-        if(ValitateHour(jFormattedTextField1.getText())==false){
+        if(ValitateHour(jFormattedTextFieldHora.getText())==false){
             JOptionPane.showMessageDialog(null, "Formato de hora incorrecto");
         }
         else{
@@ -451,8 +487,6 @@ public class Actividades extends javax.swing.JFrame {
                 DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
                 LocalDateTime dateTime = LocalDateTime.parse(fecha+" "+hora, formato);
                 String dateTimeFormateado = dateTime.format(formato);
-                
-                //System.out.println(rs1);
                 if(rs1==null){
                     ResultSet rs = util.Conexion.getSelect("Select * from realizada",miConexion);
                     //Irse a la ultima linea de la tabla
@@ -463,35 +497,35 @@ public class Actividades extends javax.swing.JFrame {
                     rs.updateString("FECHA", dateTimeFormateado);
                     rs.insertRow();
                     JOptionPane.showMessageDialog(null, "Tarea añadida correctamente");
-                    jFormattedTextField1.setText("");
-                    //jDateChooser1.setDate();
+                    jFormattedTextFieldHora.setText("");
                     ResultSet getId= util.Conexion.comprobarDatos("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='ZOO' AND TABLE_NAME='REALIZADA'",miConexion);
                     modelo.addRow(new Object[] {getId.getInt("AUTO_INCREMENT")-1,ani,cuidador,cuidado,dateTimeFormateado+"00"});
                     jDateChooser1.setDate(null);
-                    jFormattedTextField1.setText("");
+                    jFormattedTextFieldHora.setText("");
                 }
                 else{
                     JOptionPane.showMessageDialog(null, "La tarea ya existe");
                 }
 
             }   catch (SQLException ex) {
-                Logger.getLogger(addAnimal.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Error al añadir la tarea");
             }
         }
         
     }//GEN-LAST:event_JButtonAddTareaActionPerformed
 
-    private void JButtonEditAnimaltextButtonEdit(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JButtonEditAnimaltextButtonEdit
+    private void JButtonEditTareatextButtonEdit(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JButtonEditTareatextButtonEdit
         JButtonAddTarea.setToolTipText("Editar");
-    }//GEN-LAST:event_JButtonEditAnimaltextButtonEdit
+    }//GEN-LAST:event_JButtonEditTareatextButtonEdit
 
-    private void JButtonEditAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEditAnimalActionPerformed
+    private void JButtonEditTareaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEditTareaActionPerformed
+        try{
         int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No podrás recuperar los datos anteriores","Editar tarea",JOptionPane.YES_OPTION);
         if(resp==0){
             int fila = jTablaTareas.getSelectedRow();
             Date date = jDateChooser1.getDate();
             java.sql.Date fecha = new java.sql.Date(date.getTime());
-            String hora = jFormattedTextField1.getText();
+            String hora = jFormattedTextFieldHora.getText();
             int id = (int)jTablaTareas.getValueAt(fila, 0);
             DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             LocalDateTime dateTime = LocalDateTime.parse(fecha+" "+hora, formato);
@@ -511,41 +545,49 @@ public class Actividades extends javax.swing.JFrame {
                 modelo.setValueAt(dateTimeFormateado, fila, 3);
                 JOptionPane.showMessageDialog(null, "Animal editado correctamente");
                 jDateChooser1.setDate(null);
-                jFormattedTextField1.setText("");
+                jFormattedTextFieldHora.setText("");
             }
             else{
                 JOptionPane.showMessageDialog(null, "Error al editar el animal");
             }
         }
-        
-    }//GEN-LAST:event_JButtonEditAnimalActionPerformed
+        }
+        catch(java.lang.NullPointerException ex){
+            JOptionPane.showMessageDialog(null, "Selecciona una fila de la tabla");
+        }
+    }//GEN-LAST:event_JButtonEditTareaActionPerformed
 
-    private void JButtonRemoveAnimaltextButtonDelete(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JButtonRemoveAnimaltextButtonDelete
+    private void JButtonRemoveTareatextButtonDelete(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JButtonRemoveTareatextButtonDelete
         JButtonAddTarea.setToolTipText("Eliminar");
-    }//GEN-LAST:event_JButtonRemoveAnimaltextButtonDelete
+    }//GEN-LAST:event_JButtonRemoveTareatextButtonDelete
 
-    private void JButtonRemoveAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonRemoveAnimalActionPerformed
-        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro, manín? No vas a poder recuperar los datos eliminados","Eliminar tarea",JOptionPane.YES_OPTION);
-        if(resp==0){
-            int id=(int)jTablaTareas.getValueAt(jTablaTareas.getSelectedRow(), 0);
-            int fila = jTablaTareas.getSelectedRow();
-            String sentencia = "DELETE FROM REALIZADA WHERE ID_TAREA="+id;
-            if(util.Conexion.editTable(sentencia,miConexion)==1){
-                modelo.removeRow(fila);
-                JOptionPane.showMessageDialog(null, "Tarea elimada correctamente");
-                jDateChooser1.setDate(null);
-                jFormattedTextField1.setText("");
+    private void JButtonRemoveTareaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonRemoveTareaActionPerformed
+        try{
+            int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro, manín? No vas a poder recuperar los datos eliminados","Eliminar tarea",JOptionPane.YES_OPTION);
+            if(resp==0){
+                int id=(int)jTablaTareas.getValueAt(jTablaTareas.getSelectedRow(), 0);
+                int fila = jTablaTareas.getSelectedRow();
+                String sentencia = "DELETE FROM REALIZADA WHERE ID_TAREA="+id;
+                if(util.Conexion.editTable(sentencia,miConexion)==1){
+                    modelo.removeRow(fila);
+                    JOptionPane.showMessageDialog(null, "Tarea elimada correctamente");
+                    jDateChooser1.setDate(null);
+                    jFormattedTextFieldHora.setText("");
+                }
             }
         }
-    }//GEN-LAST:event_JButtonRemoveAnimalActionPerformed
+        catch(java.lang.NullPointerException ex){
+            JOptionPane.showMessageDialog(null, "Selecciona una fila de la tabla");
+        }
+    }//GEN-LAST:event_JButtonRemoveTareaActionPerformed
 
     private void JButtonEraseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEraseActionPerformed
         jDateChooser1.setDate(null);
-        jFormattedTextField1.setText("");
+        jFormattedTextFieldHora.setText("");
     }//GEN-LAST:event_JButtonEraseActionPerformed
 
     private void click(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_click
-        jFormattedTextField1.setText("");
+        jFormattedTextFieldHora.setText("");
     }//GEN-LAST:event_click
 
     /**
@@ -555,9 +597,9 @@ public class Actividades extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton JButtonAddTarea;
-    private javax.swing.JToggleButton JButtonEditAnimal;
+    private javax.swing.JToggleButton JButtonEditTarea;
     private javax.swing.JToggleButton JButtonErase;
-    private javax.swing.JToggleButton JButtonRemoveAnimal;
+    private javax.swing.JToggleButton JButtonRemoveTarea;
     private javax.swing.JLabel LAnimal;
     private javax.swing.JLabel LCuidado;
     private javax.swing.JLabel LCuidador;
@@ -565,7 +607,7 @@ public class Actividades extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jComboBoxCuidado;
     private javax.swing.JComboBox<String> jComboBoxCuidador;
     private com.toedter.calendar.JDateChooser jDateChooser1;
-    private javax.swing.JFormattedTextField jFormattedTextField1;
+    private javax.swing.JFormattedTextField jFormattedTextFieldHora;
     private javax.swing.JLabel jLFecha;
     private javax.swing.JLabel jLHora;
     private javax.swing.JLabel jLabel1;

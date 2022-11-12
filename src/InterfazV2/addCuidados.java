@@ -1,13 +1,13 @@
 package InterfazV2;
 
+import java.awt.Cursor;
+import static java.awt.Frame.HAND_CURSOR;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import zoo.*;
@@ -30,9 +30,19 @@ public class addCuidados extends javax.swing.JFrame {
     /**
      * Creates new form addCuid
      */
-    public addCuidados() {
+    public addCuidados(boolean admin) {
+        //Comprobamos si el usuario es admin o no, si es admin tiene acceso a toda la funcionalidad, pero si no lo es, no va a poder eliminar o editar cuidados
         try {
             initComponents();
+            jButtonAddCuidado.setCursor(new Cursor(HAND_CURSOR));
+            JButtonEditCuidado.setCursor(new Cursor(HAND_CURSOR));
+            JButtonErase.setCursor(new Cursor(HAND_CURSOR));
+            JButtonRemoveCuidado.setCursor(new Cursor(HAND_CURSOR));
+            if(admin==false){
+                JButtonRemoveCuidado.setEnabled(false);
+                JButtonEditCuidado.setEnabled(false);
+                jLabelAviso.setText("Aviso: los cuidadores no pueden eliminar ni editar cuidados");
+            }
             //TextPrompt sirve para poner un placeholder en un textfield
             TextPrompt name = new TextPrompt("Cortar uñas pandas", jTFNombreCuidado);
             TextPrompt descripcion = new TextPrompt("Cortarle y limarle las uñas a los pandas", jTADesc);
@@ -48,7 +58,7 @@ public class addCuidados extends javax.swing.JFrame {
                 modelo.addRow(new Object[] {rsTabla.getInt(1),rsTabla.getString(2),rsTabla.getString(3),rsTabla.getTimestamp(4)});
             }
         } catch (SQLException ex) {
-            Logger.getLogger(addCuidados.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error al cargar los datos");
         }
         
     }
@@ -75,10 +85,11 @@ public class addCuidados extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTablaCuidados = new javax.swing.JTable();
         jToolBar1 = new javax.swing.JToolBar();
-        jButtonAdd = new javax.swing.JButton();
-        JButtonEditAnimal = new javax.swing.JToggleButton();
-        JButtonRemoveAnimal = new javax.swing.JToggleButton();
+        jButtonAddCuidado = new javax.swing.JButton();
+        JButtonEditCuidado = new javax.swing.JToggleButton();
+        JButtonRemoveCuidado = new javax.swing.JToggleButton();
         JButtonErase = new javax.swing.JToggleButton();
+        jLabelAviso = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -89,18 +100,18 @@ public class addCuidados extends javax.swing.JFrame {
         jPanel1Layout.rowHeights = new int[] {0, 8, 0, 8, 0, 8, 0, 8, 0};
         jPanel1.setLayout(jPanel1Layout);
 
-        LDesc.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        LDesc.setForeground(new java.awt.Color(0, 153, 51));
+        LDesc.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        LDesc.setForeground(new java.awt.Color(0, 86, 44));
         LDesc.setText("Descripcion");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
         jPanel1.add(LDesc, gridBagConstraints);
 
-        jLabel1.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Freshman", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(51, 51, 51));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Añadir cuidado");
+        jLabel1.setText("cuidados");
         jLabel1.setPreferredSize(new java.awt.Dimension(50, 30));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -109,8 +120,8 @@ public class addCuidados extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel1.add(jLabel1, gridBagConstraints);
 
-        LNombre.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        LNombre.setForeground(new java.awt.Color(0, 153, 51));
+        LNombre.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        LNombre.setForeground(new java.awt.Color(0, 86, 44));
         LNombre.setText("Nombre");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -119,6 +130,7 @@ public class addCuidados extends javax.swing.JFrame {
 
         jTADesc.setBackground(new java.awt.Color(255, 255, 255));
         jTADesc.setColumns(20);
+        jTADesc.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
         jTADesc.setForeground(new java.awt.Color(51, 51, 51));
         jTADesc.setRows(5);
         jScrollPane2.setViewportView(jTADesc);
@@ -181,14 +193,14 @@ public class addCuidados extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -196,39 +208,39 @@ public class addCuidados extends javax.swing.JFrame {
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
-        jButtonAdd.setForeground(new java.awt.Color(0, 0, 0));
-        jButtonAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.png"))); // NOI18N
-        jButtonAdd.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButtonAdd.addActionListener(new java.awt.event.ActionListener() {
+        jButtonAddCuidado.setForeground(new java.awt.Color(0, 0, 0));
+        jButtonAddCuidado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.png"))); // NOI18N
+        jButtonAddCuidado.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonAddCuidado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonAddActionPerformed(evt);
+                jButtonAddCuidadoActionPerformed(evt);
             }
         });
-        jToolBar1.add(jButtonAdd);
+        jToolBar1.add(jButtonAddCuidado);
 
-        JButtonEditAnimal.setBackground(new java.awt.Color(51, 51, 51));
-        JButtonEditAnimal.setForeground(new java.awt.Color(0, 0, 0));
-        JButtonEditAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/edit.png"))); // NOI18N
-        JButtonEditAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        JButtonEditAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
-        JButtonEditAnimal.addActionListener(new java.awt.event.ActionListener() {
+        JButtonEditCuidado.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonEditCuidado.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonEditCuidado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/edit.png"))); // NOI18N
+        JButtonEditCuidado.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonEditCuidado.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonEditCuidado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JButtonEditAnimalActionPerformed(evt);
+                JButtonEditCuidadoActionPerformed(evt);
             }
         });
-        jToolBar1.add(JButtonEditAnimal);
+        jToolBar1.add(JButtonEditCuidado);
 
-        JButtonRemoveAnimal.setBackground(new java.awt.Color(51, 51, 51));
-        JButtonRemoveAnimal.setForeground(new java.awt.Color(0, 0, 0));
-        JButtonRemoveAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/delete.png"))); // NOI18N
-        JButtonRemoveAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        JButtonRemoveAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
-        JButtonRemoveAnimal.addActionListener(new java.awt.event.ActionListener() {
+        JButtonRemoveCuidado.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonRemoveCuidado.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonRemoveCuidado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/delete.png"))); // NOI18N
+        JButtonRemoveCuidado.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonRemoveCuidado.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonRemoveCuidado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JButtonRemoveAnimalActionPerformed(evt);
+                JButtonRemoveCuidadoActionPerformed(evt);
             }
         });
-        jToolBar1.add(JButtonRemoveAnimal);
+        jToolBar1.add(JButtonRemoveCuidado);
 
         JButtonErase.setBackground(new java.awt.Color(51, 51, 51));
         JButtonErase.setForeground(new java.awt.Color(0, 0, 0));
@@ -245,34 +257,41 @@ public class addCuidados extends javax.swing.JFrame {
         });
         jToolBar1.add(JButtonErase);
 
+        jLabelAviso.setForeground(new java.awt.Color(255, 102, 102));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
-                    .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabelAviso)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelAviso)
+                .addContainerGap())
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddActionPerformed
+    private void jButtonAddCuidadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddCuidadoActionPerformed
         String nombre = jTFNombreCuidado.getText();
         String desc = jTADesc.getText();
         if(nombre.equals("")){
@@ -295,7 +314,7 @@ public class addCuidados extends javax.swing.JFrame {
                     rs.updateString("descripcion",desc);
                     rs.insertRow();
                     //users.add(user);
-                    JOptionPane.showMessageDialog(null, "Cuidado añadida correctamente");
+                    JOptionPane.showMessageDialog(null, "Cuidado añadido correctamente");
                     ResultSet getId=util.Conexion.comprobarDatos("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='ZOO' AND TABLE_NAME='cuidado'",miConexion);
                     modelo.addRow(new Object[] {getId.getInt("AUTO_INCREMENT")-1,nombre,desc,currentTimeStamp});
                     jTFNombreCuidado.setText("");
@@ -305,34 +324,39 @@ public class addCuidados extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "El cuidado ya existe");
                 }   
             } catch (SQLException ex) {
-                Logger.getLogger(addEspecialidad.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Error al añadir el cuidado");
             }
         }
             
-    }//GEN-LAST:event_jButtonAddActionPerformed
+    }//GEN-LAST:event_jButtonAddCuidadoActionPerformed
 
-    private void JButtonEditAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEditAnimalActionPerformed
-        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No podrás recuperar los datos anteriores","Editar especie",JOptionPane.YES_OPTION);
-        if(resp==0){
-            String nombre = jTFNombreCuidado.getText();
-            String desc = jTADesc.getText();
-            int fila = jTablaCuidados.getSelectedRow();
-            int id=(int)jTablaCuidados.getValueAt(fila, 0);
-            String sentencia = "UPDATE CUIDADO SET NOMBRE_CUIDADO='"+nombre+"',DESCRIPCION='"+desc+"' WHERE ID_CUIDADO="+id;
-            System.out.println(sentencia);
-            if(util.Conexion.editTable(sentencia,miConexion)==1){
-                modelo.setValueAt(jTFNombreCuidado.getText(), fila, 1);
-                modelo.setValueAt(jTADesc.getText(), fila, 2);
-                JOptionPane.showMessageDialog(null, "Especialidad editada correctamente");
-                jTFNombreCuidado.setText("");
-            }
-            else{
-                JOptionPane.showMessageDialog(null, "Error al editar la especialidad");
+    private void JButtonEditCuidadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEditCuidadoActionPerformed
+        try{
+            int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro? No podrás recuperar los datos anteriores","Editar especie",JOptionPane.YES_OPTION);
+            if(resp==0){
+                String nombre = jTFNombreCuidado.getText();
+                String desc = jTADesc.getText();
+                int fila = jTablaCuidados.getSelectedRow();
+                int id=(int)jTablaCuidados.getValueAt(fila, 0);
+                String sentencia = "UPDATE CUIDADO SET NOMBRE_CUIDADO='"+nombre+"',DESCRIPCION='"+desc+"' WHERE ID_CUIDADO="+id;
+                System.out.println(sentencia);
+                if(util.Conexion.editTable(sentencia,miConexion)==1){
+                    modelo.setValueAt(jTFNombreCuidado.getText(), fila, 1);
+                    modelo.setValueAt(jTADesc.getText(), fila, 2);
+                    JOptionPane.showMessageDialog(null, "Especialidad editada correctamente");
+                    jTFNombreCuidado.setText("");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "Error al editar la especialidad");
+                }
             }
         }
-    }//GEN-LAST:event_JButtonEditAnimalActionPerformed
+        catch(java.lang.NullPointerException ex){
+            JOptionPane.showMessageDialog(null, "Selecciona una fila de la tabla");
+        }    
+    }//GEN-LAST:event_JButtonEditCuidadoActionPerformed
 
-    private void JButtonRemoveAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonRemoveAnimalActionPerformed
+    private void JButtonRemoveCuidadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonRemoveCuidadoActionPerformed
         int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro, manín? No vas a poder recuperar los datos eliminados","Eliminar especie",JOptionPane.YES_OPTION);
         if(resp==0){
             int id=(int)jTablaCuidados.getValueAt(jTablaCuidados.getSelectedRow(), 0);
@@ -351,7 +375,7 @@ public class addCuidados extends javax.swing.JFrame {
                     }
                 }
              } catch (SQLException ex) {
-                Logger.getLogger(addCuidadores.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Error al eliminar el cuidado");
             }
             String sentencia = "DELETE FROM CUIDADO WHERE ID_CUIDADO="+id;
             if(util.Conexion.editTable(sentencia,miConexion)==1){
@@ -362,18 +386,18 @@ public class addCuidados extends javax.swing.JFrame {
                 try {
                         miConexion.commit();
                     } catch (SQLException ex) {
-                        Logger.getLogger(addCuidadores.class.getName()).log(Level.SEVERE, null, ex);
+                        JOptionPane.showMessageDialog(null, "Error al eliminar el cuidado");
                     }
             }
             else{
                     try {
                         miConexion.rollback();
                     } catch (SQLException ex) {
-                        Logger.getLogger(addCuidadores.class.getName()).log(Level.SEVERE, null, ex);
+                        JOptionPane.showMessageDialog(null, "Error al eliminar el cuidado");
                     }
                 }
         }
-    }//GEN-LAST:event_JButtonRemoveAnimalActionPerformed
+    }//GEN-LAST:event_JButtonRemoveCuidadoActionPerformed
 
     private void click(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_click
         int fila = jTablaCuidados.getSelectedRow();
@@ -389,49 +413,17 @@ public class addCuidados extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(addCuidados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(addCuidados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(addCuidados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(addCuidados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new addCuidados().setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JToggleButton JButtonEditAnimal;
+    private javax.swing.JToggleButton JButtonEditCuidado;
     private javax.swing.JToggleButton JButtonErase;
-    private javax.swing.JToggleButton JButtonRemoveAnimal;
+    private javax.swing.JToggleButton JButtonRemoveCuidado;
     private javax.swing.JLabel LDesc;
     private javax.swing.JLabel LNombre;
-    private javax.swing.JButton jButtonAdd;
+    private javax.swing.JButton jButtonAddCuidado;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabelAviso;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;

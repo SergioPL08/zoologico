@@ -4,6 +4,9 @@
  */
 package InterfazV2;
 
+import java.awt.Cursor;
+import static java.awt.Frame.HAND_CURSOR;
+
 /**
  *
  * @author Sergio
@@ -15,6 +18,12 @@ public class menuAdmin extends javax.swing.JFrame {
      */
     public menuAdmin() {
         initComponents();
+        jButtonAnimales.setCursor(new Cursor(HAND_CURSOR));
+        jButtonCuidados.setCursor(new Cursor(HAND_CURSOR));
+        jButtonEspecialidad.setCursor(new Cursor(HAND_CURSOR));
+        jButtonEspecie.setCursor(new Cursor(HAND_CURSOR));
+        jButtonCuidadores.setCursor(new Cursor(HAND_CURSOR));
+        jButtonTareas.setCursor(new Cursor(HAND_CURSOR));
     }
 
     /**
@@ -30,11 +39,12 @@ public class menuAdmin extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jButtonAnimales = new javax.swing.JButton();
-        jButtoCuidados = new javax.swing.JButton();
+        jButtonCuidadores = new javax.swing.JButton();
         jButtonCuidados = new javax.swing.JButton();
         jButtonEspecialidad = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jButtonEspecialidadTareas = new javax.swing.JButton();
+        jButtonTareas = new javax.swing.JButton();
+        jButtonEspecie = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
 
@@ -45,19 +55,20 @@ public class menuAdmin extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setPreferredSize(new java.awt.Dimension(279, 74));
         java.awt.GridBagLayout jPanel2Layout = new java.awt.GridBagLayout();
-        jPanel2Layout.columnWidths = new int[] {0, 50, 0, 50, 0, 50, 0, 50, 0, 50, 0};
-        jPanel2Layout.rowHeights = new int[] {0, 25, 0};
+        jPanel2Layout.columnWidths = new int[] {0, 50, 0, 50, 0};
+        jPanel2Layout.rowHeights = new int[] {0, 25, 0, 25, 0};
         jPanel2.setLayout(jPanel2Layout);
 
-        jLabel1.setFont(new java.awt.Font("Calibri", 1, 36)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel1.setFont(new java.awt.Font("Freshman", 1, 30)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 86, 44));
         jLabel1.setText("Main Menu");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 11;
+        gridBagConstraints.gridwidth = 5;
         jPanel2.add(jLabel1, gridBagConstraints);
 
+        jButtonAnimales.setFont(new java.awt.Font("Freshman", 0, 12)); // NOI18N
         jButtonAnimales.setForeground(new java.awt.Color(0, 0, 0));
         jButtonAnimales.setText("Animales");
         jButtonAnimales.addActionListener(new java.awt.event.ActionListener() {
@@ -70,19 +81,20 @@ public class menuAdmin extends javax.swing.JFrame {
         gridBagConstraints.gridy = 2;
         jPanel2.add(jButtonAnimales, gridBagConstraints);
 
-        jButtoCuidados.setForeground(new java.awt.Color(0, 0, 0));
-        jButtoCuidados.setText("Cuidadores");
-        jButtoCuidados.addActionListener(new java.awt.event.ActionListener() {
+        jButtonCuidadores.setFont(new java.awt.Font("Freshman", 0, 12)); // NOI18N
+        jButtonCuidadores.setForeground(new java.awt.Color(0, 0, 0));
+        jButtonCuidadores.setText("Cuidadores");
+        jButtonCuidadores.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtoCuidadosActionPerformed(evt);
+                jButtonCuidadoresActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 3;
-        jPanel2.add(jButtoCuidados, gridBagConstraints);
+        jPanel2.add(jButtonCuidadores, gridBagConstraints);
 
+        jButtonCuidados.setFont(new java.awt.Font("Freshman", 0, 12)); // NOI18N
         jButtonCuidados.setForeground(new java.awt.Color(0, 0, 0));
         jButtonCuidados.setText("Cuidados");
         jButtonCuidados.addActionListener(new java.awt.event.ActionListener() {
@@ -91,10 +103,11 @@ public class menuAdmin extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 2;
         jPanel2.add(jButtonCuidados, gridBagConstraints);
 
+        jButtonEspecialidad.setFont(new java.awt.Font("Freshman", 0, 12)); // NOI18N
         jButtonEspecialidad.setForeground(new java.awt.Color(0, 0, 0));
         jButtonEspecialidad.setText("Especialidad");
         jButtonEspecialidad.addActionListener(new java.awt.event.ActionListener() {
@@ -103,8 +116,8 @@ public class menuAdmin extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 4;
         jPanel2.add(jButtonEspecialidad, gridBagConstraints);
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logo2.png"))); // NOI18N
@@ -113,17 +126,31 @@ public class menuAdmin extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         jPanel2.add(jLabel2, gridBagConstraints);
 
-        jButtonEspecialidadTareas.setForeground(new java.awt.Color(0, 0, 0));
-        jButtonEspecialidadTareas.setText("Tareas");
-        jButtonEspecialidadTareas.addActionListener(new java.awt.event.ActionListener() {
+        jButtonTareas.setFont(new java.awt.Font("Freshman", 0, 12)); // NOI18N
+        jButtonTareas.setForeground(new java.awt.Color(0, 0, 0));
+        jButtonTareas.setText("Tareas");
+        jButtonTareas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonEspecialidadTareasActionPerformed(evt);
+                jButtonTareasActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 10;
-        gridBagConstraints.gridy = 2;
-        jPanel2.add(jButtonEspecialidadTareas, gridBagConstraints);
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 4;
+        jPanel2.add(jButtonTareas, gridBagConstraints);
+
+        jButtonEspecie.setFont(new java.awt.Font("Freshman", 0, 12)); // NOI18N
+        jButtonEspecie.setForeground(new java.awt.Color(0, 0, 0));
+        jButtonEspecie.setText("Especies");
+        jButtonEspecie.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEspecieActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        jPanel2.add(jButtonEspecie, gridBagConstraints);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(297, 336));
@@ -166,13 +193,13 @@ public class menuAdmin extends javax.swing.JFrame {
         OpenAnimal.setVisible(true);
     }//GEN-LAST:event_jButtonAnimalesActionPerformed
 
-    private void jButtoCuidadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtoCuidadosActionPerformed
+    private void jButtonCuidadoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCuidadoresActionPerformed
         addCuidadores OpenCuidadores = new addCuidadores();
         OpenCuidadores.setVisible(true);
-    }//GEN-LAST:event_jButtoCuidadosActionPerformed
+    }//GEN-LAST:event_jButtonCuidadoresActionPerformed
 
     private void jButtonCuidadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCuidadosActionPerformed
-        addCuidados OpenCuidados = new addCuidados();
+        addCuidados OpenCuidados = new addCuidados(true);
         OpenCuidados.setVisible(true);
     }//GEN-LAST:event_jButtonCuidadosActionPerformed
 
@@ -181,55 +208,24 @@ public class menuAdmin extends javax.swing.JFrame {
         OpenEspecialidad.setVisible(true);
     }//GEN-LAST:event_jButtonEspecialidadActionPerformed
 
-    private void jButtonEspecialidadTareasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEspecialidadTareasActionPerformed
-        Actividades OpenActividades = new Actividades(-1,"admin",false);
+    private void jButtonTareasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTareasActionPerformed
+        Actividades OpenActividades = new Actividades(-1,"admin",true);
         OpenActividades.setVisible(true);
-    }//GEN-LAST:event_jButtonEspecialidadTareasActionPerformed
+    }//GEN-LAST:event_jButtonTareasActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(menuAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(menuAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(menuAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(menuAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
+    private void jButtonEspecieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEspecieActionPerformed
+        addEspecie OpenEspecie = new addEspecie();
+        OpenEspecie.setVisible(true);
+    }//GEN-LAST:event_jButtonEspecieActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new menuAdmin().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtoCuidados;
     private javax.swing.JButton jButtonAnimales;
+    private javax.swing.JButton jButtonCuidadores;
     private javax.swing.JButton jButtonCuidados;
     private javax.swing.JButton jButtonEspecialidad;
-    private javax.swing.JButton jButtonEspecialidadTareas;
+    private javax.swing.JButton jButtonEspecie;
+    private javax.swing.JButton jButtonTareas;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

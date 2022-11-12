@@ -4,6 +4,9 @@
  */
 package InterfazV2;
 
+import java.awt.Cursor;
+import static java.awt.Frame.HAND_CURSOR;
+
 /**
  *
  * @author Sergio
@@ -16,6 +19,11 @@ public class menuCuidador extends javax.swing.JFrame {
      */
     public menuCuidador(int id,String nombre) {
         initComponents();
+        jButtonAnimales.setCursor(new Cursor(HAND_CURSOR));
+        jButtonCuidados.setCursor(new Cursor(HAND_CURSOR));
+        jButtonEspecialidad.setCursor(new Cursor(HAND_CURSOR));
+        jButtonMisTareas.setCursor(new Cursor(HAND_CURSOR));
+        this.id=id;
         jLabelBienvenido.setText("Bienvenido "+nombre);
     }
 
@@ -39,6 +47,7 @@ public class menuCuidador extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jButtonMisTareas = new javax.swing.JButton();
         jLabelBienvenido = new javax.swing.JLabel();
+        jButtonEspecie = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -63,11 +72,11 @@ public class menuCuidador extends javax.swing.JFrame {
         jPanel2.setPreferredSize(new java.awt.Dimension(279, 74));
         java.awt.GridBagLayout jPanel2Layout = new java.awt.GridBagLayout();
         jPanel2Layout.columnWidths = new int[] {0, 50, 0, 50, 0, 50, 0};
-        jPanel2Layout.rowHeights = new int[] {0, 25, 0, 25, 0};
+        jPanel2Layout.rowHeights = new int[] {0, 25, 0, 25, 0, 25, 0};
         jPanel2.setLayout(jPanel2Layout);
 
-        jLabel1.setFont(new java.awt.Font("Calibri", 1, 36)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel1.setFont(new java.awt.Font("Freshman", 0, 36)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 86, 44));
         jLabel1.setText("Main Menu");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -75,6 +84,7 @@ public class menuCuidador extends javax.swing.JFrame {
         gridBagConstraints.gridwidth = 7;
         jPanel2.add(jLabel1, gridBagConstraints);
 
+        jButtonAnimales.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
         jButtonAnimales.setForeground(new java.awt.Color(0, 0, 0));
         jButtonAnimales.setText("Animales");
         jButtonAnimales.addActionListener(new java.awt.event.ActionListener() {
@@ -85,8 +95,10 @@ public class menuCuidador extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 3;
         jPanel2.add(jButtonAnimales, gridBagConstraints);
 
+        jButtonCuidados.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
         jButtonCuidados.setForeground(new java.awt.Color(0, 0, 0));
         jButtonCuidados.setText("Cuidados");
         jButtonCuidados.addActionListener(new java.awt.event.ActionListener() {
@@ -95,10 +107,12 @@ public class menuCuidador extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 3;
         jPanel2.add(jButtonCuidados, gridBagConstraints);
 
+        jButtonEspecialidad.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
         jButtonEspecialidad.setForeground(new java.awt.Color(0, 0, 0));
         jButtonEspecialidad.setText("Especialidad");
         jButtonEspecialidad.addActionListener(new java.awt.event.ActionListener() {
@@ -107,8 +121,8 @@ public class menuCuidador extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 6;
         jPanel2.add(jButtonEspecialidad, gridBagConstraints);
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logo2.png"))); // NOI18N
@@ -117,6 +131,7 @@ public class menuCuidador extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         jPanel2.add(jLabel2, gridBagConstraints);
 
+        jButtonMisTareas.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
         jButtonMisTareas.setForeground(new java.awt.Color(0, 0, 0));
         jButtonMisTareas.setText("Mis tareas");
         jButtonMisTareas.addActionListener(new java.awt.event.ActionListener() {
@@ -125,11 +140,12 @@ public class menuCuidador extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridwidth = 3;
         jPanel2.add(jButtonMisTareas, gridBagConstraints);
 
-        jLabelBienvenido.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        jLabelBienvenido.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
         jLabelBienvenido.setForeground(new java.awt.Color(0, 0, 0));
         jLabelBienvenido.setText("Bienvenido");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -137,6 +153,19 @@ public class menuCuidador extends javax.swing.JFrame {
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 3;
         jPanel2.add(jLabelBienvenido, gridBagConstraints);
+
+        jButtonEspecie.setFont(new java.awt.Font("Freshman", 0, 18)); // NOI18N
+        jButtonEspecie.setForeground(new java.awt.Color(0, 0, 0));
+        jButtonEspecie.setText("Especie");
+        jButtonEspecie.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEspecieActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        jPanel2.add(jButtonEspecie, gridBagConstraints);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -163,7 +192,7 @@ public class menuCuidador extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonAnimalesActionPerformed
 
     private void jButtonCuidadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCuidadosActionPerformed
-        addCuidados OpenCuidados = new addCuidados();
+        addCuidados OpenCuidados = new addCuidados(false);
         OpenCuidados.setVisible(true);
     }//GEN-LAST:event_jButtonCuidadosActionPerformed
 
@@ -173,9 +202,15 @@ public class menuCuidador extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonEspecialidadActionPerformed
 
     private void jButtonMisTareasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMisTareasActionPerformed
+        System.out.println(id);
         Actividades OpenActividades = new Actividades(id, nombre,false);
         OpenActividades.setVisible(true);
     }//GEN-LAST:event_jButtonMisTareasActionPerformed
+
+    private void jButtonEspecieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEspecieActionPerformed
+        addEspecie OpenAddEspecie = new addEspecie();
+        OpenAddEspecie.setVisible(true);
+    }//GEN-LAST:event_jButtonEspecieActionPerformed
 
     /**
      * @param args the command line arguments
@@ -186,6 +221,7 @@ public class menuCuidador extends javax.swing.JFrame {
     private javax.swing.JButton jButtonAnimales;
     private javax.swing.JButton jButtonCuidados;
     private javax.swing.JButton jButtonEspecialidad;
+    private javax.swing.JButton jButtonEspecie;
     private javax.swing.JButton jButtonMisTareas;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
