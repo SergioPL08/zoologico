@@ -93,6 +93,10 @@ public class addCuidadores extends javax.swing.JFrame {
         JLApellidos = new javax.swing.JLabel();
         jTFApe = new javax.swing.JTextField();
         jSSalario = new javax.swing.JSpinner();
+        jTFUser = new javax.swing.JTextField();
+        jPasswordField1 = new javax.swing.JPasswordField();
+        JLUser = new javax.swing.JLabel();
+        JLPass = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTablaCuidadores = new javax.swing.JTable();
@@ -107,8 +111,8 @@ public class addCuidadores extends javax.swing.JFrame {
         capa0.setBackground(new java.awt.Color(255, 255, 255));
         capa0.setPreferredSize(new java.awt.Dimension(800, 600));
         java.awt.GridBagLayout capa0Layout = new java.awt.GridBagLayout();
-        capa0Layout.columnWidths = new int[] {0, 35, 0, 35, 0};
-        capa0Layout.rowHeights = new int[] {0, 32, 0, 32, 0, 32, 0, 32, 0, 32, 0, 32, 0};
+        capa0Layout.columnWidths = new int[] {0, 35, 0};
+        capa0Layout.rowHeights = new int[] {0, 32, 0, 32, 0, 32, 0, 32, 0, 32, 0, 32, 0, 32, 0};
         capa0.setLayout(capa0Layout);
 
         addCuidador.setBackground(new java.awt.Color(255, 255, 255));
@@ -207,6 +211,39 @@ public class addCuidadores extends javax.swing.JFrame {
         gridBagConstraints.gridy = 6;
         capa0.add(jSSalario, gridBagConstraints);
 
+        jTFUser.setBackground(new java.awt.Color(255, 255, 255));
+        jTFUser.setForeground(new java.awt.Color(0, 0, 0));
+        jTFUser.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(0, 0, 0))); // NOI18N
+        jTFUser.setPreferredSize(new java.awt.Dimension(100, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 12;
+        capa0.add(jTFUser, gridBagConstraints);
+
+        jPasswordField1.setPreferredSize(new java.awt.Dimension(100, 22));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 14;
+        capa0.add(jPasswordField1, gridBagConstraints);
+
+        JLUser.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        JLUser.setForeground(new java.awt.Color(0, 153, 51));
+        JLUser.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        JLUser.setText("Usuario");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 12;
+        capa0.add(JLUser, gridBagConstraints);
+
+        JLPass.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        JLPass.setForeground(new java.awt.Color(0, 153, 51));
+        JLPass.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        JLPass.setText("Contraseña");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 14;
+        capa0.add(JLPass, gridBagConstraints);
+
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jTablaCuidadores.setModel(new javax.swing.table.DefaultTableModel(
@@ -258,9 +295,7 @@ public class addCuidadores extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 547, Short.MAX_VALUE)
         );
 
         jToolBar1.setBackground(new java.awt.Color(204, 204, 204));
@@ -335,8 +370,7 @@ public class addCuidadores extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(capa0, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(capa0, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -344,59 +378,104 @@ public class addCuidadores extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void JButtonAddAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonAddAnimalActionPerformed
+        //Recogemos los datos de los campos de texto
         String nombre = jTFNombreCuidador.getText();
         String ape = jTFApe.getText();
+        String user = jTFUser.getText();
+        char[] pass = jPasswordField1.getPassword();
+        String passwd = new String (pass);
         float salario = (float)jSSalario.getValue();
         String num = jTFTel.getText();
         Especialidad esp = new Especialidad((Especialidad)jComboBoxEspecialidad.getSelectedItem());
         int especialidad = esp.getId();
+        //Hacemos las comprobaciones necesarias
+        //Comprobamos que el nombre no esté vacío
         if(nombre.equals("")){
             JOptionPane.showMessageDialog(null, "Introduce el nombre");
         }
+        //Comprobamos que el apellido no esté vacío
         else if(ape.equals("")){
             JOptionPane.showMessageDialog(null, "Introduce el apellido");
         }
+        //Comprobamos que el salario no sea 0
         else if(salario==0){
             JOptionPane.showMessageDialog(null, "El salario no puede ser 0");
         }
+        //Comprobamos que el número de teléfono no esté vacío
         else if(num.equals("")){
             JOptionPane.showMessageDialog(null, "Introduce el número de teléfono");
         }
+        //Comprobamos que el número de teléfono tenga 9 caracteres
         else if(num.length()!=9){
             JOptionPane.showMessageDialog(null, "Introduce correctamente número de teléfono");
         }
+        else if(user.equals("")){
+            JOptionPane.showMessageDialog(null, "Introduce el nombre de usuario");
+        }
+        else if(passwd.equals("")){
+            JOptionPane.showMessageDialog(null, "Introduce la contraseña");
+        }
+        else if(user.equals("admin")){
+            JOptionPane.showMessageDialog(null, "Nombre de usuario no válido");
+        }
+        else if(passwd.equals("admin")){
+            JOptionPane.showMessageDialog(null, "Contraseña válida");
+        }
         else{
             try {
+                //Comprobamos que el cuidador no existe (al menos con el mismo nombre, apellido y telefono)
                 String consulta = "SELECT * FROM persona,cuidador WHERE nombre='"+nombre+"' AND apellido='"+ape+"' AND TELEFONO ='"+num+"'AND CUIDADOR.ID_ESP='"+esp.getId()+"'";
                 ResultSet rs1 = util.Conexion.comprobarDatos(consulta,miConexion);
                 //System.out.println(consulta);
                 if(rs1==null){
-                    LocalDateTime dateTime = LocalDateTime.now();
-                    String currentTimeStamp = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0").format(dateTime);
-                    ResultSet rs = util.Conexion.getSelect("Select * from persona",miConexion);
-                    //Irse a la ultima linea de la tabla persona
-                    rs.moveToInsertRow();
-                    rs.updateString("nombre",nombre);
-                    rs.updateString("apellido",ape);
-                    rs.updateFloat("salario",salario);
-                    rs.updateString("telefono", num);
-                    rs.insertRow();
-                    ResultSet rs2 = util.Conexion.getSelect("Select * from cuidador",miConexion);
-                    ResultSet getId= util.Conexion.getSelect("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='ZOO' AND TABLE_NAME='PERSONA'",miConexion);
-                    //System.out.println(getId.getInt("AUTO_INCREMENT")-1);
-                    rs2.moveToInsertRow();
-                    rs2.updateInt(1, getId.getInt("AUTO_INCREMENT")-1);
-                    rs2.updateInt(2,especialidad);
-                    rs2.insertRow();
-                    JOptionPane.showMessageDialog(null, "Cuidador añadido correctamente");
-                    jTFNombreCuidador.setText("");
-                    jTFApe.setText("");
-                    jTFTel.setText("");
-                    jSSalario.setValue(0);
-                    modelo.addRow(new Object[] {getId.getInt("AUTO_INCREMENT")-1,nombre,ape,salario,num,esp,currentTimeStamp});
+                    String valitateUser = "SELECT * FROM CUIDADOR WHERE user='"+user+"'";
+                    ResultSet rsUser = util.Conexion.comprobarDatos(consulta,miConexion);
+                    if(rsUser==null){
+                        miConexion.setAutoCommit(false);
+                        LocalDateTime dateTime = LocalDateTime.now();
+                        String currentTimeStamp = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0").format(dateTime);
+                        ResultSet rs = util.Conexion.getSelect("Select * from persona",miConexion);
+                        //Irse a la ultima linea de la tabla persona
+                        rs.moveToInsertRow();
+                        rs.updateString("nombre",nombre);
+                        rs.updateString("apellido",ape);
+                        rs.updateFloat("salario",salario);
+                        rs.updateString("telefono", num);
+                        rs.insertRow();
+                        ResultSet rs2 = util.Conexion.getSelect("Select * from cuidador",miConexion);
+                        ResultSet getId= util.Conexion.getSelect("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='ZOO' AND TABLE_NAME='PERSONA'",miConexion);
+                        System.out.println(getId);
+                        if(!getId.next()){
+                            miConexion.rollback();
+                        }
+                        else{
+                            int idPersona = getId.getInt(1);
+                        }
+                        //System.out.println(getId.getInt("AUTO_INCREMENT")-1);
+                        rs2.moveToInsertRow();
+                        rs2.updateInt(1, getId.getInt("AUTO_INCREMENT")-1);
+                        rs2.updateInt(2,especialidad);
+                        rs2.updateString(3, user);
+                        rs2.updateString(4, passwd);
+                        rs2.insertRow();
+                        ResultSet getId2= util.Conexion.getSelect("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='ZOO' AND TABLE_NAME='CUIDADOR'",miConexion);
+                        if(getId2==null){
+                            miConexion.rollback();
+                        }
+                        else{
+                            miConexion.commit();
+                        }
+                        JOptionPane.showMessageDialog(null, "Cuidador añadido correctamente");
+                        jTFNombreCuidador.setText("");
+                        jTFApe.setText("");
+                        jTFTel.setText("");
+                        jSSalario.setValue(0);
+                        modelo.addRow(new Object[] {getId.getInt("AUTO_INCREMENT")-1,nombre,ape,salario,num,esp,currentTimeStamp});
+                    }
+                    
                 }
                 else{
-                    JOptionPane.showMessageDialog(null, "El cuiador ya existe");
+                    JOptionPane.showMessageDialog(null, "El nombre de usuario ya existe");
                 }
             
         }   catch (SQLException ex) {
@@ -552,16 +631,20 @@ public class addCuidadores extends javax.swing.JFrame {
     private javax.swing.JLabel JLEspecialidad;
     private javax.swing.JLabel JLNombre;
     private javax.swing.JLabel JLNum1;
+    private javax.swing.JLabel JLPass;
     private javax.swing.JLabel JLSalario;
+    private javax.swing.JLabel JLUser;
     private javax.swing.JLabel addCuidador;
     private javax.swing.JPanel capa0;
     private javax.swing.JComboBox<String> jComboBoxEspecialidad;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JSpinner jSSalario;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTFApe;
     private javax.swing.JTextField jTFNombreCuidador;
     private javax.swing.JTextField jTFTel;
+    private javax.swing.JTextField jTFUser;
     private javax.swing.JTable jTablaCuidadores;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables

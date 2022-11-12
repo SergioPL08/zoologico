@@ -5,23 +5,18 @@
 package InterfazV2;
 
 import java.sql.Connection;
-import com.toedter.calendar.JDateChooser;
-import java.security.Timestamp;
 import javax.swing.table.DefaultTableModel;
 import util.Conexion;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import util.TextPrompt;
 import zoo.Animal;
 import zoo.Cuidador;
 import zoo.Cuidados;
@@ -50,8 +45,10 @@ public class Actividades extends javax.swing.JFrame {
     /**
      * Creates new form Actividades
      */
-    public Actividades() {
+    
+    public Actividades(int id, String nombre, boolean admin) {
         initComponents();
+        
         animales = new ArrayList();
         cuidadores = new ArrayList();
         cuidados = new ArrayList();
@@ -114,7 +111,17 @@ public class Actividades extends javax.swing.JFrame {
             Logger.getLogger(Actividades.class.getName()).log(Level.SEVERE, null, ex);
         }
         jComboBoxCuidado.setModel(modelCuidado);
-        
+        if(admin==false){
+            try {
+                jComboBoxCuidador.setEnabled(false);
+                String consultaCuidador = "Select * from persona where id_persona = "+id+"";
+                ResultSet rsCuidador = util.Conexion.getSelect(consultaCuidador,miConexion);
+                Cuidador c= new Cuidador(rsCuidador.getInt("ID_PERSONA"),rsCuidador.getString("NOMBRE"));
+                jComboBoxCuidador.getModel().setSelectedItem(c);
+            } catch (SQLException ex) {
+                Logger.getLogger(Actividades.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     /**
@@ -143,7 +150,7 @@ public class Actividades extends javax.swing.JFrame {
         jLFecha = new javax.swing.JLabel();
         jFormattedTextField1 = new javax.swing.JFormattedTextField();
         jToolBar1 = new javax.swing.JToolBar();
-        JButtonAddAnimal = new javax.swing.JToggleButton();
+        JButtonAddTarea = new javax.swing.JToggleButton();
         JButtonEditAnimal = new javax.swing.JToggleButton();
         JButtonRemoveAnimal = new javax.swing.JToggleButton();
         JButtonErase = new javax.swing.JToggleButton();
@@ -293,8 +300,14 @@ public class Actividades extends javax.swing.JFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        jFormattedTextField1.setText("12:27");
         jFormattedTextField1.setToolTipText("07:27");
         jFormattedTextField1.setPreferredSize(new java.awt.Dimension(50, 25));
+        jFormattedTextField1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                click(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 4;
@@ -304,22 +317,22 @@ public class Actividades extends javax.swing.JFrame {
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
-        JButtonAddAnimal.setBackground(new java.awt.Color(51, 51, 51));
-        JButtonAddAnimal.setForeground(new java.awt.Color(0, 0, 0));
-        JButtonAddAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.png"))); // NOI18N
-        JButtonAddAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        JButtonAddAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
-        JButtonAddAnimal.addMouseListener(new java.awt.event.MouseAdapter() {
+        JButtonAddTarea.setBackground(new java.awt.Color(51, 51, 51));
+        JButtonAddTarea.setForeground(new java.awt.Color(0, 0, 0));
+        JButtonAddTarea.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.png"))); // NOI18N
+        JButtonAddTarea.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JButtonAddTarea.setPreferredSize(new java.awt.Dimension(70, 22));
+        JButtonAddTarea.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                JButtonAddAnimaltextButtonAdd(evt);
+                JButtonAddTareatextButtonAdd(evt);
             }
         });
-        JButtonAddAnimal.addActionListener(new java.awt.event.ActionListener() {
+        JButtonAddTarea.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JButtonAddAnimalActionPerformed(evt);
+                JButtonAddTareaActionPerformed(evt);
             }
         });
-        jToolBar1.add(JButtonAddAnimal);
+        jToolBar1.add(JButtonAddTarea);
 
         JButtonEditAnimal.setBackground(new java.awt.Color(51, 51, 51));
         JButtonEditAnimal.setForeground(new java.awt.Color(0, 0, 0));
@@ -414,33 +427,31 @@ public class Actividades extends javax.swing.JFrame {
         jFormattedTextField1.setText(date.toString());
     }//GEN-LAST:event_jTablaTareasselectRow
 
-    private void JButtonAddAnimaltextButtonAdd(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JButtonAddAnimaltextButtonAdd
-        JButtonAddAnimal.setToolTipText("Añadir");
-    }//GEN-LAST:event_JButtonAddAnimaltextButtonAdd
+    private void JButtonAddTareatextButtonAdd(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JButtonAddTareatextButtonAdd
+        JButtonAddTarea.setToolTipText("Añadir");
+    }//GEN-LAST:event_JButtonAddTareatextButtonAdd
 
-    private void JButtonAddAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonAddAnimalActionPerformed
+    private void JButtonAddTareaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonAddTareaActionPerformed
+        //Recogemos los datos de los campos de texto y tal
         Date date = jDateChooser1.getDate();
         java.sql.Date fecha = new java.sql.Date(date.getTime());
         String hora = jFormattedTextField1.getText();
-        //Timestamp ts = new Timestamp(date,hora);
         Animal ani = new Animal((Animal)jComboBoxAnimal.getSelectedItem());
         Cuidador cuidador = new Cuidador((Cuidador)jComboBoxCuidador.getSelectedItem());
         Cuidados cuidado = new Cuidados((Cuidados)jComboBoxCuidado.getSelectedItem());
-        
-        //(String name, String especie, String subespecie, float peso)
+        //Comprobamos el formato de la hora con el método ValitateHour
         if(ValitateHour(jFormattedTextField1.getText())==false){
             JOptionPane.showMessageDialog(null, "Formato de hora incorrecto");
         }
         else{
-            //            Animal animal = new Animal(nombre,especie,peso);
-            //            animales.add(animal);
-            //            //System.out.println(animales);
             try {
+                //Comprobamos que el cuidador no tenga una tarea a dicha hora asignada (tiempo mínimo de 30 minutos)
                 String consulta = "SELECT * FROM realizada WHERE ID_ANIMAL='"+ani.getId()+"' AND ID_CUIDADOR="+cuidador.getId()+" AND ID_CUIDADO="+cuidado.getId();
                 ResultSet rs1 =util.Conexion.comprobarDatos(consulta,miConexion);
                 DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
                 LocalDateTime dateTime = LocalDateTime.parse(fecha+" "+hora, formato);
                 String dateTimeFormateado = dateTime.format(formato);
+                
                 //System.out.println(rs1);
                 if(rs1==null){
                     ResultSet rs = util.Conexion.getSelect("Select * from realizada",miConexion);
@@ -468,10 +479,10 @@ public class Actividades extends javax.swing.JFrame {
             }
         }
         
-    }//GEN-LAST:event_JButtonAddAnimalActionPerformed
+    }//GEN-LAST:event_JButtonAddTareaActionPerformed
 
     private void JButtonEditAnimaltextButtonEdit(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JButtonEditAnimaltextButtonEdit
-        JButtonAddAnimal.setToolTipText("Editar");
+        JButtonAddTarea.setToolTipText("Editar");
     }//GEN-LAST:event_JButtonEditAnimaltextButtonEdit
 
     private void JButtonEditAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonEditAnimalActionPerformed
@@ -510,7 +521,7 @@ public class Actividades extends javax.swing.JFrame {
     }//GEN-LAST:event_JButtonEditAnimalActionPerformed
 
     private void JButtonRemoveAnimaltextButtonDelete(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JButtonRemoveAnimaltextButtonDelete
-        JButtonAddAnimal.setToolTipText("Eliminar");
+        JButtonAddTarea.setToolTipText("Eliminar");
     }//GEN-LAST:event_JButtonRemoveAnimaltextButtonDelete
 
     private void JButtonRemoveAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonRemoveAnimalActionPerformed
@@ -533,43 +544,17 @@ public class Actividades extends javax.swing.JFrame {
         jFormattedTextField1.setText("");
     }//GEN-LAST:event_JButtonEraseActionPerformed
 
+    private void click(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_click
+        jFormattedTextField1.setText("");
+    }//GEN-LAST:event_click
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Actividades.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Actividades.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Actividades.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Actividades.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Actividades().setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JToggleButton JButtonAddAnimal;
+    private javax.swing.JToggleButton JButtonAddTarea;
     private javax.swing.JToggleButton JButtonEditAnimal;
     private javax.swing.JToggleButton JButtonErase;
     private javax.swing.JToggleButton JButtonRemoveAnimal;

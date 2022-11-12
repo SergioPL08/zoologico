@@ -75,7 +75,6 @@ public class addEspecialidad extends javax.swing.JFrame {
         jToolBar1 = new javax.swing.JToolBar();
         jButtonAdd = new javax.swing.JButton();
         JButtonEditAnimal = new javax.swing.JToggleButton();
-        JButtonRemoveAnimal = new javax.swing.JToggleButton();
         JButtonErase = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -212,18 +211,6 @@ public class addEspecialidad extends javax.swing.JFrame {
         });
         jToolBar1.add(JButtonEditAnimal);
 
-        JButtonRemoveAnimal.setBackground(new java.awt.Color(51, 51, 51));
-        JButtonRemoveAnimal.setForeground(new java.awt.Color(0, 0, 0));
-        JButtonRemoveAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/delete.png"))); // NOI18N
-        JButtonRemoveAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        JButtonRemoveAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
-        JButtonRemoveAnimal.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JButtonRemoveAnimalActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(JButtonRemoveAnimal);
-
         JButtonErase.setBackground(new java.awt.Color(51, 51, 51));
         JButtonErase.setForeground(new java.awt.Color(0, 0, 0));
         JButtonErase.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/erase.png"))); // NOI18N
@@ -326,38 +313,6 @@ public class addEspecialidad extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_JButtonEditAnimalActionPerformed
 
-    private void JButtonRemoveAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonRemoveAnimalActionPerformed
-        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro, manín? Se eliminarán todos los cuidadores relacionados con la especialidad eliminada. No vas a poder recuperar los datos eliminados","Eliminar especie",JOptionPane.YES_OPTION);
-        if(resp==0){
-            int id=(int)jTablaEspecialidades.getValueAt(jTablaEspecialidades.getSelectedRow(), 0);
-            int fila = jTablaEspecialidades.getSelectedRow();
-            try {
-                miConexion.setAutoCommit(false);
-                String comprobarTarea = "Select * from cuidador where id_esp="+id;
-                ResultSet rs1 = util.Conexion.comprobarDatos(comprobarTarea, miConexion);
-                if(rs1!=null){
-                    String sentencia = "DELETE FROM CUIDADOR WHERE ID_PER="+id;
-                    if(util.Conexion.editTable(sentencia,miConexion)!=1){
-                        miConexion.rollback();
-                    }
-                    else{
-                        JOptionPane.showMessageDialog(null, "Cuidadores relacionados con la especialidad eliminados correctamente");
-                    }
-                }
-             } catch (SQLException ex) {
-                Logger.getLogger(addCuidadores.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            String sentencia = "DELETE FROM ESPECIALIDAD WHERE ID="+id;
-            if(util.Conexion.editTable(sentencia,miConexion)==1){
-                modelo.removeRow(fila);
-                JOptionPane.showMessageDialog(null, "Especialidad elimado correctamente");
-                jTFNombreEsp.setText("");
-                jTADesc.setText("");
-            }
-        }
-        
-    }//GEN-LAST:event_JButtonRemoveAnimalActionPerformed
-
     private void click(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_click
         int fila = jTablaEspecialidades.getSelectedRow();
         jTFNombreEsp.setText((String)jTablaEspecialidades.getValueAt(fila,1));
@@ -408,7 +363,6 @@ public class addEspecialidad extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton JButtonEditAnimal;
     private javax.swing.JToggleButton JButtonErase;
-    private javax.swing.JToggleButton JButtonRemoveAnimal;
     private javax.swing.JLabel JLDescrip;
     private javax.swing.JLabel JLNombreEsp;
     private javax.swing.JLabel addEspecialidad;

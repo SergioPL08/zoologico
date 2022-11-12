@@ -46,7 +46,7 @@ public class Conexion {
         }
         
     }
-    public void closeConnect(Connection con){
+    public static void closeConnect(Connection con){
         try {
             // Cerramos posibles conexiones abiertas
             if (con!=null) con.close();    

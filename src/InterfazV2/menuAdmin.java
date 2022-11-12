@@ -8,12 +8,12 @@ package InterfazV2;
  *
  * @author Sergio
  */
-public class menuPrincipal extends javax.swing.JFrame {
+public class menuAdmin extends javax.swing.JFrame {
 
     /**
      * Creates new form menuPrincipalñ
      */
-    public menuPrincipal() {
+    public menuAdmin() {
         initComponents();
     }
 
@@ -34,12 +34,12 @@ public class menuPrincipal extends javax.swing.JFrame {
         jButtonCuidados = new javax.swing.JButton();
         jButtonEspecialidad = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        jButtonEspecialidadTareas = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
-        setPreferredSize(new java.awt.Dimension(800, 600));
         setResizable(false);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -55,7 +55,7 @@ public class menuPrincipal extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 9;
+        gridBagConstraints.gridwidth = 11;
         jPanel2.add(jLabel1, gridBagConstraints);
 
         jButtonAnimales.setForeground(new java.awt.Color(0, 0, 0));
@@ -113,6 +113,18 @@ public class menuPrincipal extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         jPanel2.add(jLabel2, gridBagConstraints);
 
+        jButtonEspecialidadTareas.setForeground(new java.awt.Color(0, 0, 0));
+        jButtonEspecialidadTareas.setText("Tareas");
+        jButtonEspecialidadTareas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEspecialidadTareasActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 10;
+        gridBagConstraints.gridy = 2;
+        jPanel2.add(jButtonEspecialidadTareas, gridBagConstraints);
+
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(297, 336));
 
@@ -150,7 +162,7 @@ public class menuPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonAnimalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAnimalesActionPerformed
-        addAnimal OpenAnimal = new addAnimal();
+        addAnimal OpenAnimal = new addAnimal(true);
         OpenAnimal.setVisible(true);
     }//GEN-LAST:event_jButtonAnimalesActionPerformed
 
@@ -169,6 +181,11 @@ public class menuPrincipal extends javax.swing.JFrame {
         OpenEspecialidad.setVisible(true);
     }//GEN-LAST:event_jButtonEspecialidadActionPerformed
 
+    private void jButtonEspecialidadTareasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEspecialidadTareasActionPerformed
+        Actividades OpenActividades = new Actividades(-1,"admin",false);
+        OpenActividades.setVisible(true);
+    }//GEN-LAST:event_jButtonEspecialidadTareasActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -186,21 +203,23 @@ public class menuPrincipal extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(menuPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(menuAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(menuPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(menuAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(menuPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(menuAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(menuPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(menuAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new menuPrincipal().setVisible(true);
+                new menuAdmin().setVisible(true);
             }
         });
     }
@@ -210,6 +229,7 @@ public class menuPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton jButtonAnimales;
     private javax.swing.JButton jButtonCuidados;
     private javax.swing.JButton jButtonEspecialidad;
+    private javax.swing.JButton jButtonEspecialidadTareas;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

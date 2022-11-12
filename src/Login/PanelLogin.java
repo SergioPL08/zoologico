@@ -4,11 +4,15 @@
  */
 package Login;
 import java.sql.Connection;
-import InterfazV2.menuPrincipal;
+import InterfazV2.menuAdmin;
+import InterfazV2.menuCuidador;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import java.awt.Color;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import util.Conexion;
 /**
  *
@@ -144,14 +148,34 @@ public class PanelLogin extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "La contraseña está vacía");
         }
         else{
-            ResultSet rs1 =util.Conexion.comprobarDatos("SELECT * FROM admin WHERE USER = '"+nombre+"' AND pass ='"+passwd+"'",miConexion);
-            System.out.println(rs1);
-            if(rs1==null){
-                JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
+            //comprobamos si el usuario y contraseña coincide con admin (admin sólo hay uno y es admin admin)
+            ResultSet rsAdmin =util.Conexion.comprobarDatos("SELECT * FROM admin WHERE USER = '"+nombre+"' AND pass ='"+passwd+"'",miConexion);
+            //System.out.println(rsAdmin);
+            if(rsAdmin==null){
+                //Si no, comprobamos que el usuario y contraseña coincide con alguno de los cuidadores
+                ResultSet rsCuidador =util.Conexion.comprobarDatos("SELECT * FROM cuidador WHERE USER = '"+nombre+"' AND pass ='"+passwd+"'",miConexion);
+                int id=-1;
+                try {
+                    id = rsCuidador.getInt("id_per");
+                } catch (SQLException ex) {
+                    Logger.getLogger(PanelLogin.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if(rsCuidador==null){
+                    JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "Cuidador correcto");
+                    util.Conexion.closeConnect(miConexion);
+                    menuCuidador mp = new menuCuidador(id,nombre);
+                    mp.setVisible(true);
+                    this.setVisible(false);
+                    
+                }
             }
             else{
-                JOptionPane.showMessageDialog(null, "Usuario correcto");
-                menuPrincipal mp = new menuPrincipal();
+                JOptionPane.showMessageDialog(null, "Admin correcto");
+                util.Conexion.closeConnect(miConexion);
+                menuAdmin mp = new menuAdmin();
                 mp.setVisible(true);
                 this.setVisible(false);
                 

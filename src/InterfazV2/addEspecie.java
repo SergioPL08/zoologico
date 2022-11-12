@@ -62,7 +62,6 @@ public class addEspecie extends javax.swing.JFrame {
         jToolBar1 = new javax.swing.JToolBar();
         JButtonAddEspecie = new javax.swing.JToggleButton();
         JButtonEditAnimal = new javax.swing.JToggleButton();
-        JButtonRemoveAnimal = new javax.swing.JToggleButton();
         JButtonErase = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -184,18 +183,6 @@ public class addEspecie extends javax.swing.JFrame {
         });
         jToolBar1.add(JButtonEditAnimal);
 
-        JButtonRemoveAnimal.setBackground(new java.awt.Color(51, 51, 51));
-        JButtonRemoveAnimal.setForeground(new java.awt.Color(0, 0, 0));
-        JButtonRemoveAnimal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/delete.png"))); // NOI18N
-        JButtonRemoveAnimal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        JButtonRemoveAnimal.setPreferredSize(new java.awt.Dimension(70, 22));
-        JButtonRemoveAnimal.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JButtonRemoveAnimalActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(JButtonRemoveAnimal);
-
         JButtonErase.setBackground(new java.awt.Color(51, 51, 51));
         JButtonErase.setForeground(new java.awt.Color(0, 0, 0));
         JButtonErase.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/erase.png"))); // NOI18N
@@ -277,7 +264,7 @@ public class addEspecie extends javax.swing.JFrame {
             System.out.println(sentencia);
             if(util.Conexion.editTable(sentencia,miConexion)==1){
                 modelo.setValueAt(TNombreEspecie.getText(), fila, 1);
-                JOptionPane.showMessageDialog(null, "Especie editado correctamente");
+                JOptionPane.showMessageDialog(null, "Especie editada correctamente");
                 TNombreEspecie.setText("");
             }
             else{
@@ -285,20 +272,6 @@ public class addEspecie extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_JButtonEditAnimalActionPerformed
-
-    private void JButtonRemoveAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonRemoveAnimalActionPerformed
-        int resp = JOptionPane.showConfirmDialog(null, "¿Estás seguro, manín? No vas a poder recuperar los datos eliminados","Eliminar especie",JOptionPane.YES_OPTION);
-        if(resp==0){
-            int id=(int)jTablaEspecies.getValueAt(jTablaEspecies.getSelectedRow(), 0);
-            int fila = jTablaEspecies.getSelectedRow();
-            String sentencia = "DELETE FROM ESPECIE WHERE ID_ESPECIE="+id;
-            if(util.Conexion.editTable(sentencia,miConexion)==1){
-                modelo.removeRow(fila);
-                JOptionPane.showMessageDialog(null, "Especie elimado correctamente");
-                TNombreEspecie.setText("");
-            }
-        }
-    }//GEN-LAST:event_JButtonRemoveAnimalActionPerformed
 
     private void mouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseClicked
         int fila = jTablaEspecies.getSelectedRow();
@@ -348,7 +321,6 @@ public class addEspecie extends javax.swing.JFrame {
     private javax.swing.JToggleButton JButtonAddEspecie;
     private javax.swing.JToggleButton JButtonEditAnimal;
     private javax.swing.JToggleButton JButtonErase;
-    private javax.swing.JToggleButton JButtonRemoveAnimal;
     private javax.swing.JLabel LnombreEspecie;
     private javax.swing.JTextField TNombreEspecie;
     private javax.swing.JLabel jLabel1;
